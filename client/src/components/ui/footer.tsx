@@ -99,6 +99,11 @@ export default function Footer() {
               Professional web development services with launch special pricing.
             </div>
           </div>
+          <div className="text-center mt-4 pt-4 border-t border-slate-800">
+            <div className="text-slate-400 text-xs">
+              made by wrwebsites.com
+            </div>
+          </div>
         </div>
       </div>
     </footer>
