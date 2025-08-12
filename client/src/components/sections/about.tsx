@@ -12,16 +12,7 @@ export default function About() {
             </p>
             
             <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <CheckCircle className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-slate-900 mb-2">Proven Expertise</h3>
-                  <p className="text-slate-600">Years of experience delivering high-quality websites that perform.</p>
-                </div>
-              </div>
-              
+
               <div className="flex items-start space-x-4">
                 <div className="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center">
                   <Zap className="w-6 h-6 text-emerald-500" />

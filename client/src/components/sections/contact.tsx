@@ -190,7 +190,7 @@ export default function Contact() {
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="basic">Basic Static Website - £50 + £10/month</SelectItem>
-                          <SelectItem value="premium">Premium Static Website - £150 + £10/month</SelectItem>
+                          <SelectItem value="premium">Premium Hosting and Domain Website - £150 + £10/month</SelectItem>
                           <SelectItem value="custom">Custom Solution</SelectItem>
                         </SelectContent>
                       </Select>

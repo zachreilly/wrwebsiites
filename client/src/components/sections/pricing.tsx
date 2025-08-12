@@ -44,10 +44,6 @@ export default function Pricing() {
               </li>
               <li className="flex items-center text-slate-600">
                 <span className="text-emerald-500 mr-3">✓</span>
-                Domain registration included
-              </li>
-              <li className="flex items-center text-slate-600">
-                <span className="text-emerald-500 mr-3">✓</span>
                 Secure hosting included
               </li>
               <li className="flex items-center text-slate-600">
@@ -70,7 +66,7 @@ export default function Pricing() {
               <div className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium">Most Popular</div>
             </div>
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">Premium Static Website</h3>
+              <h3 className="text-2xl font-bold text-slate-900 mb-2">Premium Hosting and Domain Website</h3>
               <p className="text-slate-600 mb-6">A more customised, multi-page site with extra features to showcase your business in style</p>
               <div className="text-4xl font-bold text-slate-900 mb-2">
                 £150
@@ -116,7 +112,7 @@ export default function Pricing() {
 
         {/* Additional pricing info */}
         <div className="mt-12 text-center">
-          <p className="text-slate-600 mb-4">Both packages include domain registration, secure hosting, and ongoing support</p>
+          <p className="text-slate-600 mb-4">Premium package includes domain registration. Both packages include secure hosting and ongoing support</p>
           <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl max-w-2xl mx-auto">
             <h4 className="font-semibold mb-2">Why Choose Us?</h4>
             <ul className="text-sm space-y-1 text-blue-100">
