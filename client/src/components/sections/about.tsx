@@ -45,11 +45,32 @@ export default function About() {
           </div>
           
           <div>
-            <img 
-              src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" 
-              alt="Small business owners collaborating with laptops in modern workspace" 
-              className="rounded-xl shadow-lg w-full" 
-            />
+            <div className="bg-gradient-to-br from-slate-100 to-white rounded-xl p-8 shadow-lg">
+              <h4 className="text-2xl font-bold text-slate-900 mb-4">Why Local Businesses Choose Us</h4>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">1</div>
+                  <div>
+                    <h5 className="font-semibold text-slate-800">Affordable Pricing</h5>
+                    <p className="text-slate-600 text-sm">Launch rates while we build our portfolio</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">2</div>
+                  <div>
+                    <h5 className="font-semibold text-slate-800">Local Support</h5>
+                    <p className="text-slate-600 text-sm">Direct contact with friendly, local team</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">3</div>
+                  <div>
+                    <h5 className="font-semibold text-slate-800">Fast Delivery</h5>
+                    <p className="text-slate-600 text-sm">Your site live in days, not weeks</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

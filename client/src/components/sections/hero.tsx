@@ -28,7 +28,7 @@ export default function Hero() {
                 className="bg-accent text-slate-900 px-8 py-4 rounded-lg font-semibold hover:bg-amber-400 transition-colors text-center"
                 size="lg"
               >
-                Get Free Quote
+                Contact Us
               </Button>
               <Button 
                 onClick={() => scrollToSection('services')} 
@@ -40,21 +40,17 @@ export default function Hero() {
               </Button>
             </div>
           </div>
-          <div className="relative">
-            <img 
-              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" 
-              alt="Professional web development team collaborating" 
-              className="rounded-xl shadow-2xl w-full" 
-            />
-            
-            {/* Floating achievement cards */}
-            <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-lg shadow-xl hidden lg:block">
-              <div className="text-2xl font-bold text-primary">50+</div>
-              <div className="text-sm text-slate-600">Projects Completed</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Achievement cards */}
+            <div className="bg-white p-6 rounded-lg shadow-xl">
+              <div className="text-3xl font-bold text-primary mb-2">50+</div>
+              <div className="text-slate-600">Projects Completed</div>
+              <div className="text-sm text-slate-500 mt-2">Local businesses we've helped get online</div>
             </div>
-            <div className="absolute -top-6 -right-6 bg-white p-4 rounded-lg shadow-xl hidden lg:block">
-              <div className="text-2xl font-bold text-emerald-500">24/7</div>
-              <div className="text-sm text-slate-600">Support</div>
+            <div className="bg-white p-6 rounded-lg shadow-xl">
+              <div className="text-3xl font-bold text-emerald-500 mb-2">24/7</div>
+              <div className="text-slate-600">Support Available</div>
+              <div className="text-sm text-slate-500 mt-2">We're here when you need us</div>
             </div>
           </div>
         </div>

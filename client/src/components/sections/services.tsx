@@ -69,11 +69,15 @@ export default function Services() {
           <h3 className="text-2xl font-semibold text-slate-900 mb-6 text-center">Our Development Process</h3>
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
-              <img 
-                src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" 
-                alt="Modern responsive website designs on multiple devices" 
-                className="rounded-lg shadow-lg w-full" 
-              />
+              <div className="bg-gradient-to-br from-primary to-secondary rounded-lg p-8 text-white">
+                <h4 className="text-xl font-semibold mb-4">Professional Web Design</h4>
+                <ul className="space-y-2 text-sm">
+                  <li>• Mobile-responsive design</li>
+                  <li>• Fast loading speeds</li>
+                  <li>• SEO optimized</li>
+                  <li>• Modern, clean layouts</li>
+                </ul>
+              </div>
             </div>
             <div className="space-y-6">
               <div className="flex items-start space-x-4">

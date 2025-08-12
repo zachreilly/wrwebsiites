@@ -55,12 +55,12 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-20 bg-white">
+    <section id="contact" className="py-24 bg-gradient-to-br from-slate-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-slate-900 mb-4">Get Your Free Quote Today</h2>
+        <div className="text-center mb-20">
+          <h2 className="text-5xl font-bold text-slate-900 mb-6">Get In Touch</h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Ready to transform your business with a professional website? Contact us for a free consultation and quote.
+            Ready to transform your business with a professional website? Let's discuss your project and how we can help bring your vision to life.
           </p>
         </div>
 
@@ -249,7 +249,7 @@ export default function Contact() {
                   size="lg"
                   disabled={contactMutation.isPending}
                 >
-                  {contactMutation.isPending ? "Sending..." : "Send Quote Request"}
+                  {contactMutation.isPending ? "Sending..." : "Send Message"}
                 </Button>
               </form>
             </Form>
