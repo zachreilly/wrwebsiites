@@ -50,9 +50,9 @@ export default function Contact() {
           </div>
 
           {/* Special Offer Highlight */}
-          <div className="p-6 bg-gradient-to-r from-primary to-secondary rounded-xl text-white text-center">
+          <div className="p-6 bg-gradient-to-r from-red-500 to-red-600 rounded-xl text-white text-center">
             <h4 className="font-semibold mb-2">🎉 Limited Time Launch Special</h4>
-            <p className="text-green-100">50% off all website packages. Don't miss out on this exclusive offer for new clients.</p>
+            <p className="text-red-100">50% off all website packages. Don't miss out on this exclusive offer for new clients.</p>
           </div>
         </div>
       </div>
