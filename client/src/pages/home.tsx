@@ -4,7 +4,6 @@ import Hero from "@/components/sections/hero";
 import Services from "@/components/sections/services";
 import Pricing from "@/components/sections/pricing";
 import About from "@/components/sections/about";
-import Testimonials from "@/components/sections/testimonials";
 import Contact from "@/components/sections/contact";
 
 export default function Home() {
@@ -15,7 +14,6 @@ export default function Home() {
       <Services />
       <Pricing />
       <About />
-      <Testimonials />
       <Contact />
       <Footer />
     </div>
