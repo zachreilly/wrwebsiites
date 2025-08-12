@@ -74,7 +74,7 @@ export default function Services() {
                 <ul className="space-y-2 text-sm">
                   <li>• Mobile-responsive design</li>
                   <li>• Fast loading speeds</li>
-                  <li>• SEO optimized</li>
+                  <li>• SEO optimised</li>
                   <li>• Modern, clean layouts</li>
                 </ul>
               </div>

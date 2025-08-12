@@ -19,7 +19,7 @@ export default function About() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 mb-2">Lightning Fast</h3>
-                  <p className="text-slate-600">Optimized websites that load quickly and rank well in search engines.</p>
+                  <p className="text-slate-600">Optimised websites that load quickly and rank well in search engines.</p>
                 </div>
               </div>
               
