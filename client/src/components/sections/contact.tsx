@@ -169,7 +169,7 @@ export default function Contact() {
                     <FormItem>
                       <FormLabel>Phone Number</FormLabel>
                       <FormControl>
-                        <Input type="tel" placeholder="Your phone number" {...field} />
+                        <Input type="tel" placeholder="Your phone number" {...field} value={field.value || ""} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -182,16 +182,15 @@ export default function Contact() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Interested Package</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select onValueChange={field.onChange} value={field.value || ""}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select a package" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="starter">Starter Website - £299</SelectItem>
-                          <SelectItem value="professional">Professional Website - £599</SelectItem>
-                          <SelectItem value="enterprise">Enterprise Website - £999</SelectItem>
+                          <SelectItem value="basic">Basic Static Website - £50 + £10/month</SelectItem>
+                          <SelectItem value="premium">Premium Static Website - £150 + £10/month</SelectItem>
                           <SelectItem value="custom">Custom Solution</SelectItem>
                         </SelectContent>
                       </Select>
@@ -211,6 +210,7 @@ export default function Contact() {
                           placeholder="Tell us about your project, goals, and any specific requirements..."
                           className="resize-none"
                           {...field}
+                          value={field.value || ""}
                         />
                       </FormControl>
                       <FormMessage />
@@ -224,7 +224,7 @@ export default function Contact() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Desired Timeline</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select onValueChange={field.onChange} value={field.value || ""}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select timeline" />

@@ -2,7 +2,17 @@
 
 ## Overview
 
-WebCraft Pro is a professional web development service application built as a full-stack solution for showcasing web development services and handling client inquiries. The application serves as a marketing website for a web development agency that specializes in static website development, hosting, and ongoing support services. It features a modern, responsive design with service showcases, pricing information, client testimonials, and a contact form for quote requests.
+wrwebsites is a professional web development service application built as a full-stack solution for showcasing web development services and handling client inquiries. The application serves as a marketing website for a web development agency that specializes in static website development, hosting, and ongoing support services. The website features affordable launch pricing with two package tiers: Basic Static Website (£50 setup + £10/month) and Premium Static Website (£150 setup + £10/month). Contact information includes phone numbers 07397985279 and 07535778637, and email zachhreillyy@gmail.com.
+
+## Recent Changes (August 12, 2025)
+
+- Updated branding from "WebCraft Pro" to "wrwebsites" throughout the application
+- Implemented content from user's business description including pricing structure, service descriptions, and contact information
+- Updated pricing section to reflect two-tier structure: Basic (£50 + £10/month) and Premium (£150 + £10/month) packages
+- Modified services section to match user's specific service descriptions for static websites and domain/hosting
+- Updated contact form package options to match new pricing structure
+- Fixed TypeScript type errors in contact form and storage implementation
+- Applied user's exact business messaging throughout the website
 
 ## User Preferences
 

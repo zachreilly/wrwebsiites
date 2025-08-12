@@ -14,10 +14,10 @@ export const contactRequests = pgTable("contact_requests", {
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
   email: text("email").notNull(),
-  phone: text("phone"),
-  package: text("package"),
-  projectDetails: text("project_details"),
-  timeline: text("timeline"),
+  phone: text("phone").default(""),
+  package: text("package").default(""),
+  projectDetails: text("project_details").default(""),
+  timeline: text("timeline").default(""),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

@@ -14,9 +14,9 @@ export default function Footer() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="lg:col-span-2">
-            <div className="text-2xl font-bold text-white mb-4">WebCraft Pro</div>
+            <div className="text-2xl font-bold text-white mb-4">wrwebsites</div>
             <p className="text-slate-300 mb-6 max-w-md">
-              Professional web development services helping businesses establish a strong online presence with custom websites and reliable hosting solutions.
+              We help local businesses get online with simple, affordable websites that look great and work on all devices. Special launch pricing available now.
             </p>
             <div className="space-y-2">
               <div className="flex items-center text-slate-300">
@@ -93,7 +93,7 @@ export default function Footer() {
         <div className="border-t border-slate-700 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-slate-300 text-sm">
-              © 2024 WebCraft Pro. All rights reserved.
+              © 2024 wrwebsites. All rights reserved.
             </div>
             <div className="text-slate-300 text-sm mt-4 md:mt-0">
               Professional web development services with launch special pricing.

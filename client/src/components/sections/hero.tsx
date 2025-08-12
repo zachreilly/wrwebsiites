@@ -20,7 +20,7 @@ export default function Hero() {
               Professional Web Development for Your Business
             </h1>
             <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-              Transform your business with stunning, responsive websites that convert visitors into customers. Expert development, hosting, and ongoing support.
+              We help local businesses get online with simple, affordable websites that look great and work on all devices. Special launch pricing available now.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 

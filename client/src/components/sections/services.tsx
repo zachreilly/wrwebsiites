@@ -7,7 +7,7 @@ export default function Services() {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-slate-900 mb-4">What We Offer</h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Complete web solutions designed to help your business thrive online with professional development and reliable hosting.
+            We help local businesses get online with simple, affordable websites that look great and work on all devices. Whether you just need a professional online presence or want something more customised, we've got you covered.
           </p>
         </div>
 
@@ -17,16 +17,17 @@ export default function Services() {
             <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-6">
               <Code className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-900 mb-4">Static Website Development</h3>
+            <h3 className="text-xl font-semibold text-slate-900 mb-4">Static Websites – Simple & Reliable</h3>
             <p className="text-slate-600 mb-4">
-              Lightning-fast, secure static websites built with modern technologies. Perfect for business websites, portfolios, and landing pages.
+              A static website is a site made up of fixed pages — think of it like an online brochure. The content doesn't change automatically; it only updates when we make changes for you.
             </p>
+            <h4 className="font-semibold text-slate-900 mb-2">Why it's great:</h4>
             <ul className="text-sm text-slate-600 space-y-2">
-              <li className="flex items-center"><span className="text-emerald-500 mr-2">✓</span>Responsive Design</li>
-              <li className="flex items-center"><span className="text-emerald-500 mr-2">✓</span>SEO Optimized</li>
-              <li className="flex items-center"><span className="text-emerald-500 mr-2">✓</span>Fast Loading</li>
-              <li className="flex items-center"><span className="text-emerald-500 mr-2">✓</span>Mobile First</li>
+              <li className="flex items-center"><span className="text-emerald-500 mr-2">✓</span>Loads quickly and works on any device</li>
+              <li className="flex items-center"><span className="text-emerald-500 mr-2">✓</span>Secure and low maintenance</li>
+              <li className="flex items-center"><span className="text-emerald-500 mr-2">✓</span>Perfect for showcasing your services, contact details, opening hours, and more</li>
             </ul>
+            <p className="text-sm text-slate-600 mt-3 italic">Static websites are ideal for small businesses that don't need frequent updates or complex features.</p>
           </div>
 
           {/* Web Hosting */}
@@ -34,16 +35,15 @@ export default function Services() {
             <div className="w-12 h-12 bg-emerald-500 rounded-lg flex items-center justify-center mb-6">
               <Server className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-900 mb-4">Professional Web Hosting</h3>
+            <h3 className="text-xl font-semibold text-slate-900 mb-4">Domain & Hosting – Your Website's Home</h3>
             <p className="text-slate-600 mb-4">
-              Reliable, secure hosting with 99.9% uptime guarantee. Includes SSL certificates, daily backups, and technical support.
+              Your website needs two things to be visible online:
             </p>
-            <ul className="text-sm text-slate-600 space-y-2">
-              <li className="flex items-center"><span className="text-emerald-500 mr-2">✓</span>99.9% Uptime</li>
-              <li className="flex items-center"><span className="text-emerald-500 mr-2">✓</span>SSL Included</li>
-              <li className="flex items-center"><span className="text-emerald-500 mr-2">✓</span>Daily Backups</li>
-              <li className="flex items-center"><span className="text-emerald-500 mr-2">✓</span>24/7 Support</li>
+            <ul className="text-sm text-slate-600 space-y-2 mb-4">
+              <li className="flex items-start"><span className="text-emerald-500 mr-2 mt-0.5">•</span><strong>Domain name</strong> – This is your website's address (e.g., www.yourbusiness.co.uk).</li>
+              <li className="flex items-start"><span className="text-emerald-500 mr-2 mt-0.5">•</span><strong>Hosting</strong> – This is where your website's files are stored so people can access them 24/7.</li>
             </ul>
+            <p className="text-sm text-slate-600 italic">We manage both for you, so you don't need to worry about technical setups or renewals.</p>
           </div>
 
           {/* Ongoing Support */}
