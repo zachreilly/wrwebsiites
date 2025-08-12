@@ -109,13 +109,13 @@ export default function Contact() {
             {/* Special Offer Highlight */}
             <div className="mt-8 p-6 bg-gradient-to-r from-primary to-secondary rounded-xl text-white">
               <h4 className="font-semibold mb-2">🎉 Limited Time Launch Special</h4>
-              <p className="text-blue-100">50% off all website packages. Don't miss out on this exclusive offer for new clients.</p>
+              <p className="text-green-100">50% off all website packages. Don't miss out on this exclusive offer for new clients.</p>
             </div>
           </div>
 
           {/* Contact Form */}
           <div className="bg-slate-50 p-8 rounded-xl">
-            <h3 className="text-2xl font-semibold text-slate-900 mb-6">Request Your Free Quote</h3>
+            <h3 className="text-2xl font-semibold text-slate-900 mb-6">Send Us a Message</h3>
             
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
