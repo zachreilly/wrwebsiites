@@ -7,7 +7,7 @@ export default function Contact() {
         <div className="text-center mb-20">
           <h2 className="text-5xl font-bold text-slate-900 mb-6">Get In Touch</h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Ready to transform your business with a professional website? Let's discuss your project and how we can help bring your vision to life.
+            Ready to get your business online? Contact us directly via phone or email to discuss your website needs.
           </p>
         </div>
 
@@ -18,8 +18,8 @@ export default function Contact() {
                 <Phone className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <h4 className="font-semibold text-slate-900 mb-2">Phone Numbers</h4>
-                <p className="text-slate-600 mb-2">Call us for immediate assistance</p>
+                <h4 className="font-semibold text-slate-900 mb-2">Call Us Direct</h4>
+                <p className="text-slate-600 mb-2">Speak with us directly about your project</p>
                 <div className="space-y-1">
                   <a href="tel:07397985279" className="block text-primary font-medium hover:text-secondary">07397985279</a>
                   <a href="tel:07535778637" className="block text-primary font-medium hover:text-secondary">07535778637</a>
@@ -32,8 +32,8 @@ export default function Contact() {
                 <Mail className="w-6 h-6 text-emerald-500" />
               </div>
               <div>
-                <h4 className="font-semibold text-slate-900 mb-2">Email Address</h4>
-                <p className="text-slate-600 mb-2">Send us a detailed message</p>
+                <h4 className="font-semibold text-slate-900 mb-2">Email Us Direct</h4>
+                <p className="text-slate-600 mb-2">Send us your project details</p>
                 <a href="mailto:zachhreillyy@gmail.com" className="block text-primary font-medium hover:text-secondary">zachhreillyy@gmail.com</a>
               </div>
             </div>
