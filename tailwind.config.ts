@@ -70,8 +70,8 @@ export default {
         emerald: {
           500: "var(--emerald-500)",
         },
-        blue: {
-          100: "var(--blue-100)",
+        green: {
+          100: "var(--green-100)",
         },
       },
       fontFamily: {
