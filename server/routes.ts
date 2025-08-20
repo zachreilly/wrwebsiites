@@ -204,6 +204,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update client onboarding status (admin endpoint)
+  app.patch("/api/admin/client-onboarding/:id/status", async (req, res) => {
+    try {
+      const { password } = req.query;
+      const { id } = req.params;
+      const { status } = req.body;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Authentication required" 
+        });
+      }
+
+      if (!status || !['accepted', 'delayed', 'new', 'in_progress', 'completed', 'cancelled'].includes(status)) {
+        return res.status(400).json({ success: false, message: "Invalid status" });
+      }
+
+      const updatedClient = await storage.updateClientOnboardingStatus(id, status);
+      
+      if (!updatedClient) {
+        return res.status(404).json({ success: false, message: "Client not found" });
+      }
+      
+      res.json({ 
+        success: true, 
+        data: updatedClient 
+      });
+    } catch (error) {
+      console.error("Error updating client status:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to update client status" 
+      });
+    }
+  });
+
   // Direct debit payment endpoint
   app.post("/api/payment/direct-debit", async (req, res) => {
     try {

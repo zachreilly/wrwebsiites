@@ -252,7 +252,7 @@ export class DatabaseStorage implements IStorage {
     return await db
       .select()
       .from(clientOnboarding)
-      .orderBy(desc(clientOnboarding.createdAt));
+      .orderBy(clientOnboarding.createdAt); // Oldest first for priority
   }
 
   async updateClientOnboardingStatus(id: string, status: string): Promise<ClientOnboarding | undefined> {
