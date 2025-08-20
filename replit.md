@@ -12,7 +12,7 @@ wrwebsites is a professional web development service application built as a full
 - Modified services section to match user's specific service descriptions for static websites and domain/hosting
 - **Completely removed contact forms** per user request - website now only displays direct contact information (email and phone)
 - **Added comprehensive traffic analytics system** with PostgreSQL database integration
-- **Implemented password-protected admin dashboard** at `/admin` with analytics visualization (password: wrwebsites2024)
+- **Implemented password-protected admin dashboard** at `/admin` with analytics visualization (password: BADMAN123)
 - Added real-time page view and click event tracking with automatic data collection
 - **Implemented direct debit payment system** with secure customer data collection for both Basic (£50 + £10/month) and Premium (£150 + £10/month) packages
 - **Added payment funnel** at `/payment` with 3-step process: package selection, billing address, and direct debit setup

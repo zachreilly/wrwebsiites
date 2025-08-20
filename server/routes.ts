@@ -210,7 +210,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { password } = req.query;
       
-      if (!password || password !== 'wrwebsites2024') {
+      if (!password || password !== 'BADMAN123') {
         return res.status(401).json({ 
           success: false, 
           message: "Unauthorized access" 
