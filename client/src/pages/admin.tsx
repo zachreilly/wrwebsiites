@@ -148,8 +148,8 @@ export default function AdminPage() {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Analytics Dashboard</h1>
-            <p className="text-slate-600 mt-2">Traffic data and user interactions</p>
+            <h1 className="text-3xl font-bold text-slate-900">Admin Dashboard</h1>
+            <p className="text-slate-600 mt-2">Website analytics, traffic data, and customer management</p>
           </div>
           <div className="flex items-center space-x-4">
             <Select value={days} onValueChange={setDays}>
@@ -183,52 +183,54 @@ export default function AdminPage() {
           <div className="space-y-6">
             {/* Overview Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card>
+              <Card className="border-l-4 border-l-blue-500">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Page Views</CardTitle>
-                  <Eye className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-medium">Website Visitors</CardTitle>
+                  <Eye className="h-4 w-4 text-blue-600" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-primary">{analyticsData.totalPageViews}</div>
-                  <p className="text-xs text-muted-foreground">Last {analyticsData.period}</p>
+                  <div className="text-3xl font-bold text-blue-600">{analyticsData.totalPageViews}</div>
+                  <p className="text-xs text-slate-600">Total page views in last {days} days</p>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border-l-4 border-l-emerald-500">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Clicks</CardTitle>
-                  <MousePointer className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-medium">User Interactions</CardTitle>
+                  <MousePointer className="h-4 w-4 text-emerald-600" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-secondary">{analyticsData.totalClickEvents}</div>
-                  <p className="text-xs text-muted-foreground">Last {analyticsData.period}</p>
+                  <div className="text-3xl font-bold text-emerald-600">{analyticsData.totalClickEvents}</div>
+                  <p className="text-xs text-slate-600">Button clicks and interactions</p>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border-l-4 border-l-purple-500">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Engagement Rate</CardTitle>
-                  <Activity className="h-4 w-4 text-muted-foreground" />
+                  <Activity className="h-4 w-4 text-purple-600" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-accent">
+                  <div className="text-3xl font-bold text-purple-600">
                     {analyticsData.totalPageViews > 0 
                       ? ((analyticsData.totalClickEvents / analyticsData.totalPageViews) * 100).toFixed(1)
                       : '0.0'
                     }%
                   </div>
-                  <p className="text-xs text-muted-foreground">Clicks per page view</p>
+                  <p className="text-xs text-slate-600">Average interactions per visit</p>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border-l-4 border-l-orange-500">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Period</CardTitle>
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-medium">Most Popular Page</CardTitle>
+                  <BarChart3 className="h-4 w-4 text-orange-600" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{days}</div>
-                  <p className="text-xs text-muted-foreground">Days of data</p>
+                  <div className="text-xl font-bold text-orange-600">
+                    {analyticsData.pageViewStats[0]?.page === '/' ? 'Homepage' : analyticsData.pageViewStats[0]?.page || 'N/A'}
+                  </div>
+                  <p className="text-xs text-slate-600">{analyticsData.pageViewStats[0]?.views || 0} total views</p>
                 </CardContent>
               </Card>
             </div>
