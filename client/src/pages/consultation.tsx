@@ -207,13 +207,13 @@ export default function ConsultationPage() {
           <Button 
             onClick={() => window.location.href = "/"} 
             variant="ghost" 
-            className="mb-4"
+            className="mb-4 text-white hover:text-white hover:bg-white/10"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Homepage
           </Button>
-          <h1 className="text-3xl font-bold text-slate-900 mb-4">Custom Project Consultation</h1>
-          <p className="text-slate-600 max-w-2xl mx-auto">
+          <h1 className="text-3xl font-bold text-white mb-4">Custom Project Consultation</h1>
+          <p className="text-white/90 max-w-2xl mx-auto">
             Tell us about your specific requirements and get a personalized quote for your custom web development project.
           </p>
         </div>
