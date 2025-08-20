@@ -4,6 +4,7 @@ import {
   pageViews, 
   clickEvents, 
   adminSessions,
+  paymentRequests,
   type User, 
   type InsertUser, 
   type ContactRequest, 
@@ -13,7 +14,9 @@ import {
   type ClickEvent,
   type InsertClickEvent,
   type AdminSession,
-  type InsertAdminSession
+  type InsertAdminSession,
+  type PaymentRequest,
+  type InsertPaymentRequest
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, count, sql, gt } from "drizzle-orm";
@@ -40,6 +43,10 @@ export interface IStorage {
   createAdminSession(session: InsertAdminSession): Promise<AdminSession>;
   verifyAdminSession(password: string): Promise<AdminSession | undefined>;
   cleanExpiredSessions(): Promise<void>;
+  
+  // Payment request operations
+  createPaymentRequest(request: InsertPaymentRequest): Promise<PaymentRequest>;
+  getPaymentRequests(): Promise<PaymentRequest[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -162,8 +169,9 @@ export class DatabaseStorage implements IStorage {
     const [session] = await db
       .select()
       .from(adminSessions)
-      .where(eq(adminSessions.password, password))
-      .where(gt(adminSessions.expiresAt, new Date()));
+      .where(
+        sql`${adminSessions.password} = ${password} AND ${adminSessions.expiresAt} > NOW()`
+      );
     
     return session;
   }
@@ -172,6 +180,22 @@ export class DatabaseStorage implements IStorage {
     await db
       .delete(adminSessions)
       .where(sql`${adminSessions.expiresAt} < NOW()`);
+  }
+
+  // Payment request operations
+  async createPaymentRequest(insertRequest: InsertPaymentRequest): Promise<PaymentRequest> {
+    const [request] = await db
+      .insert(paymentRequests)
+      .values(insertRequest)
+      .returning();
+    return request;
+  }
+
+  async getPaymentRequests(): Promise<PaymentRequest[]> {
+    return await db
+      .select()
+      .from(paymentRequests)
+      .orderBy(desc(paymentRequests.createdAt));
   }
 }
 

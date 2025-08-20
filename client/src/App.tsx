@@ -8,12 +8,14 @@ import { analytics } from "@/lib/analytics";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import AdminPage from "@/pages/admin";
+import PaymentPage from "@/pages/payment";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/admin" component={AdminPage} />
+      <Route path="/payment" component={PaymentPage} />
       <Route component={NotFound} />
     </Switch>
   );

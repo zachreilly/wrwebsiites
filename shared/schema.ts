@@ -79,5 +79,28 @@ export type InsertPageView = z.infer<typeof insertPageViewSchema>;
 export type PageView = typeof pageViews.$inferSelect;
 export type InsertClickEvent = z.infer<typeof insertClickEventSchema>;
 export type ClickEvent = typeof clickEvents.$inferSelect;
+
+// Payment requests table for direct debit setup
+export const paymentRequests = pgTable("payment_requests", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  package: varchar("package").notNull(), // 'basic' or 'premium'
+  firstName: varchar("first_name").notNull(),
+  lastName: varchar("last_name").notNull(),
+  email: varchar("email").notNull(),
+  phone: varchar("phone").notNull(),
+  businessName: varchar("business_name").notNull(),
+  accountHolderName: varchar("account_holder_name").notNull(),
+  sortCode: varchar("sort_code").notNull(),
+  accountNumber: varchar("account_number").notNull(),
+  address: varchar("address").notNull(),
+  city: varchar("city").notNull(),
+  postcode: varchar("postcode").notNull(),
+  status: varchar("status").notNull().default("pending"), // 'pending', 'approved', 'active', 'cancelled'
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export type PaymentRequest = typeof paymentRequests.$inferSelect;
+export type InsertPaymentRequest = typeof paymentRequests.$inferInsert;
 export type InsertAdminSession = z.infer<typeof insertAdminSessionSchema>;
 export type AdminSession = typeof adminSessions.$inferSelect;

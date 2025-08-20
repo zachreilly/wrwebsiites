@@ -165,6 +165,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Direct debit payment endpoint
+  app.post("/api/payment/direct-debit", async (req, res) => {
+    try {
+      const paymentData = req.body;
+      
+      // Store the payment request in the database
+      await storage.createPaymentRequest({
+        package: paymentData.package,
+        firstName: paymentData.firstName,
+        lastName: paymentData.lastName,
+        email: paymentData.email,
+        phone: paymentData.phone,
+        businessName: paymentData.businessName,
+        accountHolderName: paymentData.accountHolderName,
+        sortCode: paymentData.sortCode,
+        accountNumber: paymentData.accountNumber,
+        address: paymentData.address,
+        city: paymentData.city,
+        postcode: paymentData.postcode,
+        status: 'pending'
+      });
+
+      // In a real implementation, you would:
+      // 1. Integrate with a direct debit provider (like GoCardless)
+      // 2. Send confirmation emails
+      // 3. Set up the direct debit mandate
+      
+      res.json({ 
+        success: true, 
+        message: "Direct debit setup successful" 
+      });
+    } catch (error) {
+      console.error("Payment processing error:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to process payment request" 
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
+import { useLocation } from "wouter";
 
 export default function Pricing() {
+  const [, setLocation] = useLocation();
+  
   const scrollToContact = () => {
     const element = document.getElementById('contact');
     if (element) {
@@ -52,11 +55,11 @@ export default function Pricing() {
               </li>
             </ul>
             <Button 
-              onClick={scrollToContact}
+              onClick={() => setLocation('/payment?package=basic')}
               className="w-full bg-slate-900 text-white hover:bg-slate-800"
               size="lg"
             >
-              Choose Basic
+              Get Started - Basic
             </Button>
           </div>
 
@@ -101,11 +104,11 @@ export default function Pricing() {
               </li>
             </ul>
             <Button 
-              onClick={scrollToContact}
+              onClick={() => setLocation('/payment?package=premium')}
               className="w-full bg-primary text-white hover:bg-secondary"
               size="lg"
             >
-              Choose Premium
+              Get Started - Premium
             </Button>
           </div>
         </div>
