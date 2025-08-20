@@ -82,6 +82,11 @@ export default function PaymentPage() {
 
   const submitApplication = useMutation({
     mutationFn: async (data: PaymentFormData) => {
+      // Split full name into first and last name
+      const nameParts = data.fullName.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+      
       // Submit both client data and payment data
       const clientData = {
         fullName: data.fullName,
@@ -103,8 +108,13 @@ export default function PaymentPage() {
       // Submit client data
       await apiRequest("POST", "/api/clients", clientData);
       
-      // Submit payment data
-      return await apiRequest("POST", "/api/payment/direct-debit", data);
+      // Submit payment data with split names
+      const paymentData = {
+        ...data,
+        firstName,
+        lastName
+      };
+      return await apiRequest("POST", "/api/payment/direct-debit", paymentData);
     },
     onSuccess: () => {
       setCurrentStep(5); // Thank you step
