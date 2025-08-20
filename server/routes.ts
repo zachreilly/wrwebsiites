@@ -205,6 +205,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin endpoint to get payment requests
+  app.get("/api/admin/payments", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'wrwebsites2024') {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Unauthorized access" 
+        });
+      }
+
+      const payments = await storage.getPaymentRequests();
+      
+      res.json({ 
+        success: true, 
+        data: payments 
+      });
+    } catch (error) {
+      console.error("Error fetching payment requests:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to fetch payment requests" 
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

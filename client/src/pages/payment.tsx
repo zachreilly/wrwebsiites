@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Shield, CreditCard, Users, CheckCircle } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { termsAndConditions, directDebitGuarantee } from "@/components/legal/terms-and-conditions";
 
 interface PaymentFormData {
   package: string;
@@ -54,6 +55,8 @@ export default function PaymentPage() {
   });
 
   const [currentStep, setCurrentStep] = useState(1);
+  const [showTerms, setShowTerms] = useState(false);
+  const [showDirectDebitInfo, setShowDirectDebitInfo] = useState(false);
 
   const submitPayment = useMutation({
     mutationFn: async (data: PaymentFormData) => {
@@ -383,7 +386,13 @@ export default function PaymentPage() {
                           onCheckedChange={(checked) => handleInputChange('agreedToTerms', checked as boolean)}
                         />
                         <label htmlFor="terms" className="text-sm text-slate-700 leading-5">
-                          I agree to the <a href="#" className="text-emerald-600 hover:underline">terms and conditions</a> and 
+                          I agree to the <button 
+                            type="button"
+                            onClick={() => setShowTerms(true)} 
+                            className="text-emerald-600 hover:underline underline"
+                          >
+                            terms and conditions
+                          </button> and 
                           understand that the setup fee will be charged immediately upon website completion *
                         </label>
                       </div>
@@ -396,7 +405,13 @@ export default function PaymentPage() {
                         />
                         <label htmlFor="directDebit" className="text-sm text-slate-700 leading-5">
                           I authorize wrwebsites to collect payments via Direct Debit as per the 
-                          <a href="#" className="text-emerald-600 hover:underline ml-1">Direct Debit Guarantee</a> *
+                          <button 
+                            type="button"
+                            onClick={() => setShowDirectDebitInfo(true)} 
+                            className="text-emerald-600 hover:underline underline ml-1"
+                          >
+                            Direct Debit Guarantee
+                          </button> *
                         </label>
                       </div>
                     </div>
@@ -477,6 +492,48 @@ export default function PaymentPage() {
           </div>
         </div>
       </div>
+
+      {/* Terms and Conditions Modal */}
+      {showTerms && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[80vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold">Terms and Conditions</h2>
+                <Button variant="outline" onClick={() => setShowTerms(false)}>
+                  Close
+                </Button>
+              </div>
+              <div className="prose max-w-none">
+                <pre className="whitespace-pre-wrap text-sm text-slate-700 font-sans">
+                  {termsAndConditions}
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Direct Debit Guarantee Modal */}
+      {showDirectDebitInfo && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold">Direct Debit Guarantee</h2>
+                <Button variant="outline" onClick={() => setShowDirectDebitInfo(false)}>
+                  Close
+                </Button>
+              </div>
+              <div className="prose max-w-none">
+                <pre className="whitespace-pre-wrap text-sm text-slate-700 font-sans">
+                  {directDebitGuarantee}
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

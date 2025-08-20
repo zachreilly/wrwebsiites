@@ -162,6 +162,13 @@ export default function AdminPage() {
                 <SelectItem value="90">90 days</SelectItem>
               </SelectContent>
             </Select>
+            <Button 
+              onClick={() => window.open('/admin/payments', '_blank')} 
+              variant="outline"
+              className="bg-emerald-600 text-white hover:bg-emerald-700"
+            >
+              View Payments
+            </Button>
             <Button onClick={handleLogout} variant="outline">
               Logout
             </Button>
