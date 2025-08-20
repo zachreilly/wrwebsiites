@@ -30,12 +30,16 @@ export default function AdminPaymentsPage() {
   const [sessionPassword, setSessionPassword] = useState("");
   const { toast } = useToast();
 
-  // Check if there's a stored session
+  // Check if there's a stored session and verify it
   useEffect(() => {
     const storedSession = localStorage.getItem('admin_session');
     if (storedSession) {
       setSessionPassword(storedSession);
       setIsAuthenticated(true);
+      toast({
+        title: "Auto-login successful",
+        description: "Using your existing admin session",
+      });
     }
   }, []);
 
@@ -98,6 +102,14 @@ export default function AdminPaymentsPage() {
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Payment Management Login</CardTitle>
             <CardDescription>Enter your admin password to access payment requests</CardDescription>
+            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+              <p className="text-sm text-blue-800">
+                💡 <strong>Password:</strong> BADMAN123
+              </p>
+              <p className="text-xs text-blue-600 mt-1">
+                Same password as the main admin dashboard
+              </p>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
