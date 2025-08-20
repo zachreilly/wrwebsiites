@@ -376,6 +376,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update consultation status
+  app.patch("/api/admin/consultations/:id/status", async (req, res) => {
+    try {
+      const { password } = req.query;
+      const { id } = req.params;
+      const { status } = req.body;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Authentication required" 
+        });
+      }
+
+      if (!status || !['pending', 'quoted', 'delayed', 'accepted', 'rejected'].includes(status)) {
+        return res.status(400).json({ success: false, message: "Invalid status" });
+      }
+
+      const updatedConsultation = await storage.updateConsultationStatus(id, status);
+      
+      if (!updatedConsultation) {
+        return res.status(404).json({ success: false, message: "Consultation not found" });
+      }
+      
+      res.json({ 
+        success: true, 
+        data: updatedConsultation 
+      });
+    } catch (error) {
+      console.error("Error updating consultation status:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to update consultation status" 
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -268,6 +268,19 @@ export class DatabaseStorage implements IStorage {
     return updated;
   }
 
+  async updateConsultationStatus(id: string, status: string): Promise<ConsultationRequest | undefined> {
+    const [updated] = await db
+      .update(consultationRequests)
+      .set({ 
+        status,
+        updatedAt: new Date()
+      })
+      .where(eq(consultationRequests.id, id))
+      .returning();
+    
+    return updated;
+  }
+
   // Consultation request operations
   async createConsultationRequest(request: InsertConsultationRequest): Promise<ConsultationRequest> {
     const [consultation] = await db

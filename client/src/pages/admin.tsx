@@ -190,6 +190,39 @@ export default function AdminPage() {
     },
   });
 
+  // Mutation for updating consultation status
+  const updateConsultationStatusMutation = useMutation({
+    mutationFn: async ({ consultationId, status }: { consultationId: string; status: string }) => {
+      const response = await fetch(`/api/admin/consultations/${consultationId}/status?password=${encodeURIComponent(sessionPassword)}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      const result = await response.json();
+      if (!result.success) {
+        throw new Error(result.message || 'Failed to update consultation status');
+      }
+      return result.data;
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/consultations'] });
+      toast({
+        title: "Consultation status updated",
+        description: `Consultation has been ${variables.status}`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Update failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white flex items-center justify-center">
@@ -629,81 +662,126 @@ export default function AdminPage() {
                 <CardContent>
                   {consultationData && consultationData.length > 0 ? (
                     <div className="space-y-6">
-                      {consultationData.map((consultation: any, index: number) => (
-                        <div key={index} className="border rounded-lg p-6 bg-white">
-                          <div className="flex justify-between items-start mb-4">
-                            <div>
-                              <h3 className="text-lg font-semibold text-slate-900">
-                                {consultation.fullName}
-                              </h3>
-                              <p className="text-slate-600">{consultation.businessName}</p>
-                              <div className="flex items-center space-x-4 mt-2 text-sm text-slate-500">
-                                <span>📧 {consultation.email}</span>
-                                <span>📞 {consultation.phone}</span>
-                                <span>📅 {new Date(consultation.createdAt).toLocaleDateString()}</span>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <div className="text-2xl font-bold text-emerald-600">
-                                £{consultation.estimatedPrice}
-                              </div>
-                              <div className="text-sm text-slate-500">Estimated Quote</div>
-                              <div className={`inline-flex px-2 py-1 rounded-full text-xs font-medium mt-1 ${
-                                consultation.status === 'pending' 
-                                  ? 'bg-yellow-100 text-yellow-800' 
-                                  : consultation.status === 'quoted'
-                                  ? 'bg-blue-100 text-blue-800'
-                                  : consultation.status === 'accepted'
-                                  ? 'bg-green-100 text-green-800'
-                                  : 'bg-red-100 text-red-800'
-                              }`}>
-                                {consultation.status}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="grid md:grid-cols-3 gap-6">
-                            {/* Project Configuration */}
-                            <div className="space-y-3">
-                              <h4 className="font-medium text-slate-800 border-b pb-1">Project Configuration</h4>
-                              <div className="space-y-2 text-sm">
-                                <p><span className="font-medium">Service Type:</span> {consultation.serviceType}</p>
-                                <p><span className="font-medium">Complexity:</span> {consultation.projectComplexity}</p>
-                                <p><span className="font-medium">Timeline:</span> {consultation.timeline}</p>
-                              </div>
-                            </div>
-
-                            {/* Additional Services */}
-                            <div className="space-y-3">
-                              <h4 className="font-medium text-slate-800 border-b pb-1">Additional Services</h4>
-                              <div className="space-y-1 text-sm">
-                                {consultation.seoSetup && <div className="flex items-center"><span className="text-green-600 mr-2">✓</span> SEO Setup</div>}
-                                {consultation.contentWriting && <div className="flex items-center"><span className="text-green-600 mr-2">✓</span> Content Writing</div>}
-                                {consultation.ongoingSupport && <div className="flex items-center"><span className="text-green-600 mr-2">✓</span> Ongoing Support</div>}
-                                {consultation.customIntegrations && <div className="flex items-center"><span className="text-green-600 mr-2">✓</span> Custom Integrations</div>}
-                                {consultation.ecommerceFeatures && <div className="flex items-center"><span className="text-green-600 mr-2">✓</span> E-commerce Features</div>}
-                              </div>
-                            </div>
-
-                            {/* Project Details */}
-                            <div className="space-y-3">
-                              <h4 className="font-medium text-slate-800 border-b pb-1">Project Details</h4>
-                              <div className="space-y-2 text-sm">
+                      {consultationData
+                        .sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+                        .map((consultation: any, index: number) => {
+                          const daysWaiting = getDaysWaiting(consultation.createdAt);
+                          const isPriority = daysWaiting >= 3;
+                          
+                          return (
+                            <div key={index} className={`border rounded-lg p-6 ${
+                              isPriority ? 'bg-red-50 border-red-200' : 'bg-slate-50'
+                            }`}>
+                              <div className="flex justify-between items-start mb-4">
                                 <div>
-                                  <span className="font-medium">Description:</span>
-                                  <p className="text-slate-700 mt-1">{consultation.projectDescription}</p>
-                                </div>
-                                {consultation.specialRequests && (
-                                  <div>
-                                    <span className="font-medium">Special Requests:</span>
-                                    <p className="text-slate-700 mt-1">{consultation.specialRequests}</p>
+                                  <div className="flex items-center space-x-3 mb-2">
+                                    <h3 className="text-lg font-semibold text-slate-900">
+                                      {consultation.fullName}
+                                    </h3>
+                                    <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                      isPriority 
+                                        ? 'bg-red-100 text-red-800' 
+                                        : daysWaiting >= 2
+                                        ? 'bg-yellow-100 text-yellow-800'
+                                        : 'bg-green-100 text-green-800'
+                                    }`}>
+                                      {daysWaiting} day{daysWaiting !== 1 ? 's' : ''} waiting
+                                    </div>
+                                    <div className={`px-2 py-1 rounded text-xs font-medium ${
+                                      consultation.status === 'quoted' ? 'bg-green-100 text-green-800' :
+                                      consultation.status === 'delayed' ? 'bg-orange-100 text-orange-800' :
+                                      'bg-gray-100 text-gray-800'
+                                    }`}>
+                                      {consultation.status || 'pending'}
+                                    </div>
                                   </div>
-                                )}
+                                  <p className="text-slate-600">{consultation.businessName}</p>
+                                  <div className="flex items-center space-x-4 mt-2 text-sm text-slate-500">
+                                    <span>📧 {consultation.email}</span>
+                                    <span>📞 {consultation.phone}</span>
+                                    <span>📅 {new Date(consultation.createdAt).toLocaleDateString('en-GB', {
+                                      day: 'numeric',
+                                      month: 'short',
+                                      year: 'numeric',
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}</span>
+                                  </div>
+                                </div>
+                                <div className="text-right">
+                                  <div className="text-2xl font-bold text-emerald-600">
+                                    £{consultation.estimatedPrice}
+                                  </div>
+                                  <div className="text-sm text-slate-500 mb-2">Estimated Quote</div>
+                                  {consultation.status !== 'quoted' && consultation.status !== 'delayed' && (
+                                    <div className="flex space-x-2">
+                                      <Button
+                                        size="sm"
+                                        onClick={() => updateConsultationStatusMutation.mutate({ consultationId: consultation.id, status: 'quoted' })}
+                                        disabled={updateConsultationStatusMutation.isPending}
+                                        className="bg-green-600 hover:bg-green-700 text-white"
+                                      >
+                                        <Check className="w-4 h-4 mr-1" />
+                                        Send Quote
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => updateConsultationStatusMutation.mutate({ consultationId: consultation.id, status: 'delayed' })}
+                                        disabled={updateConsultationStatusMutation.isPending}
+                                        className="border-orange-300 text-orange-700 hover:bg-orange-50"
+                                      >
+                                        <Clock className="w-4 h-4 mr-1" />
+                                        Delay
+                                      </Button>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div className="grid md:grid-cols-3 gap-6">
+                                {/* Project Configuration */}
+                                <div className="space-y-3">
+                                  <h4 className="font-medium text-slate-800 border-b pb-1">Project Configuration</h4>
+                                  <div className="space-y-2 text-sm">
+                                    <p><span className="font-medium">Service Type:</span> {consultation.serviceType}</p>
+                                    <p><span className="font-medium">Complexity:</span> {consultation.projectComplexity}</p>
+                                    <p><span className="font-medium">Timeline:</span> {consultation.timeline}</p>
+                                  </div>
+                                </div>
+
+                                {/* Additional Services */}
+                                <div className="space-y-3">
+                                  <h4 className="font-medium text-slate-800 border-b pb-1">Additional Services</h4>
+                                  <div className="space-y-1 text-sm">
+                                    {consultation.seoSetup && <div className="flex items-center"><span className="text-green-600 mr-2">✓</span> SEO Setup</div>}
+                                    {consultation.contentWriting && <div className="flex items-center"><span className="text-green-600 mr-2">✓</span> Content Writing</div>}
+                                    {consultation.ongoingSupport && <div className="flex items-center"><span className="text-green-600 mr-2">✓</span> Ongoing Support</div>}
+                                    {consultation.customIntegrations && <div className="flex items-center"><span className="text-green-600 mr-2">✓</span> Custom Integrations</div>}
+                                    {consultation.ecommerceFeatures && <div className="flex items-center"><span className="text-green-600 mr-2">✓</span> E-commerce Features</div>}
+                                  </div>
+                                </div>
+
+                                {/* Project Details */}
+                                <div className="space-y-3">
+                                  <h4 className="font-medium text-slate-800 border-b pb-1">Project Details</h4>
+                                  <div className="space-y-2 text-sm">
+                                    <div>
+                                      <span className="font-medium">Description:</span>
+                                      <p className="text-slate-700 mt-1">{consultation.projectDescription}</p>
+                                    </div>
+                                    {consultation.specialRequests && (
+                                      <div>
+                                        <span className="font-medium">Special Requests:</span>
+                                        <p className="text-slate-700 mt-1">{consultation.specialRequests}</p>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
-                      ))}
+                          );
+                        })}
                     </div>
                   ) : (
                     <div className="text-center py-12">
