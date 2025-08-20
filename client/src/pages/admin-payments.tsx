@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, CreditCard, Users, Phone, Mail, MapPin, Building } from "lucide-react";
+import { ArrowLeft, CreditCard, Users, Phone, Mail, MapPin, Building, Lock } from "lucide-react";
 
 interface PaymentRequest {
   id: string;
@@ -24,7 +24,7 @@ interface PaymentRequest {
   createdAt: string;
 }
 
-export default function AdminPaymentsPage() {
+export default function AdminPaymentsNew() {
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [sessionPassword, setSessionPassword] = useState("");
@@ -95,11 +95,21 @@ export default function AdminPaymentsPage() {
     retry: false,
   });
 
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setSessionPassword("");
+    setPassword("");
+    localStorage.removeItem('admin_session');
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white flex items-center justify-center px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
+            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Lock className="w-8 h-8 text-emerald-600" />
+            </div>
             <CardTitle className="text-2xl">Payment Management Login</CardTitle>
             <CardDescription>Enter your admin password to access payment requests</CardDescription>
             <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
@@ -148,12 +158,7 @@ export default function AdminPaymentsPage() {
           </CardHeader>
           <CardContent>
             <Button 
-              onClick={() => {
-                setIsAuthenticated(false);
-                setSessionPassword("");
-                setPassword("");
-                localStorage.removeItem('admin_session');
-              }} 
+              onClick={handleLogout} 
               variant="outline" 
               className="w-full"
             >
@@ -165,32 +170,14 @@ export default function AdminPaymentsPage() {
     );
   }
 
-  const getPackageDetails = (pkg: string) => {
-    const packages = {
-      basic: { name: "Basic Static Website", setupFee: "£50", color: "bg-slate-100 text-slate-800" },
-      premium: { name: "Premium Hosting & Domain", setupFee: "£150", color: "bg-emerald-100 text-emerald-800" }
-    };
-    return packages[pkg as keyof typeof packages] || { name: pkg, setupFee: "Unknown", color: "bg-gray-100 text-gray-800" };
-  };
-
-  const getStatusColor = (status: string) => {
-    const colors = {
-      pending: "bg-yellow-100 text-yellow-800",
-      approved: "bg-blue-100 text-blue-800", 
-      active: "bg-green-100 text-green-800",
-      cancelled: "bg-red-100 text-red-800"
-    };
-    return colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800";
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Payment Requests</h1>
-            <p className="text-slate-600 mt-2">Manage customer payment requests and direct debit setups</p>
+            <h1 className="text-3xl font-bold text-slate-900">Payment Management</h1>
+            <p className="text-slate-600 mt-2">Customer payment requests and direct debit setups</p>
           </div>
           <div className="flex items-center space-x-4">
             <Button 
@@ -199,6 +186,9 @@ export default function AdminPaymentsPage() {
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Analytics
+            </Button>
+            <Button onClick={handleLogout} variant="outline">
+              Logout
             </Button>
           </div>
         </div>
@@ -211,152 +201,162 @@ export default function AdminPaymentsPage() {
           <div className="space-y-6">
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card>
+              <Card className="border-l-4 border-l-blue-500">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">Total Requests</CardTitle>
+                  <CardTitle className="text-sm font-medium flex items-center">
+                    <CreditCard className="w-4 h-4 mr-2 text-blue-600" />
+                    Total Requests
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{paymentRequests.length}</div>
+                  <div className="text-3xl font-bold text-blue-600">{paymentRequests.length}</div>
+                  <p className="text-xs text-slate-600">Payment requests received</p>
                 </CardContent>
               </Card>
-              <Card>
+
+              <Card className="border-l-4 border-l-emerald-500">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">Pending Requests</CardTitle>
+                  <CardTitle className="text-sm font-medium flex items-center">
+                    <Users className="w-4 h-4 mr-2 text-emerald-600" />
+                    Premium Plans
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-yellow-600">
-                    {paymentRequests.filter(req => req.status === 'pending').length}
+                  <div className="text-3xl font-bold text-emerald-600">
+                    {paymentRequests.filter(req => req.package === 'premium').length}
                   </div>
+                  <p className="text-xs text-slate-600">£150 + £10/month</p>
                 </CardContent>
               </Card>
-              <Card>
+
+              <Card className="border-l-4 border-l-orange-500">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">Potential Revenue</CardTitle>
+                  <CardTitle className="text-sm font-medium flex items-center">
+                    <Building className="w-4 h-4 mr-2 text-orange-600" />
+                    Basic Plans
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-emerald-600">
-                    £{paymentRequests.reduce((total, req) => {
-                      return total + (req.package === 'premium' ? 150 : 50);
-                    }, 0)}
+                  <div className="text-3xl font-bold text-orange-600">
+                    {paymentRequests.filter(req => req.package === 'basic').length}
                   </div>
+                  <p className="text-xs text-slate-600">£50 + £10/month</p>
                 </CardContent>
               </Card>
             </div>
 
             {/* Payment Requests List */}
-            <div className="space-y-4">
-              {paymentRequests.map((request) => {
-                const packageDetails = getPackageDetails(request.package);
-                return (
-                  <Card key={request.id} className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
-                          <CreditCard className="w-6 h-6 text-emerald-600" />
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <CreditCard className="w-5 h-5 mr-2" />
+                  Customer Payment Requests
+                </CardTitle>
+                <CardDescription>Direct debit setup requests from customers</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {paymentRequests.map((request, index) => (
+                    <Card key={request.id} className="border border-slate-200">
+                      <CardContent className="p-6">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <div className="flex items-center space-x-2">
+                              <span className={`inline-block px-2 py-1 text-xs rounded-full font-medium ${
+                                request.package === 'premium' 
+                                  ? 'bg-emerald-100 text-emerald-800' 
+                                  : 'bg-orange-100 text-orange-800'
+                              }`}>
+                                {request.package === 'premium' ? 'Premium Package' : 'Basic Package'}
+                              </span>
+                              <span className="text-slate-500 text-sm">
+                                {new Date(request.createdAt).toLocaleDateString('en-GB')}
+                              </span>
+                            </div>
+                            <h3 className="text-lg font-semibold mt-2">
+                              {request.firstName} {request.lastName}
+                            </h3>
+                            {request.businessName && (
+                              <p className="text-slate-600">{request.businessName}</p>
+                            )}
+                          </div>
+                          <div className="text-right">
+                            <div className="text-2xl font-bold text-slate-900">
+                              £{request.package === 'premium' ? '150' : '50'}
+                            </div>
+                            <div className="text-sm text-slate-600">+ £10/month</div>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="text-lg font-semibold text-slate-900">
-                            {request.firstName} {request.lastName}
-                          </h3>
-                          <p className="text-slate-600">{request.businessName}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${packageDetails.color}`}>
-                          {packageDetails.name}
-                        </span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(request.status)}`}>
-                          {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
-                        </span>
-                      </div>
-                    </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-                      {/* Contact Information */}
-                      <div>
-                        <h4 className="font-medium text-slate-900 mb-2 flex items-center">
-                          <Users className="w-4 h-4 mr-2" />
-                          Contact Details
-                        </h4>
-                        <div className="space-y-1 text-sm text-slate-600">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
                           <div className="flex items-center">
-                            <Mail className="w-3 h-3 mr-2" />
-                            <a href={`mailto:${request.email}`} className="text-emerald-600 hover:underline">
-                              {request.email}
-                            </a>
+                            <Mail className="w-4 h-4 mr-2 text-slate-400" />
+                            <span className="text-slate-600">{request.email}</span>
                           </div>
                           <div className="flex items-center">
-                            <Phone className="w-3 h-3 mr-2" />
-                            <a href={`tel:${request.phone}`} className="text-emerald-600 hover:underline">
-                              {request.phone}
-                            </a>
+                            <Phone className="w-4 h-4 mr-2 text-slate-400" />
+                            <span className="text-slate-600">{request.phone}</span>
                           </div>
-                          <div className="flex items-start">
-                            <MapPin className="w-3 h-3 mr-2 mt-0.5" />
-                            <span>{request.address}, {request.city}, {request.postcode}</span>
+                          <div className="flex items-center">
+                            <MapPin className="w-4 h-4 mr-2 text-slate-400" />
+                            <span className="text-slate-600">{request.city}, {request.postcode}</span>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Banking Information */}
-                      <div>
-                        <h4 className="font-medium text-slate-900 mb-2 flex items-center">
-                          <Building className="w-4 h-4 mr-2" />
-                          Banking Details
-                        </h4>
-                        <div className="space-y-1 text-sm text-slate-600">
-                          <div><strong>Account Holder:</strong> {request.accountHolderName}</div>
-                          <div><strong>Sort Code:</strong> {request.sortCode}</div>
-                          <div><strong>Account Number:</strong> ****{request.accountNumber.slice(-4)}</div>
+                        <div className="mt-4 p-4 bg-slate-50 rounded-lg">
+                          <h4 className="font-medium text-slate-900 mb-2">Banking Details</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                            <div>
+                              <span className="text-slate-600">Account Holder:</span>
+                              <div className="font-medium">{request.accountHolderName}</div>
+                            </div>
+                            <div>
+                              <span className="text-slate-600">Sort Code:</span>
+                              <div className="font-medium font-mono">{request.sortCode}</div>
+                            </div>
+                            <div>
+                              <span className="text-slate-600">Account Number:</span>
+                              <div className="font-medium font-mono">{request.accountNumber}</div>
+                            </div>
+                          </div>
+                          <div className="mt-3">
+                            <span className="text-slate-600">Address:</span>
+                            <div className="font-medium">
+                              {request.address}, {request.city}, {request.postcode}
+                            </div>
+                          </div>
                         </div>
-                      </div>
 
-                      {/* Package Information */}
-                      <div>
-                        <h4 className="font-medium text-slate-900 mb-2 flex items-center">
-                          <CreditCard className="w-4 h-4 mr-2" />
-                          Package Details
-                        </h4>
-                        <div className="space-y-1 text-sm text-slate-600">
-                          <div><strong>Setup Fee:</strong> {packageDetails.setupFee}</div>
-                          <div><strong>Monthly:</strong> £10</div>
-                          <div><strong>Submitted:</strong> {new Date(request.createdAt).toLocaleDateString('en-GB')}</div>
+                        <div className="flex justify-between items-center mt-4">
+                          <span className={`inline-block px-3 py-1 text-sm rounded-full ${
+                            request.status === 'pending' 
+                              ? 'bg-yellow-100 text-yellow-800' 
+                              : 'bg-green-100 text-green-800'
+                          }`}>
+                            Status: {request.status}
+                          </span>
+                          <div className="text-xs text-slate-500">
+                            Request #{index + 1}
+                          </div>
                         </div>
-                      </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex space-x-2 pt-4 border-t">
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => {
-                          const subject = `Website Development Project - ${request.businessName}`;
-                          const body = `Hi ${request.firstName},\n\nThank you for your interest in our ${packageDetails.name} package.\n\nI'll be in touch shortly to discuss your project requirements.\n\nBest regards,\nwrwebsites Team`;
-                          window.open(`mailto:${request.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
-                        }}
-                      >
-                        Email Customer
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => window.open(`tel:${request.phone}`)}
-                      >
-                        Call Customer
-                      </Button>
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         ) : (
           <Card>
             <CardContent className="text-center py-16">
-              <CreditCard className="w-16 h-16 mx-auto mb-4 text-slate-400" />
-              <h3 className="text-lg font-medium text-slate-900 mb-2">No Payment Requests Yet</h3>
-              <p className="text-slate-600">Payment requests will appear here when customers complete the signup process.</p>
+              <CreditCard className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-slate-900 mb-2">No Payment Requests Yet</h3>
+              <p className="text-slate-600 mb-4">
+                Customer payment requests will appear here when they complete the payment setup process.
+              </p>
+              <p className="text-sm text-slate-500">
+                Customers can request direct debit setup through the payment page on your website.
+              </p>
             </CardContent>
           </Card>
         )}
