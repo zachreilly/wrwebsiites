@@ -210,10 +210,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { password } = req.query;
       
-      if (!password || password !== 'BADMAN123') {
+      if (!password || typeof password !== 'string') {
         return res.status(401).json({ 
           success: false, 
-          message: "Unauthorized access" 
+          message: "Authentication required" 
+        });
+      }
+
+      // Verify admin session
+      const session = await storage.verifyAdminSession(password);
+      if (!session) {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Invalid or expired session" 
         });
       }
 
