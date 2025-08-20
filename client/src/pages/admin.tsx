@@ -13,6 +13,7 @@ interface AnalyticsData {
   clickEventStats: { element: string; clicks: number }[];
   totalPageViews: number;
   totalClickEvents: number;
+  uniqueVisitors: number;
   period: string;
 }
 
@@ -247,11 +248,11 @@ export default function AdminPage() {
               <Card className="border-l-4 border-l-blue-500">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Website Visitors</CardTitle>
-                  <Eye className="h-4 w-4 text-blue-600" />
+                  <Users className="h-4 w-4 text-blue-600" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold text-blue-600">{analyticsData.totalPageViews}</div>
-                  <p className="text-xs text-slate-600">Total page views in last {days} days</p>
+                  <div className="text-3xl font-bold text-blue-600">{analyticsData.uniqueVisitors}</div>
+                  <p className="text-xs text-slate-600">Unique people who visited main website</p>
                 </CardContent>
               </Card>
 
@@ -351,11 +352,11 @@ export default function AdminPage() {
                 <Card className="border-l-4 border-l-green-500">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Total Visitors</CardTitle>
-                    <Eye className="h-4 w-4 text-green-600" />
+                    <Users className="h-4 w-4 text-green-600" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-3xl font-bold text-green-600">{analyticsData.totalPageViews}</div>
-                    <p className="text-xs text-slate-600">Unique website visitors</p>
+                    <div className="text-3xl font-bold text-green-600">{analyticsData.uniqueVisitors}</div>
+                    <p className="text-xs text-slate-600">Unique people who visited main website</p>
                   </CardContent>
                 </Card>
 

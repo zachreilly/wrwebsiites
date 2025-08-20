@@ -44,6 +44,7 @@ export interface IStorage {
   getClickEventStats(days?: number): Promise<{ element: string; clicks: number }[]>;
   getTotalPageViews(days?: number): Promise<number>;
   getTotalClickEvents(days?: number): Promise<number>;
+  getUniqueVisitors(days?: number): Promise<number>;
   
   // Admin session operations
   createAdminSession(session: InsertAdminSession): Promise<AdminSession>;
@@ -169,6 +170,23 @@ export class DatabaseStorage implements IStorage {
       .where(gt(clickEvents.createdAt, cutoffDate));
     
     return result.total;
+  }
+
+  async getUniqueVisitors(days = 30): Promise<number> {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+
+    // Count unique IP addresses that visited the homepage (main website)
+    const [result] = await db
+      .select({ 
+        uniqueVisitors: sql<number>`COUNT(DISTINCT ${pageViews.ipAddress})` 
+      })
+      .from(pageViews)
+      .where(
+        sql`${pageViews.page} = '/' AND ${pageViews.createdAt} > ${cutoffDate}`
+      );
+    
+    return result.uniqueVisitors || 0;
   }
 
   // Admin session operations

@@ -99,12 +99,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         pageViewStats,
         clickEventStats,
         totalPageViews,
-        totalClickEvents
+        totalClickEvents,
+        uniqueVisitors
       ] = await Promise.all([
         storage.getPageViewStats(daysNumber),
         storage.getClickEventStats(daysNumber),
         storage.getTotalPageViews(daysNumber),
-        storage.getTotalClickEvents(daysNumber)
+        storage.getTotalClickEvents(daysNumber),
+        storage.getUniqueVisitors(daysNumber)
       ]);
 
       res.json({
@@ -114,6 +116,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           clickEventStats,
           totalPageViews,
           totalClickEvents,
+          uniqueVisitors,
           period: `${daysNumber} days`
         }
       });
