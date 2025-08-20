@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock } from "lucide-react";
+import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings } from "lucide-react";
 
 interface AnalyticsData {
   pageViewStats: { page: string; views: number }[];
@@ -235,45 +235,150 @@ export default function AdminPage() {
               </Card>
             </div>
 
-            {/* Page Views Chart */}
+            {/* Essential Client Information Overview */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <BarChart3 className="w-5 h-5 mr-2" />
-                  Page Views by Page
+                  <Users className="w-5 h-5 mr-2" />
+                  Essential Client Information Checklist
                 </CardTitle>
-                <CardDescription>Most visited pages on your website</CardDescription>
+                <CardDescription>Information needed from clients to set up their website</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {analyticsData.pageViewStats.length > 0 ? (
-                    analyticsData.pageViewStats.map((stat, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                        <div className="flex items-center">
-                          <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mr-3">
-                            <span className="text-sm font-medium text-primary">{index + 1}</span>
-                          </div>
-                          <span className="font-medium">{stat.page || 'Homepage'}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <div className="text-right mr-3">
-                            <div className="text-lg font-bold">{stat.views}</div>
-                            <div className="text-xs text-muted-foreground">views</div>
-                          </div>
-                          <div className="w-20 h-2 bg-slate-200 rounded-full overflow-hidden">
-                            <div 
-                              className="h-full bg-primary rounded-full"
-                              style={{ 
-                                width: `${(stat.views / Math.max(...analyticsData.pageViewStats.map(s => s.views))) * 100}%` 
-                              }}
-                            />
-                          </div>
-                        </div>
+                <div className="space-y-6">
+                  {/* Essential Client Info */}
+                  <div className="border-l-4 border-l-blue-500 pl-4">
+                    <h3 className="text-lg font-semibold text-slate-900 mb-3 flex items-center">
+                      <Users className="w-5 h-5 mr-2 text-blue-600" />
+                      Essential Client Info
+                    </h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                        <span className="font-medium">Full Name</span>
                       </div>
-                    ))
-                  ) : (
-                    <p className="text-center text-muted-foreground py-8">No page view data available</p>
-                  )}
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                        <span className="font-medium">Business / Brand Name</span>
+                        <span className="text-slate-600 ml-2">(as it should appear on the site)</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                        <span className="font-medium">Email</span>
+                        <span className="text-slate-600 ml-2">(for account, billing, and updates)</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-slate-300 rounded-full mr-3"></div>
+                        <span className="font-medium">Phone number</span>
+                        <span className="text-slate-500 ml-2">(optional, for contact if needed)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Domain & Hosting */}
+                  <div className="border-l-4 border-l-emerald-500 pl-4">
+                    <h3 className="text-lg font-semibold text-slate-900 mb-3 flex items-center">
+                      <Globe className="w-5 h-5 mr-2 text-emerald-600" />
+                      Domain & Hosting
+                      <span className="text-sm text-emerald-600 font-normal ml-2">(only needed for £150 plan)</span>
+                    </h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-emerald-500 rounded-full mr-3"></div>
+                        <span className="font-medium">Do you already have a domain name?</span>
+                      </div>
+                      <div className="ml-5 space-y-1 text-slate-600">
+                        <div>• If yes → Please provide the domain</div>
+                        <div>• If no → What domain name(s) would you like? (list 2–3 options in case the first isn't available)</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Website Content */}
+                  <div className="border-l-4 border-l-purple-500 pl-4">
+                    <h3 className="text-lg font-semibold text-slate-900 mb-3 flex items-center">
+                      <FileText className="w-5 h-5 mr-2 text-purple-600" />
+                      Website Content
+                    </h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                        <span className="font-medium">About your business/brand</span>
+                        <span className="text-slate-600 ml-2">(short description for "About Us" section)</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                        <span className="font-medium">Pages you need</span>
+                        <span className="text-slate-600 ml-2">(e.g. Home, About, Services, Contact, Gallery)</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                        <span className="font-medium">Text content</span>
+                        <span className="text-slate-600 ml-2">(they can paste it in or upload a file)</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-slate-300 rounded-full mr-3"></div>
+                        <span className="font-medium">Images / Logo upload</span>
+                        <span className="text-slate-500 ml-2">(optional: let them send via email if easier)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Design Preferences */}
+                  <div className="border-l-4 border-l-orange-500 pl-4">
+                    <h3 className="text-lg font-semibold text-slate-900 mb-3 flex items-center">
+                      <Palette className="w-5 h-5 mr-2 text-orange-600" />
+                      Design Preferences
+                    </h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
+                        <span className="font-medium">Do you have a logo?</span>
+                        <span className="text-slate-600 ml-2">(Upload option)</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
+                        <span className="font-medium">Preferred colour scheme / style</span>
+                        <span className="text-slate-600 ml-2">(e.g. modern, professional, playful, minimal)</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
+                        <span className="font-medium">Example websites you like</span>
+                        <span className="text-slate-600 ml-2">(links for inspiration)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Extras */}
+                  <div className="border-l-4 border-l-pink-500 pl-4">
+                    <h3 className="text-lg font-semibold text-slate-900 mb-3 flex items-center">
+                      <Settings className="w-5 h-5 mr-2 text-pink-600" />
+                      Extras
+                    </h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-pink-500 rounded-full mr-3"></div>
+                        <span className="font-medium">Do you want a contact form on the site?</span>
+                        <span className="text-slate-600 ml-2">(yes/no)</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-pink-500 rounded-full mr-3"></div>
+                        <span className="font-medium">Do you want links to social media profiles?</span>
+                        <span className="text-slate-600 ml-2">(Facebook, Instagram, LinkedIn, etc.)</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-pink-500 rounded-full mr-3"></div>
+                        <span className="font-medium">Any special requests?</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 p-4 bg-slate-50 rounded-lg">
+                    <p className="text-sm text-slate-700">
+                      <strong>💡 Tip:</strong> Use this checklist when onboarding new clients to ensure you collect all necessary information for their website setup. 
+                      Save time by sending this list to clients before your initial consultation.
+                    </p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
