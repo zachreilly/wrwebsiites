@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent } from "lucide-react";
+import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent, MessageSquare, Calculator } from "lucide-react";
 
 interface AnalyticsData {
   pageViewStats: { page: string; views: number }[];
@@ -129,6 +129,23 @@ export default function AdminPage() {
     retry: false,
   });
 
+  // Consultation requests data query
+  const { data: consultationData } = useQuery({
+    queryKey: ['/api/admin/consultations', sessionPassword],
+    enabled: isAuthenticated && !!sessionPassword,
+    queryFn: async () => {
+      const response = await fetch(`/api/admin/consultations?password=${encodeURIComponent(sessionPassword)}`);
+      const result = await response.json();
+      
+      if (!result.success) {
+        throw new Error(result.message || 'Failed to fetch consultation data');
+      }
+      
+      return result.data;
+    },
+    retry: false,
+  });
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white flex items-center justify-center px-4">
@@ -216,10 +233,11 @@ export default function AdminPage() {
           </div>
         ) : analyticsData ? (
           <Tabs defaultValue="analytics" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="analytics">Website Analytics</TabsTrigger>
               <TabsTrigger value="conversion">Sales Conversion</TabsTrigger>
               <TabsTrigger value="clients">Client Inquiries</TabsTrigger>
+              <TabsTrigger value="consultations">Consultations</TabsTrigger>
             </TabsList>
 
             {/* Analytics Tab */}
@@ -545,6 +563,116 @@ export default function AdminPage() {
                       <p className="text-slate-600 mb-2">No client inquiries yet</p>
                       <p className="text-sm text-slate-500">
                         When clients fill out the "Get Started" form on your website, their information will appear here.
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Consultations Tab */}
+            <TabsContent value="consultations" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Calculator className="w-5 h-5 mr-2" />
+                    Custom Project Consultations
+                  </CardTitle>
+                  <CardDescription>
+                    Review consultation requests from the custom pricing configurator
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {consultationData && consultationData.length > 0 ? (
+                    <div className="space-y-6">
+                      {consultationData.map((consultation: any, index: number) => (
+                        <div key={index} className="border rounded-lg p-6 bg-white">
+                          <div className="flex justify-between items-start mb-4">
+                            <div>
+                              <h3 className="text-lg font-semibold text-slate-900">
+                                {consultation.fullName}
+                              </h3>
+                              <p className="text-slate-600">{consultation.businessName}</p>
+                              <div className="flex items-center space-x-4 mt-2 text-sm text-slate-500">
+                                <span>📧 {consultation.email}</span>
+                                <span>📞 {consultation.phone}</span>
+                                <span>📅 {new Date(consultation.createdAt).toLocaleDateString()}</span>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-2xl font-bold text-emerald-600">
+                                £{consultation.estimatedPrice}
+                              </div>
+                              <div className="text-sm text-slate-500">Estimated Quote</div>
+                              <div className={`inline-flex px-2 py-1 rounded-full text-xs font-medium mt-1 ${
+                                consultation.status === 'pending' 
+                                  ? 'bg-yellow-100 text-yellow-800' 
+                                  : consultation.status === 'quoted'
+                                  ? 'bg-blue-100 text-blue-800'
+                                  : consultation.status === 'accepted'
+                                  ? 'bg-green-100 text-green-800'
+                                  : 'bg-red-100 text-red-800'
+                              }`}>
+                                {consultation.status}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="grid md:grid-cols-3 gap-6">
+                            {/* Project Configuration */}
+                            <div className="space-y-3">
+                              <h4 className="font-medium text-slate-800 border-b pb-1">Project Configuration</h4>
+                              <div className="space-y-2 text-sm">
+                                <p><span className="font-medium">Service Type:</span> {consultation.serviceType}</p>
+                                <p><span className="font-medium">Complexity:</span> {consultation.projectComplexity}</p>
+                                <p><span className="font-medium">Timeline:</span> {consultation.timeline}</p>
+                              </div>
+                            </div>
+
+                            {/* Additional Services */}
+                            <div className="space-y-3">
+                              <h4 className="font-medium text-slate-800 border-b pb-1">Additional Services</h4>
+                              <div className="space-y-1 text-sm">
+                                {consultation.seoSetup && <p>✅ SEO Setup</p>}
+                                {consultation.contentWriting && <p>✅ Content Writing</p>}
+                                {consultation.ongoingSupport && <p>✅ Ongoing Support</p>}
+                                {consultation.customIntegrations && <p>✅ Custom Integrations</p>}
+                                {consultation.ecommerceFeatures && <p>✅ E-commerce Features</p>}
+                                {!consultation.seoSetup && !consultation.contentWriting && !consultation.ongoingSupport && 
+                                 !consultation.customIntegrations && !consultation.ecommerceFeatures && (
+                                  <p className="text-slate-500">No additional services selected</p>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Project Details */}
+                            <div className="space-y-3">
+                              <h4 className="font-medium text-slate-800 border-b pb-1">Project Details</h4>
+                              <div className="space-y-2 text-sm">
+                                <div>
+                                  <span className="font-medium">Description:</span>
+                                  <p className="text-slate-700 mt-1">{consultation.projectDescription}</p>
+                                </div>
+                                {consultation.specialRequests && (
+                                  <div>
+                                    <span className="font-medium">Special Requests:</span>
+                                    <p className="text-slate-700 mt-1">{consultation.specialRequests}</p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <MessageSquare className="w-8 h-8 text-slate-400" />
+                      </div>
+                      <p className="text-slate-600 mb-2">No consultation requests yet</p>
+                      <p className="text-sm text-slate-500">
+                        When clients submit the custom quote form, their requests will appear here with pricing details.
                       </p>
                     </div>
                   )}

@@ -164,7 +164,7 @@ export default function ConsultationPage() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-br from-primary to-secondary flex items-center justify-center px-4">
         <Card className="w-full max-w-2xl">
           <CardContent className="text-center py-12">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -200,7 +200,7 @@ export default function ConsultationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
+    <div className="min-h-screen bg-gradient-to-br from-primary to-secondary">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="text-center mb-8">
