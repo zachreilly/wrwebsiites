@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User } from "lucide-react";
+import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent } from "lucide-react";
 
 interface AnalyticsData {
   pageViewStats: { page: string; views: number }[];
@@ -111,6 +112,23 @@ export default function AdminPage() {
     retry: false,
   });
 
+  // Payment requests data query for conversion tracking
+  const { data: paymentData } = useQuery({
+    queryKey: ['/api/admin/payments', sessionPassword],
+    enabled: isAuthenticated && !!sessionPassword,
+    queryFn: async () => {
+      const response = await fetch(`/api/admin/payments?password=${encodeURIComponent(sessionPassword)}`);
+      const result = await response.json();
+      
+      if (!result.success) {
+        throw new Error(result.message || 'Failed to fetch payment data');
+      }
+      
+      return result.data;
+    },
+    retry: false,
+  });
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white flex items-center justify-center px-4">
@@ -197,9 +215,17 @@ export default function AdminPage() {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           </div>
         ) : analyticsData ? (
-          <div className="space-y-6">
-            {/* Overview Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Tabs defaultValue="analytics" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="analytics">Website Analytics</TabsTrigger>
+              <TabsTrigger value="conversion">Sales Conversion</TabsTrigger>
+              <TabsTrigger value="clients">Client Inquiries</TabsTrigger>
+            </TabsList>
+
+            {/* Analytics Tab */}
+            <TabsContent value="analytics" className="space-y-6">
+              {/* Overview Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <Card className="border-l-4 border-l-blue-500">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Website Visitors</CardTitle>
@@ -250,109 +276,282 @@ export default function AdminPage() {
                   <p className="text-xs text-slate-600">{analyticsData.pageViewStats[0]?.views || 0} total views</p>
                 </CardContent>
               </Card>
-            </div>
+              </div>
 
-            {/* Client Inquiries */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <User className="w-5 h-5 mr-2" />
-                  Client Project Inquiries
-                </CardTitle>
-                <CardDescription>Information from potential clients who filled out the project form</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {clientData && clientData.length > 0 ? (
-                  <div className="space-y-6">
-                    {clientData.map((client: any, index: number) => (
-                      <div key={client.id} className="border rounded-lg p-6 bg-slate-50">
-                        <div className="flex items-center justify-between mb-4">
-                          <h3 className="text-lg font-semibold text-slate-900">{client.fullName}</h3>
-                          <span className="text-sm text-slate-500">
-                            {new Date(client.createdAt).toLocaleDateString('en-GB', {
-                              day: 'numeric',
-                              month: 'short',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
+              {/* Page Views and Click Events Charts */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Page Views */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Eye className="w-5 h-5 mr-2" />
+                      Page Views
+                    </CardTitle>
+                    <CardDescription>Most visited pages on your website</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {analyticsData.pageViewStats.map((page, index) => (
+                        <div key={index} className="flex items-center justify-between">
+                          <span className="text-sm font-medium">
+                            {page.page === '/' ? 'Homepage' : page.page}
                           </span>
+                          <span className="text-sm text-slate-600">{page.views} views</span>
                         </div>
-                        
-                        <div className="grid md:grid-cols-2 gap-6">
-                          {/* Contact Information */}
-                          <div className="space-y-3">
-                            <h4 className="font-medium text-slate-800 border-b pb-1">Contact Details</h4>
-                            <div className="space-y-2 text-sm">
-                              <p><span className="font-medium">Business:</span> {client.businessName}</p>
-                              <p><span className="font-medium">Email:</span> {client.email}</p>
-                              <p><span className="font-medium">Phone:</span> {client.phone}</p>
-                            </div>
-                          </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
 
-                          {/* Domain & Hosting */}
-                          <div className="space-y-3">
-                            <h4 className="font-medium text-slate-800 border-b pb-1">Domain & Hosting</h4>
-                            <div className="space-y-2 text-sm">
-                              <p><span className="font-medium">Has Domain:</span> {client.hasDomain || 'Not specified'}</p>
-                              <p><span className="font-medium">Domain Name:</span> {client.domainName || 'Not provided'}</p>
-                              <p><span className="font-medium">Has Hosting:</span> {client.hasHosting || 'Not specified'}</p>
-                              <p><span className="font-medium">Hosting Provider:</span> {client.hostingProvider || 'Not provided'}</p>
-                              <p><span className="font-medium">Want Setup Help:</span> {client.wantSetupHelp || 'Not specified'}</p>
-                            </div>
-                          </div>
+                {/* Click Events */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <MousePointer className="w-5 h-5 mr-2" />
+                      Click Events
+                    </CardTitle>
+                    <CardDescription>Most clicked elements and buttons</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {analyticsData.clickEventStats.map((click, index) => (
+                        <div key={index} className="flex items-center justify-between">
+                          <span className="text-sm font-medium">{click.element}</span>
+                          <span className="text-sm text-slate-600">{click.clicks} clicks</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
 
-                          {/* Website Content */}
-                          <div className="space-y-3">
-                            <h4 className="font-medium text-slate-800 border-b pb-1">Content Information</h4>
-                            <div className="space-y-2 text-sm">
-                              <div>
-                                <span className="font-medium">Business Description:</span>
-                                <p className="text-slate-700 mt-1">{client.businessDescription || 'Not provided'}</p>
-                              </div>
-                              <div>
-                                <span className="font-medium">Services/Products:</span>
-                                <p className="text-slate-700 mt-1">{client.servicesProducts || 'Not provided'}</p>
-                              </div>
-                            </div>
-                          </div>
+            {/* Sales Conversion Tab */}
+            <TabsContent value="conversion" className="space-y-6">
+              {/* Conversion Overview Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <Card className="border-l-4 border-l-green-500">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Total Visitors</CardTitle>
+                    <Eye className="h-4 w-4 text-green-600" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold text-green-600">{analyticsData.totalPageViews}</div>
+                    <p className="text-xs text-slate-600">Unique website visitors</p>
+                  </CardContent>
+                </Card>
 
-                          {/* Design & Extras */}
-                          <div className="space-y-3">
-                            <h4 className="font-medium text-slate-800 border-b pb-1">Design & Features</h4>
-                            <div className="space-y-2 text-sm">
-                              <p><span className="font-medium">Brand Colors:</span> {client.brandColors || 'Not provided'}</p>
-                              <p><span className="font-medium">Style Preference:</span> {client.stylePreference || 'Not provided'}</p>
-                              <p><span className="font-medium">Want Contact Form:</span> {client.wantContactForm || 'Not specified'}</p>
-                              <p><span className="font-medium">Want Social Links:</span> {client.wantSocialLinks || 'Not specified'}</p>
-                              {client.specialRequests && (
-                                <div>
-                                  <span className="font-medium">Special Requests:</span>
-                                  <p className="text-slate-700 mt-1">{client.specialRequests}</p>
-                                </div>
-                              )}
-                            </div>
-                          </div>
+                <Card className="border-l-4 border-l-blue-500">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Payment Requests</CardTitle>
+                    <DollarSign className="h-4 w-4 text-blue-600" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold text-blue-600">{paymentData?.length || 0}</div>
+                    <p className="text-xs text-slate-600">Customers who started payment</p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-l-4 border-l-purple-500">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
+                    <Percent className="h-4 w-4 text-purple-600" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold text-purple-600">
+                      {analyticsData.totalPageViews > 0 && paymentData
+                        ? ((paymentData.length / analyticsData.totalPageViews) * 100).toFixed(2)
+                        : '0.00'
+                      }%
+                    </div>
+                    <p className="text-xs text-slate-600">Visitors to payment rate</p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-l-4 border-l-orange-500">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Revenue Potential</CardTitle>
+                    <TrendingUp className="h-4 w-4 text-orange-600" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold text-orange-600">
+                      £{paymentData?.reduce((total: number, payment: any) => {
+                        return total + (payment.package === 'premium' ? 150 : 50);
+                      }, 0) || 0}
+                    </div>
+                    <p className="text-xs text-slate-600">Total setup fees pending</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Conversion Funnel Analysis */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Target className="w-5 h-5 mr-2" />
+                    Sales Funnel Analysis
+                  </CardTitle>
+                  <CardDescription>Track how visitors move through your sales process</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    {/* Funnel Steps */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="text-center p-4 bg-blue-50 rounded-lg">
+                        <div className="text-2xl font-bold text-blue-600">{analyticsData.totalPageViews}</div>
+                        <div className="text-sm text-slate-600">Website Visitors</div>
+                        <div className="text-xs text-slate-500 mt-1">100% of traffic</div>
+                      </div>
+                      
+                      <div className="text-center p-4 bg-purple-50 rounded-lg">
+                        <div className="text-2xl font-bold text-purple-600">
+                          {analyticsData.clickEventStats.find(click => click.element.includes('Get Started') || click.element.includes('pricing'))?.clicks || 0}
+                        </div>
+                        <div className="text-sm text-slate-600">Interested Visitors</div>
+                        <div className="text-xs text-slate-500 mt-1">
+                          {analyticsData.totalPageViews > 0 
+                            ? ((analyticsData.clickEventStats.find(click => click.element.includes('Get Started') || click.element.includes('pricing'))?.clicks || 0) / analyticsData.totalPageViews * 100).toFixed(1)
+                            : '0.0'
+                          }% clicked pricing/get started
                         </div>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <User className="w-8 h-8 text-slate-400" />
+                      
+                      <div className="text-center p-4 bg-green-50 rounded-lg">
+                        <div className="text-2xl font-bold text-green-600">{paymentData?.length || 0}</div>
+                        <div className="text-sm text-slate-600">Payment Requests</div>
+                        <div className="text-xs text-slate-500 mt-1">
+                          {analyticsData.totalPageViews > 0 && paymentData
+                            ? ((paymentData.length / analyticsData.totalPageViews) * 100).toFixed(2)
+                            : '0.00'
+                          }% conversion rate
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-slate-600 mb-2">No client inquiries yet</p>
-                    <p className="text-sm text-slate-500">
-                      When clients fill out the "Get Started" form on your website, their information will appear here.
-                    </p>
+
+                    {/* Package Breakdown */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                      <div className="p-4 border rounded-lg">
+                        <h4 className="font-medium text-slate-800 mb-3">Basic Package (£50)</h4>
+                        <div className="text-3xl font-bold text-blue-600">
+                          {paymentData?.filter((p: any) => p.package === 'basic').length || 0}
+                        </div>
+                        <p className="text-sm text-slate-600">requests</p>
+                      </div>
+                      
+                      <div className="p-4 border rounded-lg">
+                        <h4 className="font-medium text-slate-800 mb-3">Premium Package (£150)</h4>
+                        <div className="text-3xl font-bold text-purple-600">
+                          {paymentData?.filter((p: any) => p.package === 'premium').length || 0}
+                        </div>
+                        <p className="text-sm text-slate-600">requests</p>
+                      </div>
+                    </div>
                   </div>
-                )}
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
+            {/* Client Inquiries Tab */}
+            <TabsContent value="clients" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <User className="w-5 h-5 mr-2" />
+                    Client Project Inquiries
+                  </CardTitle>
+                  <CardDescription>Information from potential clients who filled out the project form</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {clientData && clientData.length > 0 ? (
+                    <div className="space-y-6">
+                      {clientData.map((client: any, index: number) => (
+                        <div key={client.id} className="border rounded-lg p-6 bg-slate-50">
+                          <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-slate-900">{client.fullName}</h3>
+                            <span className="text-sm text-slate-500">
+                              {new Date(client.createdAt).toLocaleDateString('en-GB', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </span>
+                          </div>
+                          
+                          <div className="grid md:grid-cols-2 gap-6">
+                            {/* Contact Information */}
+                            <div className="space-y-3">
+                              <h4 className="font-medium text-slate-800 border-b pb-1">Contact Details</h4>
+                              <div className="space-y-2 text-sm">
+                                <p><span className="font-medium">Business:</span> {client.businessName}</p>
+                                <p><span className="font-medium">Email:</span> {client.email}</p>
+                                <p><span className="font-medium">Phone:</span> {client.phone}</p>
+                              </div>
+                            </div>
 
-          </div>
+                            {/* Domain & Hosting */}
+                            <div className="space-y-3">
+                              <h4 className="font-medium text-slate-800 border-b pb-1">Domain & Hosting</h4>
+                              <div className="space-y-2 text-sm">
+                                <p><span className="font-medium">Has Domain:</span> {client.hasDomain || 'Not specified'}</p>
+                                <p><span className="font-medium">Domain Name:</span> {client.domainName || 'Not provided'}</p>
+                                <p><span className="font-medium">Has Hosting:</span> {client.hasHosting || 'Not specified'}</p>
+                                <p><span className="font-medium">Hosting Provider:</span> {client.hostingProvider || 'Not provided'}</p>
+                                <p><span className="font-medium">Want Setup Help:</span> {client.wantSetupHelp || 'Not specified'}</p>
+                              </div>
+                            </div>
+
+                            {/* Website Content */}
+                            <div className="space-y-3">
+                              <h4 className="font-medium text-slate-800 border-b pb-1">Content Information</h4>
+                              <div className="space-y-2 text-sm">
+                                <div>
+                                  <span className="font-medium">Business Description:</span>
+                                  <p className="text-slate-700 mt-1">{client.businessDescription || 'Not provided'}</p>
+                                </div>
+                                <div>
+                                  <span className="font-medium">Services/Products:</span>
+                                  <p className="text-slate-700 mt-1">{client.servicesProducts || 'Not provided'}</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Design & Extras */}
+                            <div className="space-y-3">
+                              <h4 className="font-medium text-slate-800 border-b pb-1">Design & Features</h4>
+                              <div className="space-y-2 text-sm">
+                                <p><span className="font-medium">Brand Colors:</span> {client.brandColors || 'Not provided'}</p>
+                                <p><span className="font-medium">Style Preference:</span> {client.stylePreference || 'Not provided'}</p>
+                                <p><span className="font-medium">Want Contact Form:</span> {client.wantContactForm || 'Not specified'}</p>
+                                <p><span className="font-medium">Want Social Links:</span> {client.wantSocialLinks || 'Not specified'}</p>
+                                {client.specialRequests && (
+                                  <div>
+                                    <span className="font-medium">Special Requests:</span>
+                                    <p className="text-slate-700 mt-1">{client.specialRequests}</p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <User className="w-8 h-8 text-slate-400" />
+                      </div>
+                      <p className="text-slate-600 mb-2">No client inquiries yet</p>
+                      <p className="text-sm text-slate-500">
+                        When clients fill out the "Get Started" form on your website, their information will appear here.
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         ) : null}
       </div>
     </div>
