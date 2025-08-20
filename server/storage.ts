@@ -6,6 +6,7 @@ import {
   adminSessions,
   paymentRequests,
   clientOnboarding,
+  consultationRequests,
   type User, 
   type InsertUser, 
   type ContactRequest, 
@@ -19,7 +20,9 @@ import {
   type PaymentRequest,
   type InsertPaymentRequest,
   type ClientOnboarding,
-  type InsertClientOnboarding
+  type InsertClientOnboarding,
+  type ConsultationRequest,
+  type InsertConsultationRequest
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, count, sql, gt } from "drizzle-orm";
@@ -55,6 +58,10 @@ export interface IStorage {
   createClientOnboarding(client: InsertClientOnboarding): Promise<ClientOnboarding>;
   getClientOnboardings(): Promise<ClientOnboarding[]>;
   updateClientOnboardingStatus(id: string, status: string): Promise<ClientOnboarding | undefined>;
+  
+  // Consultation request operations
+  createConsultationRequest(request: InsertConsultationRequest): Promise<ConsultationRequest>;
+  getConsultationRequests(): Promise<ConsultationRequest[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -241,6 +248,22 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     return updated;
+  }
+
+  // Consultation request operations
+  async createConsultationRequest(request: InsertConsultationRequest): Promise<ConsultationRequest> {
+    const [consultation] = await db
+      .insert(consultationRequests)
+      .values(request)
+      .returning();
+    return consultation;
+  }
+
+  async getConsultationRequests(): Promise<ConsultationRequest[]> {
+    return await db
+      .select()
+      .from(consultationRequests)
+      .orderBy(desc(consultationRequests.createdAt));
   }
 }
 

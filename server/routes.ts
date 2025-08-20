@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertContactRequestSchema, insertPageViewSchema, insertClickEventSchema, insertAdminSessionSchema, insertClientOnboardingSchema } from "@shared/schema";
+import { insertContactRequestSchema, insertPageViewSchema, insertClickEventSchema, insertAdminSessionSchema, insertClientOnboardingSchema, insertConsultationRequestSchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -286,6 +286,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: false, 
         message: "Failed to fetch payment requests" 
       });
+    }
+  });
+
+  // Consultation request endpoint
+  app.post("/api/consultation", async (req, res) => {
+    try {
+      const consultationData = insertConsultationRequestSchema.parse(req.body);
+      
+      // Store the consultation request
+      await storage.createConsultationRequest(consultationData);
+      
+      // In a real implementation, you would:
+      // 1. Send an email notification to your business email
+      // 2. Send a confirmation email to the client
+      // 3. Generate a detailed quote and send it within 24 hours
+      
+      res.json({ 
+        success: true, 
+        message: "Consultation request received. We'll email you within 24 hours." 
+      });
+    } catch (error) {
+      console.error("Consultation request error:", error);
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ success: false, message: "Invalid form data", errors: error.errors });
+      } else {
+        res.status(500).json({ success: false, message: "Failed to submit consultation request" });
+      }
+    }
+  });
+
+  // Admin endpoint to get consultation requests
+  app.get("/api/admin/consultations", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Authentication required" 
+        });
+      }
+
+      const consultations = await storage.getConsultationRequests();
+      res.json({ success: true, data: consultations });
+    } catch (error) {
+      console.error("Error fetching consultation requests:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch consultation requests" });
     }
   });
 

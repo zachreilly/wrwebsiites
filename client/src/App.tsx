@@ -11,6 +11,7 @@ import AdminPage from "@/pages/admin";
 import AdminPaymentsPage from "@/pages/admin-payments";
 import PaymentPage from "@/pages/payment";
 import OnboardingPage from "@/pages/onboarding";
+import ConsultationPage from "@/pages/consultation";
 
 function Router() {
   return (
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/admin/payments" component={AdminPaymentsPage} />
       <Route path="/payment" component={PaymentPage} />
       <Route path="/onboarding" component={OnboardingPage} />
+      <Route path="/consultation" component={ConsultationPage} />
       <Route component={NotFound} />
     </Switch>
   );

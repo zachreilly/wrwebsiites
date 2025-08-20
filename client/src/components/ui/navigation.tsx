@@ -48,6 +48,12 @@ export default function Navigation() {
               >
                 About
               </button>
+              <button 
+                onClick={() => window.location.href = '/consultation'} 
+                className="text-amber-600 hover:text-amber-700 px-3 py-2 text-sm font-medium transition-colors border border-amber-200 rounded-md bg-amber-50 hover:bg-amber-100"
+              >
+                Custom Quote
+              </button>
               <Button 
                 onClick={() => window.location.href = '/onboarding'} 
                 className="bg-primary text-white hover:bg-secondary"
@@ -104,6 +110,15 @@ export default function Navigation() {
               className="block px-3 py-2 text-slate-600 hover:text-primary w-full text-left"
             >
               Contact
+            </button>
+            <button 
+              onClick={() => {
+                window.location.href = '/consultation';
+                setIsMenuOpen(false);
+              }} 
+              className="block px-3 py-2 text-amber-600 hover:text-amber-700 w-full text-left font-medium border border-amber-200 rounded-md bg-amber-50 hover:bg-amber-100 mt-2"
+            >
+              Custom Quote
             </button>
           </div>
         </div>

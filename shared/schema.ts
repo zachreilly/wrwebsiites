@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, integer, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -151,3 +151,47 @@ export const insertClientOnboardingSchema = createInsertSchema(clientOnboarding)
 
 export type ClientOnboarding = typeof clientOnboarding.$inferSelect;
 export type InsertClientOnboarding = z.infer<typeof insertClientOnboardingSchema>;
+
+// Consultation requests table for custom pricing
+export const consultationRequests = pgTable("consultation_requests", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  
+  // Contact Information
+  fullName: varchar("full_name").notNull(),
+  email: varchar("email").notNull(),
+  phone: varchar("phone").notNull(),
+  businessName: varchar("business_name").notNull(),
+  
+  // Project Configuration
+  serviceType: varchar("service_type").notNull(),
+  projectComplexity: varchar("project_complexity").notNull(),
+  timeline: varchar("timeline").notNull(),
+  
+  // Additional Services (stored as boolean)
+  seoSetup: boolean("seo_setup").default(false),
+  contentWriting: boolean("content_writing").default(false),
+  ongoingSupport: boolean("ongoing_support").default(false),
+  customIntegrations: boolean("custom_integrations").default(false),
+  ecommerceFeatures: boolean("ecommerce_features").default(false),
+  
+  // Project Details
+  projectDescription: text("project_description").notNull(),
+  specialRequests: text("special_requests"),
+  
+  // Pricing
+  estimatedPrice: integer("estimated_price").notNull(),
+  
+  status: varchar("status").notNull().default("pending"), // 'pending', 'quoted', 'accepted', 'rejected'
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertConsultationRequestSchema = createInsertSchema(consultationRequests).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  status: true,
+});
+
+export type ConsultationRequest = typeof consultationRequests.$inferSelect;
+export type InsertConsultationRequest = z.infer<typeof insertConsultationRequestSchema>;
