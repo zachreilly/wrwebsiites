@@ -210,25 +210,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { password } = req.query;
       
+      console.log("Payment request password:", password); // Debug log
+      
       if (!password || typeof password !== 'string') {
+        console.log("No password provided or invalid type"); // Debug log
         return res.status(401).json({ 
           success: false, 
           message: "Authentication required" 
         });
       }
 
-      // For payment management, also check direct password validation as fallback
+      // Direct password check for BADMAN123
       if (password === 'BADMAN123') {
+        console.log("Direct password validation successful"); // Debug log
         // Valid admin password, proceed
       } else {
+        console.log("Trying session verification for password:", password); // Debug log
         // Try session verification as backup
         const session = await storage.verifyAdminSession(password);
         if (!session) {
+          console.log("Session verification failed"); // Debug log
           return res.status(401).json({ 
             success: false, 
             message: "Invalid password or expired session" 
           });
         }
+        console.log("Session verification successful"); // Debug log
       }
 
       const payments = await storage.getPaymentRequests();
