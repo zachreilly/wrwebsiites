@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings } from "lucide-react";
+import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User } from "lucide-react";
 
 interface AnalyticsData {
   pageViewStats: { page: string; views: number }[];
@@ -90,6 +90,23 @@ export default function AdminPage() {
       }
       
       return result.data as AnalyticsData;
+    },
+    retry: false,
+  });
+
+  // Client onboarding data query
+  const { data: clientData } = useQuery({
+    queryKey: ['/api/admin/client-onboarding', sessionPassword],
+    enabled: isAuthenticated && !!sessionPassword,
+    queryFn: async () => {
+      const response = await fetch(`/api/admin/client-onboarding?password=${encodeURIComponent(sessionPassword)}`);
+      const result = await response.json();
+      
+      if (!result.success) {
+        throw new Error(result.message || 'Failed to fetch client data');
+      }
+      
+      return result.data;
     },
     retry: false,
   });
@@ -235,196 +252,106 @@ export default function AdminPage() {
               </Card>
             </div>
 
-            {/* Essential Client Information Overview */}
+            {/* Client Inquiries */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <Users className="w-5 h-5 mr-2" />
-                  Essential Client Information Checklist
+                  <User className="w-5 h-5 mr-2" />
+                  Client Project Inquiries
                 </CardTitle>
-                <CardDescription>Information needed from clients to set up their website</CardDescription>
+                <CardDescription>Information from potential clients who filled out the project form</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-6">
-                  {/* Essential Client Info */}
-                  <div className="border-l-4 border-l-blue-500 pl-4">
-                    <h3 className="text-lg font-semibold text-slate-900 mb-3 flex items-center">
-                      <Users className="w-5 h-5 mr-2 text-blue-600" />
-                      Essential Client Info
-                    </h3>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                        <span className="font-medium">Full Name</span>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                        <span className="font-medium">Business / Brand Name</span>
-                        <span className="text-slate-600 ml-2">(as it should appear on the site)</span>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                        <span className="font-medium">Email</span>
-                        <span className="text-slate-600 ml-2">(for account, billing, and updates)</span>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-slate-300 rounded-full mr-3"></div>
-                        <span className="font-medium">Phone number</span>
-                        <span className="text-slate-500 ml-2">(optional, for contact if needed)</span>
-                      </div>
-                    </div>
-                  </div>
+                {clientData && clientData.length > 0 ? (
+                  <div className="space-y-6">
+                    {clientData.map((client: any, index: number) => (
+                      <div key={client.id} className="border rounded-lg p-6 bg-slate-50">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-lg font-semibold text-slate-900">{client.fullName}</h3>
+                          <span className="text-sm text-slate-500">
+                            {new Date(client.createdAt).toLocaleDateString('en-GB', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </span>
+                        </div>
+                        
+                        <div className="grid md:grid-cols-2 gap-6">
+                          {/* Contact Information */}
+                          <div className="space-y-3">
+                            <h4 className="font-medium text-slate-800 border-b pb-1">Contact Details</h4>
+                            <div className="space-y-2 text-sm">
+                              <p><span className="font-medium">Business:</span> {client.businessName}</p>
+                              <p><span className="font-medium">Email:</span> {client.email}</p>
+                              <p><span className="font-medium">Phone:</span> {client.phone}</p>
+                            </div>
+                          </div>
 
-                  {/* Domain & Hosting */}
-                  <div className="border-l-4 border-l-emerald-500 pl-4">
-                    <h3 className="text-lg font-semibold text-slate-900 mb-3 flex items-center">
-                      <Globe className="w-5 h-5 mr-2 text-emerald-600" />
-                      Domain & Hosting
-                      <span className="text-sm text-emerald-600 font-normal ml-2">(only needed for £150 plan)</span>
-                    </h3>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-emerald-500 rounded-full mr-3"></div>
-                        <span className="font-medium">Do you already have a domain name?</span>
-                      </div>
-                      <div className="ml-5 space-y-1 text-slate-600">
-                        <div>• If yes → Please provide the domain</div>
-                        <div>• If no → What domain name(s) would you like? (list 2–3 options in case the first isn't available)</div>
-                      </div>
-                    </div>
-                  </div>
+                          {/* Domain & Hosting */}
+                          <div className="space-y-3">
+                            <h4 className="font-medium text-slate-800 border-b pb-1">Domain & Hosting</h4>
+                            <div className="space-y-2 text-sm">
+                              <p><span className="font-medium">Has Domain:</span> {client.hasDomain || 'Not specified'}</p>
+                              <p><span className="font-medium">Domain Name:</span> {client.domainName || 'Not provided'}</p>
+                              <p><span className="font-medium">Has Hosting:</span> {client.hasHosting || 'Not specified'}</p>
+                              <p><span className="font-medium">Hosting Provider:</span> {client.hostingProvider || 'Not provided'}</p>
+                              <p><span className="font-medium">Want Setup Help:</span> {client.wantSetupHelp || 'Not specified'}</p>
+                            </div>
+                          </div>
 
-                  {/* Website Content */}
-                  <div className="border-l-4 border-l-purple-500 pl-4">
-                    <h3 className="text-lg font-semibold text-slate-900 mb-3 flex items-center">
-                      <FileText className="w-5 h-5 mr-2 text-purple-600" />
-                      Website Content
-                    </h3>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
-                        <span className="font-medium">About your business/brand</span>
-                        <span className="text-slate-600 ml-2">(short description for "About Us" section)</span>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
-                        <span className="font-medium">Pages you need</span>
-                        <span className="text-slate-600 ml-2">(e.g. Home, About, Services, Contact, Gallery)</span>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
-                        <span className="font-medium">Text content</span>
-                        <span className="text-slate-600 ml-2">(they can paste it in or upload a file)</span>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-slate-300 rounded-full mr-3"></div>
-                        <span className="font-medium">Images / Logo upload</span>
-                        <span className="text-slate-500 ml-2">(optional: let them send via email if easier)</span>
-                      </div>
-                    </div>
-                  </div>
+                          {/* Website Content */}
+                          <div className="space-y-3">
+                            <h4 className="font-medium text-slate-800 border-b pb-1">Content Information</h4>
+                            <div className="space-y-2 text-sm">
+                              <div>
+                                <span className="font-medium">Business Description:</span>
+                                <p className="text-slate-700 mt-1">{client.businessDescription || 'Not provided'}</p>
+                              </div>
+                              <div>
+                                <span className="font-medium">Services/Products:</span>
+                                <p className="text-slate-700 mt-1">{client.servicesProducts || 'Not provided'}</p>
+                              </div>
+                            </div>
+                          </div>
 
-                  {/* Design Preferences */}
-                  <div className="border-l-4 border-l-orange-500 pl-4">
-                    <h3 className="text-lg font-semibold text-slate-900 mb-3 flex items-center">
-                      <Palette className="w-5 h-5 mr-2 text-orange-600" />
-                      Design Preferences
-                    </h3>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
-                        <span className="font-medium">Do you have a logo?</span>
-                        <span className="text-slate-600 ml-2">(Upload option)</span>
+                          {/* Design & Extras */}
+                          <div className="space-y-3">
+                            <h4 className="font-medium text-slate-800 border-b pb-1">Design & Features</h4>
+                            <div className="space-y-2 text-sm">
+                              <p><span className="font-medium">Brand Colors:</span> {client.brandColors || 'Not provided'}</p>
+                              <p><span className="font-medium">Style Preference:</span> {client.stylePreference || 'Not provided'}</p>
+                              <p><span className="font-medium">Want Contact Form:</span> {client.wantContactForm || 'Not specified'}</p>
+                              <p><span className="font-medium">Want Social Links:</span> {client.wantSocialLinks || 'Not specified'}</p>
+                              {client.specialRequests && (
+                                <div>
+                                  <span className="font-medium">Special Requests:</span>
+                                  <p className="text-slate-700 mt-1">{client.specialRequests}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
-                        <span className="font-medium">Preferred colour scheme / style</span>
-                        <span className="text-slate-600 ml-2">(e.g. modern, professional, playful, minimal)</span>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
-                        <span className="font-medium">Example websites you like</span>
-                        <span className="text-slate-600 ml-2">(links for inspiration)</span>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-
-                  {/* Extras */}
-                  <div className="border-l-4 border-l-pink-500 pl-4">
-                    <h3 className="text-lg font-semibold text-slate-900 mb-3 flex items-center">
-                      <Settings className="w-5 h-5 mr-2 text-pink-600" />
-                      Extras
-                    </h3>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-pink-500 rounded-full mr-3"></div>
-                        <span className="font-medium">Do you want a contact form on the site?</span>
-                        <span className="text-slate-600 ml-2">(yes/no)</span>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-pink-500 rounded-full mr-3"></div>
-                        <span className="font-medium">Do you want links to social media profiles?</span>
-                        <span className="text-slate-600 ml-2">(Facebook, Instagram, LinkedIn, etc.)</span>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-pink-500 rounded-full mr-3"></div>
-                        <span className="font-medium">Any special requests?</span>
-                      </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <User className="w-8 h-8 text-slate-400" />
                     </div>
-                  </div>
-
-                  <div className="mt-6 p-4 bg-slate-50 rounded-lg">
-                    <p className="text-sm text-slate-700">
-                      <strong>💡 Tip:</strong> Use this checklist when onboarding new clients to ensure you collect all necessary information for their website setup. 
-                      Save time by sending this list to clients before your initial consultation.
+                    <p className="text-slate-600 mb-2">No client inquiries yet</p>
+                    <p className="text-sm text-slate-500">
+                      When clients fill out the "Get Started" form on your website, their information will appear here.
                     </p>
                   </div>
-                </div>
+                )}
               </CardContent>
             </Card>
 
-            {/* Click Events Chart */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <MousePointer className="w-5 h-5 mr-2" />
-                  Click Events by Element
-                </CardTitle>
-                <CardDescription>Most clicked buttons and links</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {analyticsData.clickEventStats.length > 0 ? (
-                    analyticsData.clickEventStats.map((stat, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                        <div className="flex items-center">
-                          <div className="w-8 h-8 bg-secondary/10 rounded-full flex items-center justify-center mr-3">
-                            <span className="text-sm font-medium text-secondary">{index + 1}</span>
-                          </div>
-                          <span className="font-medium">{stat.element}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <div className="text-right mr-3">
-                            <div className="text-lg font-bold">{stat.clicks}</div>
-                            <div className="text-xs text-muted-foreground">clicks</div>
-                          </div>
-                          <div className="w-20 h-2 bg-slate-200 rounded-full overflow-hidden">
-                            <div 
-                              className="h-full bg-secondary rounded-full"
-                              style={{ 
-                                width: `${(stat.clicks / Math.max(...analyticsData.clickEventStats.map(s => s.clicks))) * 100}%` 
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-center text-muted-foreground py-8">No click event data available</p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+
           </div>
         ) : null}
       </div>

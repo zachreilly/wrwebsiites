@@ -5,6 +5,7 @@ import {
   clickEvents, 
   adminSessions,
   paymentRequests,
+  clientOnboarding,
   type User, 
   type InsertUser, 
   type ContactRequest, 
@@ -16,7 +17,9 @@ import {
   type AdminSession,
   type InsertAdminSession,
   type PaymentRequest,
-  type InsertPaymentRequest
+  type InsertPaymentRequest,
+  type ClientOnboarding,
+  type InsertClientOnboarding
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, count, sql, gt } from "drizzle-orm";
@@ -47,6 +50,11 @@ export interface IStorage {
   // Payment request operations
   createPaymentRequest(request: InsertPaymentRequest): Promise<PaymentRequest>;
   getPaymentRequests(): Promise<PaymentRequest[]>;
+  
+  // Client onboarding operations
+  createClientOnboarding(client: InsertClientOnboarding): Promise<ClientOnboarding>;
+  getClientOnboardings(): Promise<ClientOnboarding[]>;
+  updateClientOnboardingStatus(id: string, status: string): Promise<ClientOnboarding | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -196,6 +204,43 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(paymentRequests)
       .orderBy(desc(paymentRequests.createdAt));
+  }
+
+  // Client onboarding operations
+  async createClientOnboarding(insertClient: InsertClientOnboarding): Promise<ClientOnboarding> {
+    // Convert boolean values to strings for database storage
+    const clientData = {
+      ...insertClient,
+      hasImages: insertClient.hasImages?.toString() || "false",
+      hasLogo: insertClient.hasLogo?.toString() || "false", 
+      wantsContactForm: insertClient.wantsContactForm?.toString() || "false"
+    };
+    
+    const [client] = await db
+      .insert(clientOnboarding)
+      .values(clientData)
+      .returning();
+    return client;
+  }
+
+  async getClientOnboardings(): Promise<ClientOnboarding[]> {
+    return await db
+      .select()
+      .from(clientOnboarding)
+      .orderBy(desc(clientOnboarding.createdAt));
+  }
+
+  async updateClientOnboardingStatus(id: string, status: string): Promise<ClientOnboarding | undefined> {
+    const [updated] = await db
+      .update(clientOnboarding)
+      .set({ 
+        status,
+        updatedAt: new Date()
+      })
+      .where(eq(clientOnboarding.id, id))
+      .returning();
+    
+    return updated;
   }
 }
 

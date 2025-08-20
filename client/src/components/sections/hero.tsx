@@ -24,19 +24,19 @@ export default function Hero() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 
-                onClick={() => scrollToSection('contact')} 
+                onClick={() => window.location.href = '/onboarding'} 
                 className="bg-accent text-slate-900 px-8 py-4 rounded-lg font-semibold hover:bg-amber-400 transition-colors text-center"
                 size="lg"
               >
-                Contact Us
+                Get Started - Tell Us About Your Project
               </Button>
               <Button 
-                onClick={() => scrollToSection('services')} 
+                onClick={() => scrollToSection('contact')} 
                 variant="outline"
                 className="border-2 border-white bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary transition-colors text-center"
                 size="lg"
               >
-                View Services
+                Contact Us Directly
               </Button>
             </div>
           </div>

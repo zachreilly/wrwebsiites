@@ -104,3 +104,50 @@ export type PaymentRequest = typeof paymentRequests.$inferSelect;
 export type InsertPaymentRequest = typeof paymentRequests.$inferInsert;
 export type InsertAdminSession = z.infer<typeof insertAdminSessionSchema>;
 export type AdminSession = typeof adminSessions.$inferSelect;
+
+// Client onboarding information table
+export const clientOnboarding = pgTable("client_onboarding", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  fullName: varchar("full_name").notNull(),
+  businessName: varchar("business_name").notNull(),
+  email: varchar("email").notNull(),
+  phone: varchar("phone"),
+  
+  // Domain & Hosting
+  hasDomain: varchar("has_domain"), // 'yes', 'no', or null
+  existingDomain: varchar("existing_domain"),
+  desiredDomains: text("desired_domains"),
+  
+  // Website Content
+  businessDescription: text("business_description").notNull(),
+  pagesNeeded: text("pages_needed").notNull(),
+  textContent: text("text_content"),
+  hasImages: text("has_images").default("false"), // stored as string for consistency
+  
+  // Design Preferences
+  hasLogo: text("has_logo").default("false"), // stored as string for consistency
+  colorScheme: varchar("color_scheme").notNull(),
+  exampleWebsites: text("example_websites"),
+  
+  // Extras
+  wantsContactForm: text("wants_contact_form").default("false"), // stored as string for consistency
+  socialMediaLinks: text("social_media_links"),
+  specialRequests: text("special_requests"),
+  
+  // Package selection
+  selectedPackage: varchar("selected_package").notNull(), // 'basic' or 'premium'
+  
+  status: varchar("status").notNull().default("new"), // 'new', 'in_progress', 'completed', 'cancelled'
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertClientOnboardingSchema = createInsertSchema(clientOnboarding).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  status: true,
+});
+
+export type ClientOnboarding = typeof clientOnboarding.$inferSelect;
+export type InsertClientOnboarding = z.infer<typeof insertClientOnboardingSchema>;

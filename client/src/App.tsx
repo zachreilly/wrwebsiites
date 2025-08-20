@@ -10,6 +10,7 @@ import Home from "@/pages/home";
 import AdminPage from "@/pages/admin";
 import AdminPaymentsPage from "@/pages/admin-payments";
 import PaymentPage from "@/pages/payment";
+import OnboardingPage from "@/pages/onboarding";
 
 function Router() {
   return (
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/admin" component={AdminPage} />
       <Route path="/admin/payments" component={AdminPaymentsPage} />
       <Route path="/payment" component={PaymentPage} />
+      <Route path="/onboarding" component={OnboardingPage} />
       <Route component={NotFound} />
     </Switch>
   );

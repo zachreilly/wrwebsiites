@@ -49,10 +49,10 @@ export default function Navigation() {
                 About
               </button>
               <Button 
-                onClick={() => scrollToSection('contact')} 
+                onClick={() => window.location.href = '/onboarding'} 
                 className="bg-primary text-white hover:bg-secondary"
               >
-                Contact
+                Get Started
               </Button>
             </div>
           </div>

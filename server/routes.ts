@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertContactRequestSchema, insertPageViewSchema, insertClickEventSchema, insertAdminSessionSchema } from "@shared/schema";
+import { insertContactRequestSchema, insertPageViewSchema, insertClickEventSchema, insertAdminSessionSchema, insertClientOnboardingSchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -162,6 +162,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching contact requests:", error);
       res.status(500).json({ message: "Failed to fetch contact requests" });
+    }
+  });
+
+  // Client onboarding submission
+  app.post("/api/client-onboarding", async (req, res) => {
+    try {
+      const validatedData = insertClientOnboardingSchema.parse(req.body);
+      const clientOnboarding = await storage.createClientOnboarding(validatedData);
+      res.json({ success: true, data: clientOnboarding });
+    } catch (error) {
+      console.error("Client onboarding error:", error);
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ success: false, message: "Invalid form data", errors: error.errors });
+      } else {
+        res.status(500).json({ success: false, message: "Failed to submit client information" });
+      }
+    }
+  });
+
+  // Get client onboarding requests (admin endpoint)
+  app.get("/api/admin/client-onboarding", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Authentication required" 
+        });
+      }
+
+      const clients = await storage.getClientOnboardings();
+      res.json({ success: true, data: clients });
+    } catch (error) {
+      console.error("Error fetching client onboarding:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch client information" });
     }
   });
 
