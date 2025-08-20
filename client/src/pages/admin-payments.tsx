@@ -102,12 +102,12 @@ export default function AdminPaymentsPage() {
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Payment Management Login</CardTitle>
             <CardDescription>Enter your admin password to access payment requests</CardDescription>
-            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-800">
-                💡 <strong>Password:</strong> BADMAN123
+            <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+              <p className="text-sm text-emerald-800 font-medium">
+                🔑 Admin Password: <span className="font-mono">BADMAN123</span>
               </p>
-              <p className="text-xs text-blue-600 mt-1">
-                Same password as the main admin dashboard
+              <p className="text-xs text-emerald-600 mt-1">
+                Use this password to access payment requests and customer data
               </p>
             </div>
           </CardHeader>
