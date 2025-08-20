@@ -378,41 +378,86 @@ export default function PaymentPage() {
                       </div>
                     </div>
 
-                    <div className="space-y-4">
-                      <div className="flex items-start space-x-2">
-                        <Checkbox
-                          id="terms"
-                          checked={formData.agreedToTerms}
-                          onCheckedChange={(checked) => handleInputChange('agreedToTerms', checked as boolean)}
-                        />
-                        <label htmlFor="terms" className="text-sm text-slate-700 leading-5">
-                          I agree to the <button 
-                            type="button"
-                            onClick={() => setShowTerms(true)} 
-                            className="text-emerald-600 hover:underline underline"
-                          >
-                            terms and conditions
-                          </button> and 
-                          understand that the setup fee will be charged immediately upon website completion *
-                        </label>
+                    {/* Important Legal Information */}
+                    <div className="bg-slate-50 border-2 border-slate-200 rounded-lg p-6 space-y-6">
+                      <div className="text-center">
+                        <h3 className="text-lg font-semibold text-slate-900 mb-2">Important Legal Information</h3>
+                        <p className="text-sm text-slate-600">Please read and accept the following before proceeding</p>
                       </div>
 
-                      <div className="flex items-start space-x-2">
-                        <Checkbox
-                          id="directDebit"
-                          checked={formData.agreedToDirectDebit}
-                          onCheckedChange={(checked) => handleInputChange('agreedToDirectDebit', checked as boolean)}
-                        />
-                        <label htmlFor="directDebit" className="text-sm text-slate-700 leading-5">
-                          I authorize wrwebsites to collect payments via Direct Debit as per the 
-                          <button 
+                      {/* Terms and Conditions Preview */}
+                      <div className="bg-white rounded-lg border p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="font-medium text-slate-900">Terms and Conditions</h4>
+                          <Button 
                             type="button"
-                            onClick={() => setShowDirectDebitInfo(true)} 
-                            className="text-emerald-600 hover:underline underline ml-1"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setShowTerms(true)}
+                            className="text-emerald-600 border-emerald-200 hover:bg-emerald-50"
                           >
-                            Direct Debit Guarantee
-                          </button> *
-                        </label>
+                            Read Full Terms
+                          </Button>
+                        </div>
+                        <div className="text-xs text-slate-600 space-y-1">
+                          <p>• Setup fees: Basic £50, Premium £150</p>
+                          <p>• Monthly hosting: £10 for all packages</p>
+                          <p>• Development begins within 5 business days</p>
+                          <p>• 99.9% uptime guarantee with technical support</p>
+                        </div>
+                      </div>
+
+                      {/* Direct Debit Guarantee Preview */}
+                      <div className="bg-white rounded-lg border p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="font-medium text-slate-900">Direct Debit Guarantee</h4>
+                          <Button 
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setShowDirectDebitInfo(true)}
+                            className="text-emerald-600 border-emerald-200 hover:bg-emerald-50"
+                          >
+                            Read Full Guarantee
+                          </Button>
+                        </div>
+                        <div className="text-xs text-slate-600 space-y-1">
+                          <p>• You can cancel Direct Debit at any time</p>
+                          <p>• Full refund if errors are made by us or your bank</p>
+                          <p>• 10 working days notice for any payment changes</p>
+                          <p>• Protected by your bank or building society</p>
+                        </div>
+                      </div>
+
+                      {/* Checkboxes */}
+                      <div className="space-y-4 pt-2">
+                        <div className="bg-white rounded-lg border-2 border-slate-200 p-4">
+                          <div className="flex items-start space-x-3">
+                            <Checkbox
+                              id="terms"
+                              checked={formData.agreedToTerms}
+                              onCheckedChange={(checked) => handleInputChange('agreedToTerms', checked as boolean)}
+                              className="mt-1"
+                            />
+                            <label htmlFor="terms" className="text-sm font-medium text-slate-900 leading-5 cursor-pointer">
+                              I have read and agree to the Terms and Conditions, and understand that the setup fee will be charged immediately upon website completion *
+                            </label>
+                          </div>
+                        </div>
+
+                        <div className="bg-white rounded-lg border-2 border-slate-200 p-4">
+                          <div className="flex items-start space-x-3">
+                            <Checkbox
+                              id="directDebit"
+                              checked={formData.agreedToDirectDebit}
+                              onCheckedChange={(checked) => handleInputChange('agreedToDirectDebit', checked as boolean)}
+                              className="mt-1"
+                            />
+                            <label htmlFor="directDebit" className="text-sm font-medium text-slate-900 leading-5 cursor-pointer">
+                              I authorize wrwebsites to collect payments via Direct Debit and acknowledge the Direct Debit Guarantee *
+                            </label>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -495,19 +540,45 @@ export default function PaymentPage() {
 
       {/* Terms and Conditions Modal */}
       {showTerms && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[80vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">Terms and Conditions</h2>
-                <Button variant="outline" onClick={() => setShowTerms(false)}>
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[85vh] overflow-hidden shadow-2xl">
+            <div className="bg-emerald-600 text-white p-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl font-bold">Terms and Conditions</h2>
+                  <p className="text-emerald-100 mt-1">wrwebsites - Web Development Services</p>
+                </div>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowTerms(false)}
+                  className="bg-white text-emerald-600 hover:bg-emerald-50 border-white"
+                >
                   Close
                 </Button>
               </div>
-              <div className="prose max-w-none">
-                <pre className="whitespace-pre-wrap text-sm text-slate-700 font-sans">
+            </div>
+            <div className="p-6 overflow-y-auto max-h-[calc(85vh-120px)]">
+              <div className="prose max-w-none text-slate-700">
+                <pre className="whitespace-pre-wrap text-sm leading-relaxed font-sans bg-slate-50 rounded-lg p-4">
                   {termsAndConditions}
                 </pre>
+              </div>
+              <div className="mt-6 flex justify-end space-x-3">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowTerms(false)}
+                >
+                  Close
+                </Button>
+                <Button 
+                  onClick={() => {
+                    handleInputChange('agreedToTerms', true);
+                    setShowTerms(false);
+                  }}
+                  className="bg-emerald-600 hover:bg-emerald-700"
+                >
+                  I Accept These Terms
+                </Button>
               </div>
             </div>
           </div>
@@ -516,19 +587,58 @@ export default function PaymentPage() {
 
       {/* Direct Debit Guarantee Modal */}
       {showDirectDebitInfo && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">Direct Debit Guarantee</h2>
-                <Button variant="outline" onClick={() => setShowDirectDebitInfo(false)}>
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl max-w-3xl w-full max-h-[85vh] overflow-hidden shadow-2xl">
+            <div className="bg-blue-600 text-white p-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl font-bold">The Direct Debit Guarantee</h2>
+                  <p className="text-blue-100 mt-1">Your rights and protections when paying by Direct Debit</p>
+                </div>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowDirectDebitInfo(false)}
+                  className="bg-white text-blue-600 hover:bg-blue-50 border-white"
+                >
                   Close
                 </Button>
               </div>
-              <div className="prose max-w-none">
-                <pre className="whitespace-pre-wrap text-sm text-slate-700 font-sans">
+            </div>
+            <div className="p-6 overflow-y-auto max-h-[calc(85vh-120px)]">
+              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded">
+                <div className="flex">
+                  <Shield className="w-5 h-5 text-blue-500 mt-0.5 mr-3" />
+                  <div>
+                    <h3 className="font-semibold text-blue-900">Your Protection</h3>
+                    <p className="text-blue-800 text-sm mt-1">
+                      This guarantee is backed by all UK banks and building societies that accept Direct Debit instructions.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="prose max-w-none text-slate-700">
+                <pre className="whitespace-pre-wrap text-sm leading-relaxed font-sans bg-slate-50 rounded-lg p-4">
                   {directDebitGuarantee}
                 </pre>
+              </div>
+              
+              <div className="mt-6 flex justify-end space-x-3">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowDirectDebitInfo(false)}
+                >
+                  Close
+                </Button>
+                <Button 
+                  onClick={() => {
+                    handleInputChange('agreedToDirectDebit', true);
+                    setShowDirectDebitInfo(false);
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  I Understand My Rights
+                </Button>
               </div>
             </div>
           </div>
