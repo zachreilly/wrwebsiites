@@ -83,5 +83,11 @@ wrwebsites
 Email: zachhreillyy@gmail.com
 Phone: 07397985279 or 07535778637
 
+PAYMENT INFORMATION:
+Direct Debit payments will be collected by:
+Account Name: Zachary Reilly
+Sort Code: 60-84-07
+Account Number: 46122747
+
 The Direct Debit Guarantee is backed by your bank or building society.
 `;

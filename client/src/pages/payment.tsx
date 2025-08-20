@@ -407,6 +407,22 @@ export default function PaymentPage() {
                         </div>
                       </div>
 
+                      {/* Payment Collection Details */}
+                      <div className="bg-blue-50 rounded-lg border border-blue-200 p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="font-medium text-slate-900">Payment Collection Details</h4>
+                          <Shield className="w-5 h-5 text-blue-600" />
+                        </div>
+                        <div className="text-sm text-slate-700 space-y-1">
+                          <p><strong>Payments will be collected by Direct Debit to:</strong></p>
+                          <div className="bg-white rounded p-3 mt-2 border">
+                            <p><strong>Account Name:</strong> Zachary Reilly</p>
+                            <p><strong>Sort Code:</strong> 60-84-07</p>
+                            <p><strong>Account Number:</strong> 46122747</p>
+                          </div>
+                        </div>
+                      </div>
+
                       {/* Direct Debit Guarantee Preview */}
                       <div className="bg-white rounded-lg border p-4">
                         <div className="flex items-center justify-between mb-3">
@@ -454,7 +470,7 @@ export default function PaymentPage() {
                               className="mt-1"
                             />
                             <label htmlFor="directDebit" className="text-sm font-medium text-slate-900 leading-5 cursor-pointer">
-                              I authorize wrwebsites to collect payments via Direct Debit and acknowledge the Direct Debit Guarantee *
+                              I authorize wrwebsites (Zachary Reilly) to collect payments via Direct Debit from my account above to account 60-84-07 46122747, and acknowledge the Direct Debit Guarantee *
                             </label>
                           </div>
                         </div>
