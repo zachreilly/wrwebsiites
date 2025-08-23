@@ -95,6 +95,7 @@ export const paymentRequests = pgTable("payment_requests", {
   address: varchar("address").notNull(),
   city: varchar("city").notNull(),
   postcode: varchar("postcode").notNull(),
+  googleBusinessSetup: boolean("google_business_setup").default(false), // £25 add-on
   status: varchar("status").notNull().default("pending"), // 'pending', 'approved', 'active', 'cancelled'
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -131,6 +132,7 @@ export const clientOnboarding = pgTable("client_onboarding", {
   
   // Extras
   wantsContactForm: text("wants_contact_form").default("false"), // stored as string for consistency
+  googleBusinessSetup: text("google_business_setup").default("false"), // stored as string for consistency
   socialMediaLinks: text("social_media_links"),
   specialRequests: text("special_requests"),
   

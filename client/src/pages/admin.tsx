@@ -484,8 +484,9 @@ export default function AdminPage() {
                   <CardContent>
                     <div className="text-3xl font-bold text-orange-600">
                       £{paymentData ? paymentData.reduce((total: number, payment: any) => {
-                        const setupFee = payment.selectedPackage === 'premium' ? 150 : 50;
-                        return total + setupFee;
+                        const setupFee = payment.package === 'premium' ? 150 : 50;
+                        const googleBusinessFee = payment.googleBusinessSetup ? 25 : 0;
+                        return total + setupFee + googleBusinessFee;
                       }, 0) : 0}
                     </div>
                     <p className="text-xs text-slate-600">Total setup fees from requests</p>

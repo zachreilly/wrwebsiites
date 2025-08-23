@@ -20,6 +20,7 @@ interface PaymentRequest {
   address: string;
   city: string;
   postcode: string;
+  googleBusinessSetup: boolean;
   status: string;
   createdAt: string;
 }
@@ -243,6 +244,21 @@ export default function AdminPaymentsNew() {
                   <p className="text-xs text-slate-600">£50 + £10/month</p>
                 </CardContent>
               </Card>
+
+              <Card className="border-l-4 border-l-blue-500">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium flex items-center">
+                    <Building className="w-4 h-4 mr-2 text-blue-600" />
+                    Google Business Add-ons
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold text-blue-600">
+                    {paymentRequests.filter(req => req.googleBusinessSetup).length}
+                  </div>
+                  <p className="text-xs text-slate-600">+£25 each</p>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Payment Requests List */}
@@ -282,9 +298,12 @@ export default function AdminPaymentsNew() {
                           </div>
                           <div className="text-right">
                             <div className="text-2xl font-bold text-slate-900">
-                              £{request.package === 'premium' ? '150' : '50'}
+                              £{(request.package === 'premium' ? 150 : 50) + (request.googleBusinessSetup ? 25 : 0)}
                             </div>
                             <div className="text-sm text-slate-600">+ £10/month</div>
+                            {request.googleBusinessSetup && (
+                              <div className="text-xs text-blue-600 font-medium">Includes Google Business (+£25)</div>
+                            )}
                           </div>
                         </div>
 
@@ -302,6 +321,20 @@ export default function AdminPaymentsNew() {
                             <span className="text-slate-600">{request.city}, {request.postcode}</span>
                           </div>
                         </div>
+                        
+                        {/* Add-on Services */}
+                        {request.googleBusinessSetup && (
+                          <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <div className="flex items-center">
+                              <Building className="w-4 h-4 mr-2 text-blue-600" />
+                              <span className="text-sm font-medium text-blue-800">Google Business Listing Setup</span>
+                              <span className="ml-auto text-sm font-bold text-blue-600">+£25</span>
+                            </div>
+                            <p className="text-xs text-blue-600 mt-1 ml-6">
+                              Customer requested Google Business profile setup and optimization
+                            </p>
+                          </div>
+                        )}
 
                         <div className="mt-4 p-4 bg-slate-50 rounded-lg">
                           <h4 className="font-medium text-slate-900 mb-2">Banking Details</h4>

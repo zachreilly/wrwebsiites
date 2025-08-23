@@ -27,6 +27,7 @@ interface PaymentFormData {
   desiredDomains: string;
   colorScheme: string;
   wantsContactForm: boolean;
+  googleBusinessSetup: boolean;
   socialMediaLinks: string;
   specialRequests: string;
   // Payment Details
@@ -62,6 +63,7 @@ export default function PaymentPage() {
     desiredDomains: '',
     colorScheme: '',
     wantsContactForm: false,
+    googleBusinessSetup: false,
     socialMediaLinks: '',
     specialRequests: '',
     // Payment Details
@@ -100,6 +102,7 @@ export default function PaymentPage() {
         desiredDomains: data.desiredDomains,
         colorScheme: data.colorScheme,
         wantContactForm: data.wantsContactForm ? 'Yes' : 'No',
+        googleBusinessSetup: data.googleBusinessSetup ? 'Yes' : 'No',
         wantSocialLinks: data.socialMediaLinks ? 'Yes' : 'No',
         socialMediaLinks: data.socialMediaLinks,
         specialRequests: data.specialRequests
@@ -163,16 +166,23 @@ export default function PaymentPage() {
   const packageDetails = {
     basic: {
       name: "Basic Static Website",
-      setupFee: "£50",
-      monthlyFee: "£10",
+      setupFee: 50,
+      monthlyFee: 10,
       features: ["Mobile-responsive design", "Up to 5 pages", "Basic SEO", "Contact form", "1 month support"]
     },
     premium: {
       name: "Premium Hosting and Domain Website",
-      setupFee: "£150", 
-      monthlyFee: "£10",
+      setupFee: 150, 
+      monthlyFee: 10,
       features: ["Everything in Basic", "Custom domain included", "Advanced SEO", "Analytics setup", "3 months support", "Content management"]
     }
+  };
+
+  const calculateTotal = () => {
+    if (!formData.package) return 0;
+    const basePrice = packageDetails[formData.package as keyof typeof packageDetails].setupFee;
+    const googleBusinessPrice = formData.googleBusinessSetup ? 25 : 0;
+    return basePrice + googleBusinessPrice;
   };
 
   const nextStep = () => {
@@ -335,11 +345,30 @@ export default function PaymentPage() {
                         <h3 className="font-semibold text-slate-900 mb-3">{packageDetails[formData.package as keyof typeof packageDetails].name}</h3>
                         <div className="flex items-center gap-4 mb-4">
                           <span className="text-2xl font-bold text-emerald-600">
-                            {packageDetails[formData.package as keyof typeof packageDetails].setupFee} setup
+                            £{calculateTotal()} setup
                           </span>
                           <span className="text-lg text-slate-600">
-                            + {packageDetails[formData.package as keyof typeof packageDetails].monthlyFee}/month
+                            + £{packageDetails[formData.package as keyof typeof packageDetails].monthlyFee}/month
                           </span>
+                        </div>
+                        
+                        {/* Price Breakdown */}
+                        <div className="mb-4 text-sm text-slate-600">
+                          <div className="flex justify-between">
+                            <span>Base package:</span>
+                            <span>£{packageDetails[formData.package as keyof typeof packageDetails].setupFee}</span>
+                          </div>
+                          {formData.googleBusinessSetup && (
+                            <div className="flex justify-between">
+                              <span>Google Business setup:</span>
+                              <span>£25</span>
+                            </div>
+                          )}
+                          <hr className="my-2" />
+                          <div className="flex justify-between font-semibold">
+                            <span>Total setup:</span>
+                            <span>£{calculateTotal()}</span>
+                          </div>
                         </div>
                         <ul className="space-y-2">
                           {packageDetails[formData.package as keyof typeof packageDetails].features.map((feature, index) => (
@@ -349,6 +378,23 @@ export default function PaymentPage() {
                             </li>
                           ))}
                         </ul>
+                        
+                        {/* Google Business Add-on */}
+                        <div className="mt-4 p-4 border rounded-lg bg-blue-50">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <Checkbox
+                              id="googleBusinessSetup"
+                              checked={formData.googleBusinessSetup}
+                              onCheckedChange={(checked) => handleInputChange('googleBusinessSetup', !!checked)}
+                            />
+                            <Label htmlFor="googleBusinessSetup" className="font-medium text-slate-900">
+                              Add Google Business Listing Setup (+£25)
+                            </Label>
+                          </div>
+                          <p className="text-sm text-slate-600 ml-6">
+                            We'll set up and optimize your Google Business profile to help customers find you locally
+                          </p>
+                        </div>
                       </div>
                     )}
                   </div>

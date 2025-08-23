@@ -260,6 +260,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         address: paymentData.address,
         city: paymentData.city,
         postcode: paymentData.postcode,
+        googleBusinessSetup: paymentData.googleBusinessSetup || false,
         status: 'pending'
       });
 
