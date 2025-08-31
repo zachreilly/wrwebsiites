@@ -43,7 +43,8 @@ export class GoCardlessService {
     countryCode: string;
   }) {
     try {
-      const response = await gc.customers.create({
+      const client = await initializeGoCardless();
+      const response = await client.customers.create({
         email: customerData.email,
         given_name: customerData.firstName,
         family_name: customerData.lastName,
@@ -68,7 +69,8 @@ export class GoCardlessService {
   }) {
     try {
       // Create customer bank account
-      const bankAccountResponse = await gc.customerBankAccounts.create({
+      const client = await initializeGoCardless();
+      const bankAccountResponse = await client.customerBankAccounts.create({
         account_holder_name: bankAccount.accountHolderName,
         account_number: bankAccount.accountNumber,
         branch_code: bankAccount.sortCode,
@@ -79,7 +81,7 @@ export class GoCardlessService {
       });
 
       // Create mandate for direct debit
-      const mandateResponse = await gc.mandates.create({
+      const mandateResponse = await client.mandates.create({
         links: {
           customer_bank_account: bankAccountResponse.customerBankAccounts.id,
         },
@@ -99,7 +101,8 @@ export class GoCardlessService {
   // Create a one-time payment
   async createPayment(paymentData: PaymentIntentData & { mandateId: string }) {
     try {
-      const response = await gc.payments.create({
+      const client = await initializeGoCardless();
+      const response = await client.payments.create({
         amount: paymentData.amount,
         currency: paymentData.currency,
         description: paymentData.description,
