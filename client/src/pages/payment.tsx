@@ -516,7 +516,7 @@ export default function PaymentPage() {
                             value={formData.email}
                             onChange={(e) => handleInputChange('email', e.target.value)}
                             placeholder="john@business.com"
-                            className={formData.email && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(formData.email) ? 'border-red-300 focus:border-red-500' : formData.email ? 'border-green-300 focus:border-green-500' : ''}
+                            className={formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) ? 'border-red-300 focus:border-red-500' : formData.email ? 'border-green-300 focus:border-green-500' : ''}
                           />
                           {formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
                             <p className="text-red-500 text-sm mt-1">Please enter a valid email address</p>
@@ -529,9 +529,9 @@ export default function PaymentPage() {
                             value={formData.phone}
                             onChange={(e) => handleInputChange('phone', e.target.value)}
                             placeholder="07123 456789"
-                            className={formData.phone && !/^[0-9\s+()-]{10,}$/.test(formData.phone.replace(/\s/g, '')) ? 'border-red-300 focus:border-red-500' : formData.phone ? 'border-green-300 focus:border-green-500' : ''}
+                            className={formData.phone && !/^[0-9\s+().-]{10,}$/.test(formData.phone.replace(/\s/g, '')) ? 'border-red-300 focus:border-red-500' : formData.phone ? 'border-green-300 focus:border-green-500' : ''}
                           />
-                          {formData.phone && !/^[0-9\s+()-]{10,}$/.test(formData.phone.replace(/\s/g, '')) && (
+                          {formData.phone && !/^[0-9\s+().-]{10,}$/.test(formData.phone.replace(/\s/g, '')) && (
                             <p className="text-red-500 text-sm mt-1">Please enter a valid UK phone number</p>
                           )}
                         </div>
