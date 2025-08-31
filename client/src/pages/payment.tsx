@@ -516,10 +516,10 @@ export default function PaymentPage() {
                             value={formData.email}
                             onChange={(e) => handleInputChange('email', e.target.value)}
                             placeholder="john@business.com"
-                            className={validateField('email', formData.email) ? 'border-red-300 focus:border-red-500' : ''}
+                            className={formData.email && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(formData.email) ? 'border-red-300 focus:border-red-500' : formData.email ? 'border-green-300 focus:border-green-500' : ''}
                           />
-                          {validateField('email', formData.email) && (
-                            <p className="text-red-500 text-sm mt-1">{validateField('email', formData.email)}</p>
+                          {formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
+                            <p className="text-red-500 text-sm mt-1">Please enter a valid email address</p>
                           )}
                         </div>
                         <div>
@@ -529,10 +529,10 @@ export default function PaymentPage() {
                             value={formData.phone}
                             onChange={(e) => handleInputChange('phone', e.target.value)}
                             placeholder="07123 456789"
-                            className={validateField('phone', formData.phone) ? 'border-red-300 focus:border-red-500' : ''}
+                            className={formData.phone && !/^[0-9\s+()-]{10,}$/.test(formData.phone.replace(/\s/g, '')) ? 'border-red-300 focus:border-red-500' : formData.phone ? 'border-green-300 focus:border-green-500' : ''}
                           />
-                          {validateField('phone', formData.phone) && (
-                            <p className="text-red-500 text-sm mt-1">{validateField('phone', formData.phone)}</p>
+                          {formData.phone && !/^[0-9\s+()-]{10,}$/.test(formData.phone.replace(/\s/g, '')) && (
+                            <p className="text-red-500 text-sm mt-1">Please enter a valid UK phone number</p>
                           )}
                         </div>
                       </div>
@@ -694,10 +694,10 @@ export default function PaymentPage() {
                               onChange={(e) => handleInputChange('sortCode', formatSortCode(e.target.value))}
                               placeholder="12-34-56"
                               maxLength={8}
-                              className={validateField('sortCode', formData.sortCode) ? 'border-red-300 focus:border-red-500' : 'border-green-300 focus:border-green-500'}
+                              className={formData.sortCode && formData.sortCode.replace(/\D/g, '').length > 0 && formData.sortCode.replace(/\D/g, '').length !== 6 ? 'border-red-300 focus:border-red-500' : formData.sortCode ? 'border-green-300 focus:border-green-500' : ''}
                             />
-                            {validateField('sortCode', formData.sortCode) && (
-                              <p className="text-red-500 text-sm mt-1">{validateField('sortCode', formData.sortCode)}</p>
+                            {formData.sortCode && formData.sortCode.replace(/\D/g, '').length > 0 && formData.sortCode.replace(/\D/g, '').length !== 6 && (
+                              <p className="text-red-500 text-sm mt-1">Sort code must be 6 digits (XX-XX-XX format)</p>
                             )}
                           </div>
                           <div>
@@ -708,10 +708,10 @@ export default function PaymentPage() {
                               onChange={(e) => handleInputChange('accountNumber', e.target.value.replace(/\D/g, ''))}
                               placeholder="12345678"
                               maxLength={8}
-                              className={validateField('accountNumber', formData.accountNumber) ? 'border-red-300 focus:border-red-500' : 'border-green-300 focus:border-green-500'}
+                              className={formData.accountNumber && (formData.accountNumber.replace(/\D/g, '').length < 6 || formData.accountNumber.replace(/\D/g, '').length > 8) ? 'border-red-300 focus:border-red-500' : formData.accountNumber ? 'border-green-300 focus:border-green-500' : ''}
                             />
-                            {validateField('accountNumber', formData.accountNumber) && (
-                              <p className="text-red-500 text-sm mt-1">{validateField('accountNumber', formData.accountNumber)}</p>
+                            {formData.accountNumber && (formData.accountNumber.replace(/\D/g, '').length < 6 || formData.accountNumber.replace(/\D/g, '').length > 8) && (
+                              <p className="text-red-500 text-sm mt-1">Account number must be 6-8 digits</p>
                             )}
                           </div>
                         </div>
