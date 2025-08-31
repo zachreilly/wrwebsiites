@@ -144,11 +144,13 @@ export default function CustomerDashboard() {
     window.location.href = "/customer/login";
   };
 
-  const formatCurrency = (amountInPence: number) => {
+  const formatCurrency = (amountInPence: number | null) => {
+    if (amountInPence === null) return '£0.00';
     return `£${(amountInPence / 100).toFixed(2)}`;
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string | null) => {
+    if (!status) return 'bg-gray-100 text-gray-800';
     switch (status) {
       case 'completed':
       case 'paid':
@@ -208,7 +210,7 @@ export default function CustomerDashboard() {
             </div>
             <div className="flex items-center space-x-4">
               <Badge className={getStatusColor(customerData.customer.subscriptionStatus)}>
-                {customerData.customer.subscriptionStatus}
+                {customerData.customer.subscriptionStatus || 'inactive'}
               </Badge>
               <Button variant="outline" onClick={handleLogout} data-testid="button-logout">
                 <LogOut className="w-4 h-4 mr-2" />
@@ -410,7 +412,7 @@ export default function CustomerDashboard() {
                     <div className="flex justify-between">
                       <span>Status:</span>
                       <Badge className={getStatusColor(customerData.customer.subscriptionStatus)}>
-                        {customerData.customer.subscriptionStatus}
+                        {customerData.customer.subscriptionStatus || 'inactive'}
                       </Badge>
                     </div>
                     <div className="flex justify-between">
