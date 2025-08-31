@@ -49,6 +49,13 @@ export default function Navigation() {
                 About
               </button>
               <button 
+                onClick={() => window.location.href = '/customer/login'} 
+                className="text-slate-600 hover:text-primary px-3 py-2 text-sm font-medium transition-colors"
+                data-testid="button-customer-portal"
+              >
+                Customer Portal
+              </button>
+              <button 
                 onClick={() => window.location.href = '/consultation'} 
                 className="text-amber-600 hover:text-amber-700 px-3 py-2 text-sm font-medium transition-colors border border-amber-200 rounded-md bg-amber-50 hover:bg-amber-100"
               >
@@ -110,6 +117,15 @@ export default function Navigation() {
               className="block px-3 py-2 text-slate-600 hover:text-primary w-full text-left"
             >
               Contact
+            </button>
+            <button 
+              onClick={() => {
+                window.location.href = '/customer/login';
+                setIsMenuOpen(false);
+              }} 
+              className="block px-3 py-2 text-slate-600 hover:text-primary w-full text-left"
+            >
+              Customer Portal
             </button>
             <button 
               onClick={() => {

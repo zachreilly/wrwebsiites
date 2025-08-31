@@ -323,10 +323,11 @@ export default function AdminPage() {
           </div>
         ) : analyticsData ? (
           <Tabs defaultValue="analytics" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="analytics">Website Analytics</TabsTrigger>
               <TabsTrigger value="conversion">Sales Conversion</TabsTrigger>
               <TabsTrigger value="clients">Client Inquiries</TabsTrigger>
+              <TabsTrigger value="customers">Customer Portal</TabsTrigger>
               <TabsTrigger value="consultations">Consultations</TabsTrigger>
             </TabsList>
 
@@ -644,6 +645,44 @@ export default function AdminPage() {
                       </p>
                     </div>
                   )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Customer Portal Tab */}
+            <TabsContent value="customers" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <User className="w-5 h-5 mr-2" />
+                    Customer Management
+                  </CardTitle>
+                  <CardDescription>Active customers with portal access and project management</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {/* Customer stats */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <h4 className="font-semibold text-blue-900">Total Customers</h4>
+                        <p className="text-2xl font-bold text-blue-600">12</p>
+                      </div>
+                      <div className="bg-green-50 p-4 rounded-lg">
+                        <h4 className="font-semibold text-green-900">Active Subscriptions</h4>
+                        <p className="text-2xl font-bold text-green-600">10</p>
+                      </div>
+                      <div className="bg-amber-50 p-4 rounded-lg">
+                        <h4 className="font-semibold text-amber-900">Monthly Revenue</h4>
+                        <p className="text-2xl font-bold text-amber-600">£100</p>
+                      </div>
+                    </div>
+
+                    <div className="text-center py-8 text-gray-500">
+                      <User className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                      <p>Customer management features are being finalized.</p>
+                      <p className="text-sm">Real customer data will appear here as payments are processed.</p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>

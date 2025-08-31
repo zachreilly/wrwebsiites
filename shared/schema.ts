@@ -197,3 +197,196 @@ export const insertConsultationRequestSchema = createInsertSchema(consultationRe
 
 export type ConsultationRequest = typeof consultationRequests.$inferSelect;
 export type InsertConsultationRequest = z.infer<typeof insertConsultationRequestSchema>;
+
+// Customer table for client portal and subscription management
+export const customers = pgTable("customers", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  firstName: varchar("first_name").notNull(),
+  lastName: varchar("last_name").notNull(),
+  email: varchar("email").notNull().unique(),
+  phone: varchar("phone"),
+  businessName: varchar("business_name"),
+  
+  // GoCardless customer information
+  gocardlessCustomerId: varchar("gocardless_customer_id").unique(),
+  gocardlessMandateId: varchar("gocardless_mandate_id"),
+  
+  // Subscription status
+  subscriptionStatus: varchar("subscription_status").default("inactive"), // 'inactive', 'active', 'cancelled', 'paused'
+  subscriptionStartDate: timestamp("subscription_start_date"),
+  nextBillingDate: timestamp("next_billing_date"),
+  
+  // Package information
+  package: varchar("package").notNull(), // 'basic' or 'premium'
+  setupFeesPaid: boolean("setup_fees_paid").default(false),
+  monthlyFee: integer("monthly_fee").default(1000), // in pence, so £10.00 = 1000
+  googleBusinessSetup: boolean("google_business_setup").default(false),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Projects table for tracking customer projects
+export const projects = pgTable("projects", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  customerId: varchar("customer_id").notNull().references(() => customers.id),
+  
+  projectName: varchar("project_name").notNull(),
+  projectDescription: text("project_description"),
+  status: varchar("status").notNull().default("planning"), // 'planning', 'design', 'development', 'review', 'completed'
+  priority: varchar("priority").default("medium"), // 'low', 'medium', 'high'
+  
+  // Timeline
+  estimatedCompletionDate: timestamp("estimated_completion_date"),
+  actualCompletionDate: timestamp("actual_completion_date"),
+  
+  // Project details
+  domainName: varchar("domain_name"),
+  pagesRequired: text("pages_required"),
+  designNotes: text("design_notes"),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Design assets and approvals
+export const designApprovals = pgTable("design_approvals", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  projectId: varchar("project_id").notNull().references(() => projects.id),
+  customerId: varchar("customer_id").notNull().references(() => customers.id),
+  
+  designType: varchar("design_type").notNull(), // 'mockup', 'homepage', 'logo', 'color_scheme'
+  designTitle: varchar("design_title").notNull(),
+  designDescription: text("design_description"),
+  designImageUrl: varchar("design_image_url"), // for uploaded designs
+  
+  status: varchar("status").notNull().default("pending"), // 'pending', 'approved', 'rejected', 'revision_requested'
+  customerFeedback: text("customer_feedback"),
+  
+  submittedAt: timestamp("submitted_at").defaultNow(),
+  respondedAt: timestamp("responded_at"),
+});
+
+// Change requests from customers
+export const changeRequests = pgTable("change_requests", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  projectId: varchar("project_id").notNull().references(() => projects.id),
+  customerId: varchar("customer_id").notNull().references(() => customers.id),
+  
+  requestType: varchar("request_type").notNull(), // 'content_change', 'design_change', 'functionality_change'
+  title: varchar("title").notNull(),
+  description: text("description").notNull(),
+  priority: varchar("priority").default("medium"), // 'low', 'medium', 'high', 'urgent'
+  
+  status: varchar("status").notNull().default("pending"), // 'pending', 'in_progress', 'completed', 'rejected'
+  adminResponse: text("admin_response"),
+  estimatedHours: integer("estimated_hours"),
+  actualHours: integer("actual_hours"),
+  additionalCost: integer("additional_cost"), // in pence
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Payment transactions and billing history
+export const transactions = pgTable("transactions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  customerId: varchar("customer_id").notNull().references(() => customers.id),
+  
+  // GoCardless payment information
+  gocardlessPaymentId: varchar("gocardless_payment_id").unique(),
+  
+  type: varchar("type").notNull(), // 'setup_fee', 'monthly_subscription', 'addon', 'change_request'
+  description: varchar("description").notNull(),
+  amount: integer("amount").notNull(), // in pence
+  currency: varchar("currency").default("GBP"),
+  
+  status: varchar("status").notNull(), // 'pending', 'confirmed', 'paid_out', 'cancelled', 'failed'
+  
+  // Billing details
+  billingDate: timestamp("billing_date").notNull(),
+  paidDate: timestamp("paid_date"),
+  failureReason: text("failure_reason"),
+  
+  // Receipt information
+  receiptUrl: varchar("receipt_url"),
+  receiptSent: boolean("receipt_sent").default(false),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Invoices for customer viewing
+export const invoices = pgTable("invoices", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  customerId: varchar("customer_id").notNull().references(() => customers.id),
+  
+  invoiceNumber: varchar("invoice_number").notNull().unique(),
+  
+  // Invoice details
+  subtotal: integer("subtotal").notNull(), // in pence
+  vatAmount: integer("vat_amount").default(0), // in pence
+  total: integer("total").notNull(), // in pence
+  
+  status: varchar("status").notNull().default("draft"), // 'draft', 'sent', 'paid', 'overdue', 'cancelled'
+  
+  // Dates
+  issueDate: timestamp("issue_date").defaultNow(),
+  dueDate: timestamp("due_date").notNull(),
+  paidDate: timestamp("paid_date"),
+  
+  // Invoice content
+  description: text("description"),
+  lineItems: text("line_items"), // JSON string of invoice items
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export type Customer = typeof customers.$inferSelect;
+export type InsertCustomer = typeof customers.$inferInsert;
+export type Project = typeof projects.$inferSelect;
+export type InsertProject = typeof projects.$inferInsert;
+export type DesignApproval = typeof designApprovals.$inferSelect;
+export type InsertDesignApproval = typeof designApprovals.$inferInsert;
+export type ChangeRequest = typeof changeRequests.$inferSelect;
+export type InsertChangeRequest = typeof changeRequests.$inferInsert;
+export type Transaction = typeof transactions.$inferSelect;
+export type InsertTransaction = typeof transactions.$inferInsert;
+export type Invoice = typeof invoices.$inferSelect;
+export type InsertInvoice = typeof invoices.$inferInsert;
+
+export const insertCustomerSchema = createInsertSchema(customers).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertProjectSchema = createInsertSchema(projects).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertDesignApprovalSchema = createInsertSchema(designApprovals).omit({
+  id: true,
+  submittedAt: true,
+});
+
+export const insertChangeRequestSchema = createInsertSchema(changeRequests).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertTransactionSchema = createInsertSchema(transactions).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertInvoiceSchema = createInsertSchema(invoices).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});

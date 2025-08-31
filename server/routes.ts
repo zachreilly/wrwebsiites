@@ -1,8 +1,10 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertContactRequestSchema, insertPageViewSchema, insertClickEventSchema, insertAdminSessionSchema, insertClientOnboardingSchema, insertConsultationRequestSchema } from "@shared/schema";
+import { insertContactRequestSchema, insertPageViewSchema, insertClickEventSchema, insertAdminSessionSchema, insertClientOnboardingSchema, insertConsultationRequestSchema, customers, projects } from "@shared/schema";
 import { z } from "zod";
+import { db } from "./db";
+import { eq, desc, count } from "drizzle-orm";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Enable trust proxy to get real IP addresses
@@ -244,41 +246,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Direct debit payment endpoint
   app.post("/api/payment/direct-debit", async (req, res) => {
     try {
-      const paymentData = req.body;
-      
-      // Store the payment request in the database
-      await storage.createPaymentRequest({
-        package: paymentData.package,
-        firstName: paymentData.firstName,
-        lastName: paymentData.lastName,
-        email: paymentData.email,
-        phone: paymentData.phone,
-        businessName: paymentData.businessName,
-        accountHolderName: paymentData.accountHolderName,
-        sortCode: paymentData.sortCode,
-        accountNumber: paymentData.accountNumber,
-        address: paymentData.address,
-        city: paymentData.city,
-        postcode: paymentData.postcode,
-        googleBusinessSetup: paymentData.googleBusinessSetup || false,
-        status: 'pending'
-      });
-
-      // In a real implementation, you would:
-      // 1. Integrate with a direct debit provider (like GoCardless)
-      // 2. Send confirmation emails
-      // 3. Set up the direct debit mandate
-      
-      res.json({ 
-        success: true, 
-        message: "Direct debit setup successful" 
-      });
+      const { setupDirectDebit } = await import("./gocardless");
+      await setupDirectDebit(req, res);
     } catch (error) {
       console.error("Payment processing error:", error);
       res.status(500).json({ 
         success: false, 
         message: "Failed to process payment request" 
       });
+    }
+  });
+
+  // GoCardless webhook endpoint for payment status updates
+  app.post("/api/gocardless/webhook", async (req, res) => {
+    try {
+      const { processWebhook } = await import("./gocardless");
+      await processWebhook(req, res);
+    } catch (error) {
+      console.error("Webhook processing error:", error);
+      res.status(500).json({ error: 'Webhook processing failed' });
     }
   });
 
@@ -411,6 +397,222 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: false, 
         message: "Failed to update consultation status" 
       });
+    }
+  });
+
+  // Customer portal authentication - simple email-based lookup
+  app.post("/api/customer/login", async (req, res) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ success: false, message: "Email required" });
+      }
+
+      const customer = await storage.getCustomerByEmail(email);
+      
+      if (!customer) {
+        return res.status(404).json({ 
+          success: false, 
+          message: "No customer account found with this email address" 
+        });
+      }
+
+      res.json({ 
+        success: true, 
+        customer: {
+          id: customer.id,
+          firstName: customer.firstName,
+          lastName: customer.lastName,
+          email: customer.email,
+          businessName: customer.businessName,
+          subscriptionStatus: customer.subscriptionStatus,
+          package: customer.package
+        }
+      });
+    } catch (error) {
+      console.error("Customer login error:", error);
+      res.status(500).json({ success: false, message: "Login failed" });
+    }
+  });
+
+  // Customer dashboard data
+  app.get("/api/customer/:customerId/dashboard", async (req, res) => {
+    try {
+      const { customerId } = req.params;
+      
+      const [customer, projects, transactions, invoices] = await Promise.all([
+        storage.getCustomer(customerId),
+        storage.getProjectsByCustomer(customerId),
+        storage.getTransactionsByCustomer(customerId),
+        storage.getInvoicesByCustomer(customerId)
+      ]);
+
+      if (!customer) {
+        return res.status(404).json({ success: false, message: "Customer not found" });
+      }
+
+      res.json({
+        success: true,
+        data: {
+          customer,
+          projects,
+          transactions,
+          invoices
+        }
+      });
+    } catch (error) {
+      console.error("Customer dashboard error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch dashboard data" });
+    }
+  });
+
+  // Get design approvals for a project
+  app.get("/api/customer/project/:projectId/designs", async (req, res) => {
+    try {
+      const { projectId } = req.params;
+      const designs = await storage.getDesignApprovalsByProject(projectId);
+      res.json({ success: true, data: designs });
+    } catch (error) {
+      console.error("Design approvals error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch designs" });
+    }
+  });
+
+  // Submit design approval/rejection
+  app.patch("/api/customer/design/:designId", async (req, res) => {
+    try {
+      const { designId } = req.params;
+      const { status, feedback } = req.body;
+      
+      if (!['approved', 'rejected', 'revision_requested'].includes(status)) {
+        return res.status(400).json({ success: false, message: "Invalid status" });
+      }
+
+      const updated = await storage.updateDesignApprovalStatus(designId, status, feedback);
+      
+      if (!updated) {
+        return res.status(404).json({ success: false, message: "Design not found" });
+      }
+
+      res.json({ success: true, data: updated });
+    } catch (error) {
+      console.error("Design approval error:", error);
+      res.status(500).json({ success: false, message: "Failed to update design approval" });
+    }
+  });
+
+  // Submit change request
+  app.post("/api/customer/project/:projectId/change-request", async (req, res) => {
+    try {
+      const { projectId } = req.params;
+      const { customerId, requestType, title, description, priority } = req.body;
+      
+      const changeRequest = await storage.createChangeRequest({
+        projectId,
+        customerId,
+        requestType,
+        title,
+        description,
+        priority: priority || 'medium'
+      });
+
+      res.json({ success: true, data: changeRequest });
+    } catch (error) {
+      console.error("Change request error:", error);
+      res.status(500).json({ success: false, message: "Failed to submit change request" });
+    }
+  });
+
+  // Get change requests for a project
+  app.get("/api/customer/project/:projectId/change-requests", async (req, res) => {
+    try {
+      const { projectId } = req.params;
+      const requests = await storage.getChangeRequestsByProject(projectId);
+      res.json({ success: true, data: requests });
+    } catch (error) {
+      console.error("Change requests error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch change requests" });
+    }
+  });
+
+  // Admin: Create design approval for review
+  app.post("/api/admin/project/:projectId/design", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      const { projectId } = req.params;
+      const { customerId, designType, designTitle, designDescription, designImageUrl } = req.body;
+      
+      const design = await storage.createDesignApproval({
+        projectId,
+        customerId,
+        designType,
+        designTitle,
+        designDescription,
+        designImageUrl
+      });
+
+      res.json({ success: true, data: design });
+    } catch (error) {
+      console.error("Admin design submission error:", error);
+      res.status(500).json({ success: false, message: "Failed to submit design" });
+    }
+  });
+
+  // Admin: Update change request status
+  app.patch("/api/admin/change-request/:requestId", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      const { requestId } = req.params;
+      const { status, adminResponse, estimatedHours, additionalCost } = req.body;
+      
+      const updated = await storage.updateChangeRequestStatus(requestId, status, adminResponse);
+      
+      if (!updated) {
+        return res.status(404).json({ success: false, message: "Change request not found" });
+      }
+
+      res.json({ success: true, data: updated });
+    } catch (error) {
+      console.error("Change request update error:", error);
+      res.status(500).json({ success: false, message: "Failed to update change request" });
+    }
+  });
+
+  // Admin: Get all customers for management
+  app.get("/api/admin/customers", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      // Get all customers with their project counts
+      const customersData = await db
+        .select({
+          customer: customers,
+          projectCount: count(projects.id)
+        })
+        .from(customers)
+        .leftJoin(projects, eq(customers.id, projects.customerId))
+        .groupBy(customers.id)
+        .orderBy(desc(customers.createdAt));
+
+      res.json({ success: true, data: customersData });
+    } catch (error) {
+      console.error("Admin customers error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch customers" });
     }
   });
 

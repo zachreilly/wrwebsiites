@@ -250,8 +250,20 @@ export default function PaymentPage() {
               </p>
             </div>
 
-            <div className="text-center">
-              <Button onClick={() => setLocation('/')} className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-2">
+            <div className="text-center space-y-4">
+              <Button 
+                onClick={() => window.location.href = '/customer/login'} 
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-2 w-full"
+                data-testid="button-access-portal"
+              >
+                Access Your Customer Portal
+              </Button>
+              <Button 
+                onClick={() => setLocation('/')} 
+                variant="outline" 
+                className="px-8 py-2 w-full"
+                data-testid="button-return-home"
+              >
                 Return to Homepage
               </Button>
             </div>

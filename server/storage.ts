@@ -7,6 +7,12 @@ import {
   paymentRequests,
   clientOnboarding,
   consultationRequests,
+  customers,
+  projects,
+  designApprovals,
+  changeRequests,
+  transactions,
+  invoices,
   type User, 
   type InsertUser, 
   type ContactRequest, 
@@ -22,7 +28,19 @@ import {
   type ClientOnboarding,
   type InsertClientOnboarding,
   type ConsultationRequest,
-  type InsertConsultationRequest
+  type InsertConsultationRequest,
+  type Customer,
+  type InsertCustomer,
+  type Project,
+  type InsertProject,
+  type DesignApproval,
+  type InsertDesignApproval,
+  type ChangeRequest,
+  type InsertChangeRequest,
+  type Transaction,
+  type InsertTransaction,
+  type Invoice,
+  type InsertInvoice
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, count, sql, gt } from "drizzle-orm";
@@ -63,6 +81,38 @@ export interface IStorage {
   // Consultation request operations
   createConsultationRequest(request: InsertConsultationRequest): Promise<ConsultationRequest>;
   getConsultationRequests(): Promise<ConsultationRequest[]>;
+  
+  // Customer operations
+  createCustomer(customer: InsertCustomer): Promise<Customer>;
+  getCustomer(id: string): Promise<Customer | undefined>;
+  getCustomerByEmail(email: string): Promise<Customer | undefined>;
+  updateCustomer(id: string, updates: Partial<Customer>): Promise<Customer | undefined>;
+  
+  // Project operations
+  createProject(project: InsertProject): Promise<Project>;
+  getProjectsByCustomer(customerId: string): Promise<Project[]>;
+  updateProject(id: string, updates: Partial<Project>): Promise<Project | undefined>;
+  
+  // Design approval operations
+  createDesignApproval(approval: InsertDesignApproval): Promise<DesignApproval>;
+  getDesignApprovalsByProject(projectId: string): Promise<DesignApproval[]>;
+  updateDesignApprovalStatus(id: string, status: string, feedback?: string): Promise<DesignApproval | undefined>;
+  
+  // Change request operations
+  createChangeRequest(request: InsertChangeRequest): Promise<ChangeRequest>;
+  getChangeRequestsByProject(projectId: string): Promise<ChangeRequest[]>;
+  updateChangeRequestStatus(id: string, status: string, response?: string): Promise<ChangeRequest | undefined>;
+  
+  // Transaction operations
+  createTransaction(transaction: InsertTransaction): Promise<Transaction>;
+  getTransactionsByCustomer(customerId: string): Promise<Transaction[]>;
+  updateTransactionByGoCardlessId(gocardlessId: string, updates: Partial<Transaction>): Promise<Transaction | undefined>;
+  getTransactionByGoCardlessId(gocardlessId: string): Promise<Transaction | undefined>;
+  
+  // Invoice operations
+  createInvoice(invoice: InsertInvoice): Promise<Invoice>;
+  getInvoicesByCustomer(customerId: string): Promise<Invoice[]>;
+  updateInvoiceStatus(id: string, status: string): Promise<Invoice | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -295,6 +345,184 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(consultationRequests)
       .orderBy(desc(consultationRequests.createdAt));
+  }
+
+  // Customer operations
+  async createCustomer(insertCustomer: InsertCustomer): Promise<Customer> {
+    const [customer] = await db
+      .insert(customers)
+      .values(insertCustomer)
+      .returning();
+    return customer;
+  }
+
+  async getCustomer(id: string): Promise<Customer | undefined> {
+    const [customer] = await db.select().from(customers).where(eq(customers.id, id));
+    return customer;
+  }
+
+  async getCustomerByEmail(email: string): Promise<Customer | undefined> {
+    const [customer] = await db.select().from(customers).where(eq(customers.email, email));
+    return customer;
+  }
+
+  async updateCustomer(id: string, updates: Partial<Customer>): Promise<Customer | undefined> {
+    const [updated] = await db
+      .update(customers)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(customers.id, id))
+      .returning();
+    return updated;
+  }
+
+  // Project operations
+  async createProject(insertProject: InsertProject): Promise<Project> {
+    const [project] = await db
+      .insert(projects)
+      .values(insertProject)
+      .returning();
+    return project;
+  }
+
+  async getProjectsByCustomer(customerId: string): Promise<Project[]> {
+    return await db
+      .select()
+      .from(projects)
+      .where(eq(projects.customerId, customerId))
+      .orderBy(desc(projects.createdAt));
+  }
+
+  async updateProject(id: string, updates: Partial<Project>): Promise<Project | undefined> {
+    const [updated] = await db
+      .update(projects)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(projects.id, id))
+      .returning();
+    return updated;
+  }
+
+  // Design approval operations
+  async createDesignApproval(insertApproval: InsertDesignApproval): Promise<DesignApproval> {
+    const [approval] = await db
+      .insert(designApprovals)
+      .values(insertApproval)
+      .returning();
+    return approval;
+  }
+
+  async getDesignApprovalsByProject(projectId: string): Promise<DesignApproval[]> {
+    return await db
+      .select()
+      .from(designApprovals)
+      .where(eq(designApprovals.projectId, projectId))
+      .orderBy(desc(designApprovals.submittedAt));
+  }
+
+  async updateDesignApprovalStatus(id: string, status: string, feedback?: string): Promise<DesignApproval | undefined> {
+    const [updated] = await db
+      .update(designApprovals)
+      .set({ 
+        status, 
+        customerFeedback: feedback,
+        respondedAt: new Date()
+      })
+      .where(eq(designApprovals.id, id))
+      .returning();
+    return updated;
+  }
+
+  // Change request operations
+  async createChangeRequest(insertRequest: InsertChangeRequest): Promise<ChangeRequest> {
+    const [request] = await db
+      .insert(changeRequests)
+      .values(insertRequest)
+      .returning();
+    return request;
+  }
+
+  async getChangeRequestsByProject(projectId: string): Promise<ChangeRequest[]> {
+    return await db
+      .select()
+      .from(changeRequests)
+      .where(eq(changeRequests.projectId, projectId))
+      .orderBy(desc(changeRequests.createdAt));
+  }
+
+  async updateChangeRequestStatus(id: string, status: string, response?: string): Promise<ChangeRequest | undefined> {
+    const [updated] = await db
+      .update(changeRequests)
+      .set({ 
+        status, 
+        adminResponse: response,
+        updatedAt: new Date()
+      })
+      .where(eq(changeRequests.id, id))
+      .returning();
+    return updated;
+  }
+
+  // Transaction operations
+  async createTransaction(insertTransaction: InsertTransaction): Promise<Transaction> {
+    const [transaction] = await db
+      .insert(transactions)
+      .values(insertTransaction)
+      .returning();
+    return transaction;
+  }
+
+  async getTransactionsByCustomer(customerId: string): Promise<Transaction[]> {
+    return await db
+      .select()
+      .from(transactions)
+      .where(eq(transactions.customerId, customerId))
+      .orderBy(desc(transactions.billingDate));
+  }
+
+  async updateTransactionByGoCardlessId(gocardlessId: string, updates: Partial<Transaction>): Promise<Transaction | undefined> {
+    const [updated] = await db
+      .update(transactions)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(transactions.gocardlessPaymentId, gocardlessId))
+      .returning();
+    return updated;
+  }
+
+  async getTransactionByGoCardlessId(gocardlessId: string): Promise<Transaction | undefined> {
+    const [transaction] = await db
+      .select()
+      .from(transactions)
+      .where(eq(transactions.gocardlessPaymentId, gocardlessId));
+    return transaction;
+  }
+
+  // Invoice operations
+  async createInvoice(insertInvoice: InsertInvoice): Promise<Invoice> {
+    const [invoice] = await db
+      .insert(invoices)
+      .values(insertInvoice)
+      .returning();
+    return invoice;
+  }
+
+  async getInvoicesByCustomer(customerId: string): Promise<Invoice[]> {
+    return await db
+      .select()
+      .from(invoices)
+      .where(eq(invoices.customerId, customerId))
+      .orderBy(desc(invoices.issueDate));
+  }
+
+  async updateInvoiceStatus(id: string, status: string): Promise<Invoice | undefined> {
+    const [updated] = await db
+      .update(invoices)
+      .set({ 
+        status,
+        paidDate: status === 'paid' ? new Date() : undefined,
+        updatedAt: new Date()
+      })
+      .where(eq(invoices.id, id))
+      .returning();
+    return updated;
   }
 }
 
