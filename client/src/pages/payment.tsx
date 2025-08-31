@@ -39,6 +39,9 @@ interface PaymentFormData {
   postcode: string;
   agreedToTerms: boolean;
   agreedToDirectDebit: boolean;
+  // Success data
+  customerId?: string;
+  customerEmail?: string;
 }
 
 export default function PaymentPage() {
@@ -81,9 +84,12 @@ export default function PaymentPage() {
   const totalSteps = 5; // Package, Client Details, Domain Info, Payment Details, Thank You
   const [showTerms, setShowTerms] = useState(false);
   const [showDirectDebitInfo, setShowDirectDebitInfo] = useState(false);
+  const [isValidating, setIsValidating] = useState(false);
+  const [stepErrors, setStepErrors] = useState<{[key: number]: string}>({});
 
   const submitApplication = useMutation({
     mutationFn: async (data: PaymentFormData) => {
+      setIsValidating(true);
       // Split full name into first and last name
       const nameParts = data.fullName.trim().split(' ');
       const firstName = nameParts[0] || '';
@@ -119,10 +125,25 @@ export default function PaymentPage() {
       };
       return await apiRequest("POST", "/api/payment/direct-debit", paymentData);
     },
-    onSuccess: () => {
+    onSuccess: (data: any) => {
+      setIsValidating(false);
       setCurrentStep(5); // Thank you step
+      
+      // Store customer data for thank you page
+      setFormData(prev => ({
+        ...prev,
+        customerId: data.customer?.id,
+        customerEmail: data.customer?.email
+      }));
+      
+      toast({
+        title: "Payment Setup Complete!",
+        description: "Your direct debit has been set up successfully. You now have access to your customer portal.",
+        variant: "default",
+      });
     },
     onError: (error: any) => {
+      setIsValidating(false);
       toast({
         title: "Submission Failed",
         description: error.message || "There was an error processing your application. Please try again.",
@@ -133,6 +154,21 @@ export default function PaymentPage() {
 
   const handleInputChange = (field: keyof PaymentFormData, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    
+    // Clear field-specific errors on change
+    if (stepErrors[currentStep]) {
+      const newErrors = {...stepErrors};
+      delete newErrors[currentStep];
+      setStepErrors(newErrors);
+    }
+    
+    // Auto-format sort code
+    if (field === 'sortCode' && typeof value === 'string') {
+      const formatted = formatSortCode(value);
+      if (formatted !== value) {
+        setFormData(prev => ({ ...prev, [field]: formatted }));
+      }
+    }
   };
 
   const validateStep1 = () => {
@@ -186,22 +222,34 @@ export default function PaymentPage() {
   };
 
   const nextStep = () => {
-    if (currentStep === 1 && validateStep1()) {
-      setCurrentStep(2);
-    } else if (currentStep === 2 && validateStep2()) {
-      if (formData.package === 'basic') {
-        setCurrentStep(4); // Skip domain step for basic package
-      } else {
-        setCurrentStep(3);
+    // Add smooth transition effect
+    setIsValidating(true);
+    
+    setTimeout(() => {
+      if (currentStep === 1 && validateStep1()) {
+        setCurrentStep(2);
+      } else if (currentStep === 2 && validateStep2()) {
+        if (formData.package === 'basic') {
+          setCurrentStep(4); // Skip domain step for basic package
+        } else {
+          setCurrentStep(3);
+        }
+      } else if (currentStep === 3 && validateStep3()) {
+        setCurrentStep(4);
+      } else if (currentStep === 4 && validateStep4()) {
+        submitApplication.mutate(formData);
+        return; // Don't reset validation state
       }
-    } else if (currentStep === 3 && validateStep3()) {
-      setCurrentStep(4);
-    } else if (currentStep === 4 && validateStep4()) {
-      submitApplication.mutate(formData);
-    }
+      setIsValidating(false);
+    }, 300); // Small delay for smooth UX
   };
 
   const prevStep = () => {
+    // Clear any step errors when going back
+    const newErrors = {...stepErrors};
+    delete newErrors[currentStep];
+    setStepErrors(newErrors);
+    
     if (currentStep === 4 && formData.package === 'basic') {
       setCurrentStep(2); // Skip domain step for basic package
     } else if (currentStep > 1) {
@@ -223,25 +271,32 @@ export default function PaymentPage() {
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="bg-emerald-50 p-6 rounded-lg border border-emerald-200">
-              <h3 className="font-semibold text-emerald-800 mb-4 text-lg">What happens next?</h3>
-              <ul className="space-y-3 text-emerald-700">
-                <li className="flex items-start">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  <span>We'll contact you via email within the next 24 hours to confirm your project details</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  <span>Your website development will begin immediately after confirmation</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  <span>You'll receive regular updates throughout the development process</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  <span>Your first payment will be taken once your website is live and approved</span>
-                </li>
-              </ul>
+              <h3 className="font-semibold text-emerald-800 mb-4 text-lg">Your Account is Ready!</h3>
+              <div className="space-y-4">
+                <div className="bg-white p-4 rounded-lg border border-emerald-200">
+                  <h4 className="font-medium text-emerald-800 mb-2">Customer Portal Access</h4>
+                  <p className="text-emerald-700 text-sm">Use your email address: <strong>{formData.email}</strong></p>
+                  <p className="text-emerald-700 text-sm">To track your project progress, approve designs, and manage payments</p>
+                </div>
+                <ul className="space-y-3 text-emerald-700">
+                  <li className="flex items-start">
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <span>Project development begins within 24 hours</span>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <span>Track progress and approve designs in your portal</span>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <span>Setup fee collected when website goes live</span>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <span>Monthly £10 payments start automatically</span>
+                  </li>
+                </ul>
+              </div>
             </div>
             
             <div className="bg-slate-50 p-4 rounded-lg border">
@@ -251,17 +306,31 @@ export default function PaymentPage() {
             </div>
 
             <div className="text-center space-y-4">
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
+                <p className="text-sm text-blue-800 font-medium mb-2">🚀 Ready to get started?</p>
+                <p className="text-sm text-blue-700">Access your customer portal now to see your project details and track progress in real-time.</p>
+              </div>
               <Button 
-                onClick={() => window.location.href = '/customer/login'} 
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-2 w-full"
+                onClick={() => {
+                  // Smooth transition to customer portal
+                  toast({
+                    title: "Redirecting to Customer Portal",
+                    description: "Taking you to your project dashboard...",
+                    variant: "default",
+                  });
+                  setTimeout(() => {
+                    window.location.href = '/customer-portal';
+                  }, 1000);
+                }} 
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 w-full text-lg font-semibold transition-all duration-200 transform hover:scale-105"
                 data-testid="button-access-portal"
               >
-                Access Your Customer Portal
+                🔑 Access Your Customer Portal
               </Button>
               <Button 
                 onClick={() => setLocation('/')} 
                 variant="outline" 
-                className="px-8 py-2 w-full"
+                className="px-8 py-2 w-full transition-all duration-200"
                 data-testid="button-return-home"
               >
                 Return to Homepage
@@ -447,7 +516,11 @@ export default function PaymentPage() {
                             value={formData.email}
                             onChange={(e) => handleInputChange('email', e.target.value)}
                             placeholder="john@business.com"
+                            className={validateField('email', formData.email) ? 'border-red-300 focus:border-red-500' : ''}
                           />
+                          {validateField('email', formData.email) && (
+                            <p className="text-red-500 text-sm mt-1">{validateField('email', formData.email)}</p>
+                          )}
                         </div>
                         <div>
                           <Label htmlFor="phone">Phone Number</Label>
@@ -456,7 +529,11 @@ export default function PaymentPage() {
                             value={formData.phone}
                             onChange={(e) => handleInputChange('phone', e.target.value)}
                             placeholder="07123 456789"
+                            className={validateField('phone', formData.phone) ? 'border-red-300 focus:border-red-500' : ''}
                           />
+                          {validateField('phone', formData.phone) && (
+                            <p className="text-red-500 text-sm mt-1">{validateField('phone', formData.phone)}</p>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -617,7 +694,11 @@ export default function PaymentPage() {
                               onChange={(e) => handleInputChange('sortCode', formatSortCode(e.target.value))}
                               placeholder="12-34-56"
                               maxLength={8}
+                              className={validateField('sortCode', formData.sortCode) ? 'border-red-300 focus:border-red-500' : 'border-green-300 focus:border-green-500'}
                             />
+                            {validateField('sortCode', formData.sortCode) && (
+                              <p className="text-red-500 text-sm mt-1">{validateField('sortCode', formData.sortCode)}</p>
+                            )}
                           </div>
                           <div>
                             <Label htmlFor="accountNumber">Account Number *</Label>
@@ -627,7 +708,11 @@ export default function PaymentPage() {
                               onChange={(e) => handleInputChange('accountNumber', e.target.value.replace(/\D/g, ''))}
                               placeholder="12345678"
                               maxLength={8}
+                              className={validateField('accountNumber', formData.accountNumber) ? 'border-red-300 focus:border-red-500' : 'border-green-300 focus:border-green-500'}
                             />
+                            {validateField('accountNumber', formData.accountNumber) && (
+                              <p className="text-red-500 text-sm mt-1">{validateField('accountNumber', formData.accountNumber)}</p>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -733,6 +818,8 @@ export default function PaymentPage() {
                     <Button
                       variant="outline"
                       onClick={prevStep}
+                      disabled={submitApplication.isPending || isValidating}
+                      className="transition-all duration-200"
                     >
                       <ArrowLeft className="w-4 h-4 mr-2" />
                       Previous
@@ -746,12 +833,23 @@ export default function PaymentPage() {
                         (currentStep === 2 && !validateStep2()) ||
                         (currentStep === 3 && !validateStep3()) ||
                         (currentStep === 4 && !validateStep4()) ||
-                        submitApplication.isPending
+                        submitApplication.isPending ||
+                        isValidating
                       }
-                      className="bg-emerald-600 hover:bg-emerald-700"
+                      className="bg-emerald-600 hover:bg-emerald-700 transition-all duration-200 min-w-[140px]"
                     >
-                      {currentStep === 4 ? (
-                        submitApplication.isPending ? "Submitting..." : "Complete Setup"
+                      {submitApplication.isPending ? (
+                        <>
+                          <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2" />
+                          Setting up payment...
+                        </>
+                      ) : isValidating ? (
+                        <>
+                          <div className="animate-pulse w-4 h-4 bg-white rounded-full mr-2" />
+                          Validating...
+                        </>
+                      ) : currentStep === 4 ? (
+                        "Complete Setup"
                       ) : (
                         "Next Step"
                       )}
