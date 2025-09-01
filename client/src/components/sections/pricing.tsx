@@ -62,7 +62,7 @@ export default function Pricing() {
           <div className="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
             <div className="text-center mb-8">
               <h3 className="text-2xl font-bold text-slate-900 mb-2">Basic Static Website</h3>
-              <p className="text-slate-600 mb-6">A professional 1–3 page site to get your business online</p>
+              <p className="text-slate-600 mb-6">Perfect for small businesses - a professional website with everything you need to establish your online presence</p>
               <div className="text-4xl font-bold text-slate-900 mb-2">
                 {basicPricing.isDiscounted && basicPricing.originalSetupPrice && (
                   <span className="text-2xl text-red-500 line-through mr-3">£{basicPricing.originalSetupPrice}</span>
@@ -80,22 +80,30 @@ export default function Pricing() {
                 + £{basicPricing.monthlyPrice} per month
               </div>
             </div>
-            <ul className="space-y-4 mb-8">
-              <li className="flex items-center text-slate-600">
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-center text-slate-700">
                 <span className="text-emerald-500 mr-3">✓</span>
-                1-3 pages
+                <strong>Up to 3 professional pages</strong> (Home, About, Contact)
               </li>
-              <li className="flex items-center text-slate-600">
+              <li className="flex items-center text-slate-700">
                 <span className="text-emerald-500 mr-3">✓</span>
-                Mobile responsive design
+                <strong>Mobile-friendly responsive design</strong>
               </li>
-              <li className="flex items-center text-slate-600">
+              <li className="flex items-center text-slate-700">
                 <span className="text-emerald-500 mr-3">✓</span>
-                Secure hosting included
+                <strong>Contact form & business information</strong>
               </li>
-              <li className="flex items-center text-slate-600">
+              <li className="flex items-center text-slate-700">
                 <span className="text-emerald-500 mr-3">✓</span>
-                Ongoing support
+                <strong>Fast secure hosting included</strong>
+              </li>
+              <li className="flex items-center text-slate-700">
+                <span className="text-emerald-500 mr-3">✓</span>
+                <strong>Basic SEO optimization</strong>
+              </li>
+              <li className="flex items-center text-slate-700">
+                <span className="text-emerald-500 mr-3">✓</span>
+                <strong>1 month dedicated support</strong>
               </li>
             </ul>
             <Button 
