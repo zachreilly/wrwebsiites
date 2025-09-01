@@ -13,6 +13,7 @@ import {
   changeRequests,
   transactions,
   invoices,
+  portfolioItems,
   type User, 
   type InsertUser, 
   type ContactRequest, 
@@ -40,7 +41,9 @@ import {
   type Transaction,
   type InsertTransaction,
   type Invoice,
-  type InsertInvoice
+  type InsertInvoice,
+  type PortfolioItem,
+  type InsertPortfolioItem
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, count, sql, gt } from "drizzle-orm";
@@ -113,6 +116,15 @@ export interface IStorage {
   createInvoice(invoice: InsertInvoice): Promise<Invoice>;
   getInvoicesByCustomer(customerId: string): Promise<Invoice[]>;
   updateInvoiceStatus(id: string, status: string): Promise<Invoice | undefined>;
+  
+  // Portfolio operations
+  createPortfolioItem(item: InsertPortfolioItem): Promise<PortfolioItem>;
+  getPortfolioItems(): Promise<PortfolioItem[]>;
+  getPublicPortfolioItems(): Promise<PortfolioItem[]>;
+  getFeaturedPortfolioItems(): Promise<PortfolioItem[]>;
+  getPortfolioItem(id: string): Promise<PortfolioItem | undefined>;
+  updatePortfolioItem(id: string, updates: Partial<PortfolioItem>): Promise<PortfolioItem | undefined>;
+  deletePortfolioItem(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -523,6 +535,61 @@ export class DatabaseStorage implements IStorage {
       .where(eq(invoices.id, id))
       .returning();
     return updated;
+  }
+
+  // Portfolio operations
+  async createPortfolioItem(insertItem: InsertPortfolioItem): Promise<PortfolioItem> {
+    const [item] = await db
+      .insert(portfolioItems)
+      .values(insertItem)
+      .returning();
+    return item;
+  }
+
+  async getPortfolioItems(): Promise<PortfolioItem[]> {
+    return await db
+      .select()
+      .from(portfolioItems)
+      .orderBy(desc(portfolioItems.displayOrder), desc(portfolioItems.createdAt));
+  }
+
+  async getPublicPortfolioItems(): Promise<PortfolioItem[]> {
+    return await db
+      .select()
+      .from(portfolioItems)
+      .where(eq(portfolioItems.isPublic, true))
+      .orderBy(desc(portfolioItems.displayOrder), desc(portfolioItems.createdAt));
+  }
+
+  async getFeaturedPortfolioItems(): Promise<PortfolioItem[]> {
+    return await db
+      .select()
+      .from(portfolioItems)
+      .where(sql`${portfolioItems.isPublic} = true AND ${portfolioItems.isFeatured} = true`)
+      .orderBy(desc(portfolioItems.displayOrder), desc(portfolioItems.createdAt));
+  }
+
+  async getPortfolioItem(id: string): Promise<PortfolioItem | undefined> {
+    const [item] = await db
+      .select()
+      .from(portfolioItems)
+      .where(eq(portfolioItems.id, id));
+    return item;
+  }
+
+  async updatePortfolioItem(id: string, updates: Partial<PortfolioItem>): Promise<PortfolioItem | undefined> {
+    const [updated] = await db
+      .update(portfolioItems)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(portfolioItems.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deletePortfolioItem(id: string): Promise<void> {
+    await db
+      .delete(portfolioItems)
+      .where(eq(portfolioItems.id, id));
   }
 }
 

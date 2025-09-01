@@ -49,6 +49,13 @@ export default function Navigation() {
                 About
               </button>
               <button 
+                onClick={() => window.location.href = '/portfolio'} 
+                className="text-slate-600 hover:text-primary px-3 py-2 text-sm font-medium transition-colors"
+                data-testid="button-portfolio"
+              >
+                Portfolio
+              </button>
+              <button 
                 onClick={() => window.location.href = '/customer/login'} 
                 className="text-slate-600 hover:text-primary px-3 py-2 text-sm font-medium transition-colors"
                 data-testid="button-customer-portal"
@@ -111,6 +118,16 @@ export default function Navigation() {
               className="block px-3 py-2 text-slate-600 hover:text-primary w-full text-left"
             >
               About
+            </button>
+            <button 
+              onClick={() => {
+                window.location.href = '/portfolio';
+                setIsMenuOpen(false);
+              }} 
+              className="block px-3 py-2 text-slate-600 hover:text-primary w-full text-left"
+              data-testid="button-portfolio-mobile"
+            >
+              Portfolio
             </button>
             <button 
               onClick={() => scrollToSection('contact')} 

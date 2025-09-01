@@ -6,7 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent, MessageSquare, Calculator, Check, Clock } from "lucide-react";
+import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent, MessageSquare, Calculator, Check, Clock, ExternalLink, Star, Trash2, Edit, Plus, Camera, Tag } from "lucide-react";
+import type { PortfolioItem } from "@shared/schema";
+import { apiRequest } from "@/lib/queryClient";
 
 interface AnalyticsData {
   pageViewStats: { page: string; views: number }[];
@@ -15,6 +17,212 @@ interface AnalyticsData {
   totalClickEvents: number;
   uniqueVisitors: number;
   period: string;
+}
+
+interface PortfolioManagementProps {
+  sessionPassword: string;
+}
+
+function PortfolioManagement({ sessionPassword }: PortfolioManagementProps) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const { data: portfolioData, isLoading } = useQuery({
+    queryKey: ['/api/admin/portfolio', sessionPassword],
+    queryFn: async () => {
+      const response = await apiRequest("GET", `/api/admin/portfolio?password=${sessionPassword}`);
+      return response.json();
+    },
+    enabled: !!sessionPassword,
+  });
+
+  const deletePortfolioMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await apiRequest("DELETE", `/api/admin/portfolio/${id}?password=${sessionPassword}`);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/portfolio', sessionPassword] });
+      toast({
+        title: "Portfolio item deleted",
+        description: "The portfolio item has been removed successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to delete portfolio item",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const portfolioItems: PortfolioItem[] = portfolioData?.data || [];
+
+  const handleDeleteItem = (id: string, projectTitle: string) => {
+    if (window.confirm(`Are you sure you want to delete "${projectTitle}"? This action cannot be undone.`)) {
+      deletePortfolioMutation.mutate(id);
+    }
+  };
+
+  const getProjectTypeColor = (type: string) => {
+    switch (type) {
+      case 'basic':
+        return 'bg-blue-100 text-blue-800';
+      case 'premium':
+        return 'bg-purple-100 text-purple-800';
+      case 'custom':
+        return 'bg-emerald-100 text-emerald-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {portfolioItems.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Camera className="w-8 h-8 text-slate-400" />
+          </div>
+          <p className="text-slate-600 mb-2">No portfolio items yet</p>
+          <p className="text-sm text-slate-500">
+            Add your first completed project to showcase your work to potential clients.
+          </p>
+        </div>
+      ) : (
+        <div className="grid gap-6">
+          {portfolioItems.map((item) => (
+            <Card key={item.id} className="overflow-hidden">
+              <div className="flex">
+                {/* Screenshot */}
+                {item.screenshotUrl && (
+                  <div className="w-48 flex-shrink-0">
+                    <img 
+                      src={item.screenshotUrl} 
+                      alt={`${item.projectTitle} screenshot`}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                )}
+                
+                {/* Content */}
+                <div className="flex-1 p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-xl font-semibold text-gray-900">
+                          {item.projectTitle}
+                        </h3>
+                        <div className={`px-2 py-1 rounded-full text-xs font-medium ${getProjectTypeColor(item.projectType)}`}>
+                          {item.projectType}
+                        </div>
+                        {item.isFeatured && (
+                          <div className="flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                            <Star className="w-3 h-3 mr-1 fill-current" />
+                            Featured
+                          </div>
+                        )}
+                        <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          item.isPublic ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                          {item.isPublic ? 'Public' : 'Private'}
+                        </div>
+                      </div>
+                      
+                      <div className="text-gray-600 space-y-1">
+                        <p><span className="font-medium">Client:</span> {item.clientName}</p>
+                        {item.industry && (
+                          <p><span className="font-medium">Industry:</span> {item.industry}</p>
+                        )}
+                        {item.projectCompletedDate && (
+                          <p><span className="font-medium">Completed:</span> {
+                            new Date(item.projectCompletedDate).toLocaleDateString('en-GB', { 
+                              month: 'long', 
+                              year: 'numeric' 
+                            })
+                          }</p>
+                        )}
+                      </div>
+                      
+                      <p className="text-gray-700 mt-3">{item.description}</p>
+                      
+                      {item.clientRating && (
+                        <div className="flex items-center mt-2">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`w-4 h-4 ${
+                                star <= item.clientRating! ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                              }`}
+                            />
+                          ))}
+                          <span className="ml-2 text-sm text-gray-600">({item.clientRating}/5)</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Actions */}
+                    <div className="flex items-center gap-2 ml-4">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.open(item.websiteUrl, '_blank')}
+                      >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        View Site
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          toast({
+                            title: "Feature Coming Soon",
+                            description: "Portfolio item editing will be added in the next update",
+                          });
+                        }}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteItem(item.id, item.projectTitle)}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        disabled={deletePortfolioMutation.isPending}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  {item.testimonialText && (
+                    <blockquote className="border-l-4 border-emerald-200 pl-4 mt-4 bg-emerald-50 p-3 rounded-r">
+                      <p className="text-sm italic text-gray-700">
+                        "{item.testimonialText}"
+                      </p>
+                    </blockquote>
+                  )}
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function AdminPage() {
@@ -323,12 +531,13 @@ export default function AdminPage() {
           </div>
         ) : analyticsData ? (
           <Tabs defaultValue="analytics" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="analytics">Website Analytics</TabsTrigger>
               <TabsTrigger value="conversion">Sales Conversion</TabsTrigger>
               <TabsTrigger value="clients">Client Inquiries</TabsTrigger>
               <TabsTrigger value="customers">Customer Portal</TabsTrigger>
               <TabsTrigger value="consultations">Consultations</TabsTrigger>
+              <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
             </TabsList>
 
             {/* Analytics Tab */}
@@ -834,6 +1043,42 @@ export default function AdminPage() {
                       </p>
                     </div>
                   )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Portfolio Management Tab */}
+            <TabsContent value="portfolio" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="flex items-center">
+                        <Camera className="w-6 h-6 mr-2" />
+                        Portfolio Management
+                      </CardTitle>
+                      <CardDescription>
+                        Manage your portfolio showcase to display completed projects
+                      </CardDescription>
+                    </div>
+                    <Button
+                      onClick={() => {
+                        // Add portfolio item functionality would go here
+                        toast({
+                          title: "Feature Coming Soon",
+                          description: "Portfolio item creation form will be added in the next update",
+                        });
+                      }}
+                      className="bg-emerald-600 hover:bg-emerald-700"
+                      data-testid="button-add-portfolio"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Portfolio Item
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <PortfolioManagement sessionPassword={sessionPassword} />
                 </CardContent>
               </Card>
             </TabsContent>

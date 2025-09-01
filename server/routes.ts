@@ -616,6 +616,113 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Portfolio API endpoints
+  
+  // Get public portfolio items for main website
+  app.get("/api/portfolio", async (req, res) => {
+    try {
+      const portfolioItems = await storage.getPublicPortfolioItems();
+      res.json({ success: true, data: portfolioItems });
+    } catch (error) {
+      console.error("Portfolio fetch error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch portfolio" });
+    }
+  });
+
+  // Get featured portfolio items
+  app.get("/api/portfolio/featured", async (req, res) => {
+    try {
+      const featuredItems = await storage.getFeaturedPortfolioItems();
+      res.json({ success: true, data: featuredItems });
+    } catch (error) {
+      console.error("Featured portfolio fetch error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch featured portfolio" });
+    }
+  });
+
+  // Admin: Get all portfolio items
+  app.get("/api/admin/portfolio", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      const portfolioItems = await storage.getPortfolioItems();
+      res.json({ success: true, data: portfolioItems });
+    } catch (error) {
+      console.error("Admin portfolio fetch error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch portfolio items" });
+    }
+  });
+
+  // Admin: Create new portfolio item
+  app.post("/api/admin/portfolio", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      // Parse and validate the portfolio data
+      const portfolioData = req.body;
+      
+      // Basic validation
+      if (!portfolioData.projectTitle || !portfolioData.clientName || !portfolioData.websiteUrl || !portfolioData.description || !portfolioData.projectType) {
+        return res.status(400).json({ success: false, message: "Required fields missing" });
+      }
+
+      const newItem = await storage.createPortfolioItem(portfolioData);
+      res.json({ success: true, data: newItem });
+    } catch (error) {
+      console.error("Portfolio creation error:", error);
+      res.status(500).json({ success: false, message: "Failed to create portfolio item" });
+    }
+  });
+
+  // Admin: Update portfolio item
+  app.put("/api/admin/portfolio/:id", async (req, res) => {
+    try {
+      const { password } = req.query;
+      const { id } = req.params;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      const updatedItem = await storage.updatePortfolioItem(id, req.body);
+      
+      if (!updatedItem) {
+        return res.status(404).json({ success: false, message: "Portfolio item not found" });
+      }
+
+      res.json({ success: true, data: updatedItem });
+    } catch (error) {
+      console.error("Portfolio update error:", error);
+      res.status(500).json({ success: false, message: "Failed to update portfolio item" });
+    }
+  });
+
+  // Admin: Delete portfolio item
+  app.delete("/api/admin/portfolio/:id", async (req, res) => {
+    try {
+      const { password } = req.query;
+      const { id } = req.params;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      await storage.deletePortfolioItem(id);
+      res.json({ success: true, message: "Portfolio item deleted" });
+    } catch (error) {
+      console.error("Portfolio deletion error:", error);
+      res.status(500).json({ success: false, message: "Failed to delete portfolio item" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

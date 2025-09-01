@@ -390,3 +390,47 @@ export const insertInvoiceSchema = createInsertSchema(invoices).omit({
   createdAt: true,
   updatedAt: true,
 });
+
+// Portfolio/testimonials table for showcasing completed projects
+export const portfolioItems = pgTable("portfolio_items", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  
+  // Project details
+  projectTitle: varchar("project_title").notNull(),
+  clientName: varchar("client_name").notNull(),
+  websiteUrl: varchar("website_url").notNull(),
+  description: text("description").notNull(),
+  
+  // Screenshot/image
+  screenshotUrl: varchar("screenshot_url"), // URL to screenshot image
+  
+  // Project categorization
+  projectType: varchar("project_type").notNull(), // 'basic', 'premium', 'custom'
+  industry: varchar("industry"), // 'restaurant', 'retail', 'services', etc.
+  
+  // Features/technologies used
+  features: text("features"), // JSON string of features used
+  
+  // Client testimonial (optional)
+  testimonialText: text("testimonial_text"),
+  clientRating: integer("client_rating"), // 1-5 star rating
+  
+  // Display settings
+  isPublic: boolean("is_public").default(true),
+  displayOrder: integer("display_order").default(0),
+  isFeatured: boolean("is_featured").default(false),
+  
+  // Dates
+  projectCompletedDate: timestamp("project_completed_date"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertPortfolioItemSchema = createInsertSchema(portfolioItems).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type PortfolioItem = typeof portfolioItems.$inferSelect;
+export type InsertPortfolioItem = z.infer<typeof insertPortfolioItemSchema>;
