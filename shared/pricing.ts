@@ -26,7 +26,7 @@ export const pricingConfig: PricingConfig = {
     setupPrice: 50,           // Current discounted price
     originalSetupPrice: 100,  // Original price to show crossed out
     monthlyPrice: 10,         // Current discounted price
-    originalMonthlyPrice: 10, // Same as current (no change)
+    originalMonthlyPrice: 20, // Original price after discount ends
     features: [
       "Professional static website",
       "Mobile responsive design", 
