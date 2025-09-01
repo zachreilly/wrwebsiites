@@ -441,6 +441,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Create portfolio item endpoint
+  app.post("/api/admin/portfolio", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Authentication required" 
+        });
+      }
+
+      const portfolioData = {
+        ...req.body,
+        imageUrls: Array.isArray(req.body.imageUrls) ? req.body.imageUrls : []
+      };
+
+      const portfolioItem = await storage.createPortfolioItem(portfolioData);
+      
+      res.json({ 
+        success: true, 
+        data: portfolioItem,
+        message: "Portfolio item created successfully" 
+      });
+    } catch (error) {
+      console.error("Error creating portfolio item:", error);
+      res.status(500).json({ success: false, message: "Failed to create portfolio item" });
+    }
+  });
+
   // Update consultation status
   app.patch("/api/admin/consultations/:id/status", async (req, res) => {
     try {

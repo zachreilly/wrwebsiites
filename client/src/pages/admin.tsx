@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent, MessageSquare, Calculator, Check, Clock, ExternalLink, Star, Trash2, Edit, Plus, Camera, Tag } from "lucide-react";
 import type { PortfolioItem } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
+import { PortfolioForm } from "@/components/PortfolioForm";
 
 interface AnalyticsData {
   pageViewStats: { page: string; views: number }[];
@@ -230,6 +231,7 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [sessionPassword, setSessionPassword] = useState("");
   const [days, setDays] = useState("30");
+  const [showPortfolioForm, setShowPortfolioForm] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -1243,13 +1245,7 @@ export default function AdminPage() {
                       </CardDescription>
                     </div>
                     <Button
-                      onClick={() => {
-                        // Add portfolio item functionality would go here
-                        toast({
-                          title: "Feature Coming Soon",
-                          description: "Portfolio item creation form will be added in the next update",
-                        });
-                      }}
+                      onClick={() => setShowPortfolioForm(true)}
                       className="bg-emerald-600 hover:bg-emerald-700"
                       data-testid="button-add-portfolio"
                     >
@@ -1265,6 +1261,14 @@ export default function AdminPage() {
             </TabsContent>
           </Tabs>
         ) : null}
+        
+        {/* Portfolio Form Modal */}
+        {showPortfolioForm && (
+          <PortfolioForm
+            sessionPassword={sessionPassword}
+            onClose={() => setShowPortfolioForm(false)}
+          />
+        )}
       </div>
     </div>
   );
