@@ -62,7 +62,7 @@ export default function Pricing() {
           <div className="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
             <div className="text-center mb-8">
               <h3 className="text-2xl font-bold text-slate-900 mb-2">Basic Static Website</h3>
-              <p className="text-slate-600 mb-6">Perfect for small businesses - a professional website with everything you need to establish your online presence</p>
+              <p className="text-slate-600 mb-6">Perfect for small businesses - a professional website with everything you need to establish your online presence. Monthly fee covers ongoing moderation and support for as long as you're subscribed.</p>
               <div className="text-4xl font-bold text-slate-900 mb-2">
                 {basicPricing.isDiscounted && basicPricing.originalSetupPrice && (
                   <span className="text-2xl text-red-500 line-through mr-3">£{basicPricing.originalSetupPrice}</span>
@@ -79,6 +79,7 @@ export default function Pricing() {
                 )}
                 + £{basicPricing.monthlyPrice} per month
               </div>
+              <p className="text-xs text-slate-500 mt-2">Monthly fee includes hosting, security, and ongoing support</p>
             </div>
             <ul className="space-y-3 mb-8">
               <li className="flex items-center text-slate-700">
