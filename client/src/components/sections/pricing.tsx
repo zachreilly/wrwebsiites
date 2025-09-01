@@ -113,8 +113,8 @@ export default function Pricing() {
               <div className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium">Most Popular</div>
             </div>
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">Premium Hosting and Domain Website</h3>
-              <p className="text-slate-600 mb-6">A more customised, multi-page site with extra features to showcase your business in style</p>
+              <h3 className="text-2xl font-bold text-slate-900 mb-2">Premium Business Website</h3>
+              <p className="text-slate-600 mb-6">Everything you need for a professional online presence - custom design, your own domain, and advanced features that help you stand out from competitors</p>
               <div className="text-4xl font-bold text-slate-900 mb-2">
                 {premiumPricing.isDiscounted && premiumPricing.originalSetupPrice && (
                   <span className="text-2xl text-red-500 line-through mr-3">£{premiumPricing.originalSetupPrice}</span>
@@ -132,32 +132,68 @@ export default function Pricing() {
                 + £{premiumPricing.monthlyPrice} per month
               </div>
             </div>
-            <ul className="space-y-4 mb-8">
-              <li className="flex items-center text-slate-600">
-                <span className="text-emerald-500 mr-3">✓</span>
-                Multi-page website
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-start text-slate-700">
+                <span className="text-emerald-500 mr-3 mt-1">✓</span>
+                <div>
+                  <strong>Unlimited pages</strong> - As many pages as your business needs
+                </div>
               </li>
-              <li className="flex items-center text-slate-600">
-                <span className="text-emerald-500 mr-3">✓</span>
-                Custom design & styling
+              <li className="flex items-start text-slate-700">
+                <span className="text-emerald-500 mr-3 mt-1">✓</span>
+                <div>
+                  <strong>Custom professional domain</strong> - We register and set up your own .co.uk or .com domain (worth £12/year)
+                </div>
               </li>
-              <li className="flex items-center text-slate-600">
-                <span className="text-emerald-500 mr-3">✓</span>
-                Enhanced functionality
+              <li className="flex items-start text-slate-700">
+                <span className="text-emerald-500 mr-3 mt-1">✓</span>
+                <div>
+                  <strong>Bespoke design & branding</strong> - Unique design tailored to your business, not a template
+                </div>
               </li>
-              <li className="flex items-center text-slate-600">
-                <span className="text-emerald-500 mr-3">✓</span>
-                Domain registration included
+              <li className="flex items-start text-slate-700">
+                <span className="text-emerald-500 mr-3 mt-1">✓</span>
+                <div>
+                  <strong>Advanced SEO & Google optimization</strong> - Better search rankings to get more customers
+                </div>
               </li>
-              <li className="flex items-center text-slate-600">
-                <span className="text-emerald-500 mr-3">✓</span>
-                Secure hosting included
+              <li className="flex items-start text-slate-700">
+                <span className="text-emerald-500 mr-3 mt-1">✓</span>
+                <div>
+                  <strong>Professional email setup</strong> - Get your own business email (e.g., info@yourbusiness.co.uk)
+                </div>
               </li>
-              <li className="flex items-center text-slate-600">
-                <span className="text-emerald-500 mr-3">✓</span>
-                Ongoing support
+              <li className="flex items-start text-slate-700">
+                <span className="text-emerald-500 mr-3 mt-1">✓</span>
+                <div>
+                  <strong>Analytics & performance tracking</strong> - See how many visitors you get and where they come from
+                </div>
+              </li>
+              <li className="flex items-start text-slate-700">
+                <span className="text-emerald-500 mr-3 mt-1">✓</span>
+                <div>
+                  <strong>Priority support for 3 months</strong> - Fast response times and dedicated help
+                </div>
+              </li>
+              <li className="flex items-start text-slate-700">
+                <span className="text-emerald-500 mr-3 mt-1">✓</span>
+                <div>
+                  <strong>Content management system</strong> - Easy way to update your website yourself
+                </div>
               </li>
             </ul>
+            
+            {/* Value Highlight */}
+            <div className="bg-emerald-50 p-4 rounded-lg mb-6 border border-emerald-200">
+              <div className="text-center">
+                <p className="text-emerald-800 font-semibold text-sm mb-2">💰 INCREDIBLE VALUE</p>
+                <p className="text-emerald-700 text-sm">
+                  Domain (£12/year) + Professional email (£60/year) + Custom design (£500+) = 
+                  <span className="font-bold"> Over £570 worth of services included FREE!</span>
+                </p>
+              </div>
+            </div>
+            
             <Button 
               onClick={() => setLocation('/payment?package=premium')}
               className="w-full bg-primary text-white hover:bg-secondary"

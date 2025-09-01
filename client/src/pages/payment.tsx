@@ -216,13 +216,22 @@ export default function PaymentPage() {
         features: ["Mobile-responsive design", "Up to 5 pages", "Basic SEO", "Contact form", "1 month support"]
       },
       premium: {
-        name: "Premium Hosting and Domain Website",
+        name: "Premium Business Website",
         setupFee: premiumPricing.setupPrice,
         monthlyFee: premiumPricing.monthlyPrice,
         originalSetupFee: discountActive ? premiumPricing.originalSetupPrice : undefined,
         originalMonthlyFee: discountActive && premiumPricing.originalMonthlyPrice !== premiumPricing.monthlyPrice ? premiumPricing.originalMonthlyPrice : undefined,
         isDiscounted: premiumPricing.isDiscounted,
-        features: ["Everything in Basic", "Custom domain included", "Advanced SEO", "Analytics setup", "3 months support", "Content management"]
+        features: [
+          "Unlimited pages - as many as your business needs",
+          "Custom professional domain registration (worth £12/year)", 
+          "Bespoke design & branding - unique to your business",
+          "Advanced SEO & Google optimization for better rankings",
+          "Professional email setup (info@yourbusiness.co.uk)",
+          "Analytics & performance tracking dashboard",
+          "Priority support for 3 months",
+          "Content management system for easy updates"
+        ]
       }
     };
   };
