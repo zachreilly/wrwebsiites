@@ -7,6 +7,7 @@ import {
   paymentRequests,
   clientOnboarding,
   consultationRequests,
+  websiteUpdateRequests,
   customers,
   projects,
   designApprovals,
@@ -30,6 +31,8 @@ import {
   type InsertClientOnboarding,
   type ConsultationRequest,
   type InsertConsultationRequest,
+  type WebsiteUpdateRequest,
+  type InsertWebsiteUpdateRequest,
   type Customer,
   type InsertCustomer,
   type Project,
@@ -84,6 +87,11 @@ export interface IStorage {
   // Consultation request operations
   createConsultationRequest(request: InsertConsultationRequest): Promise<ConsultationRequest>;
   getConsultationRequests(): Promise<ConsultationRequest[]>;
+  
+  // Website update request operations
+  createWebsiteUpdateRequest(request: InsertWebsiteUpdateRequest): Promise<WebsiteUpdateRequest>;
+  getWebsiteUpdateRequests(): Promise<WebsiteUpdateRequest[]>;
+  updateWebsiteUpdateRequestStatus(id: string, status: string): Promise<WebsiteUpdateRequest | undefined>;
   
   // Customer operations
   createCustomer(customer: InsertCustomer): Promise<Customer>;
@@ -357,6 +365,35 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(consultationRequests)
       .orderBy(desc(consultationRequests.createdAt));
+  }
+
+  // Website update request operations
+  async createWebsiteUpdateRequest(request: InsertWebsiteUpdateRequest): Promise<WebsiteUpdateRequest> {
+    const [updateRequest] = await db
+      .insert(websiteUpdateRequests)
+      .values(request)
+      .returning();
+    return updateRequest;
+  }
+
+  async getWebsiteUpdateRequests(): Promise<WebsiteUpdateRequest[]> {
+    return await db
+      .select()
+      .from(websiteUpdateRequests)
+      .orderBy(desc(websiteUpdateRequests.createdAt));
+  }
+
+  async updateWebsiteUpdateRequestStatus(id: string, status: string): Promise<WebsiteUpdateRequest | undefined> {
+    const [updated] = await db
+      .update(websiteUpdateRequests)
+      .set({ 
+        status,
+        updatedAt: new Date()
+      })
+      .where(eq(websiteUpdateRequests.id, id))
+      .returning();
+    
+    return updated;
   }
 
   // Customer operations

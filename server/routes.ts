@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertContactRequestSchema, insertPageViewSchema, insertClickEventSchema, insertAdminSessionSchema, insertClientOnboardingSchema, insertConsultationRequestSchema, customers, projects } from "@shared/schema";
+import { insertContactRequestSchema, insertPageViewSchema, insertClickEventSchema, insertAdminSessionSchema, insertClientOnboardingSchema, insertConsultationRequestSchema, insertWebsiteUpdateRequestSchema, customers, projects } from "@shared/schema";
 import { z } from "zod";
 import { db } from "./db";
 import { eq, desc, count } from "drizzle-orm";
@@ -360,6 +360,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching consultation requests:", error);
       res.status(500).json({ success: false, message: "Failed to fetch consultation requests" });
+    }
+  });
+
+  // Website update request endpoint
+  app.post("/api/website-update", async (req, res) => {
+    try {
+      const updateData = insertWebsiteUpdateRequestSchema.parse(req.body);
+      
+      // Store the website update request
+      await storage.createWebsiteUpdateRequest(updateData);
+      
+      // In a real implementation, you would:
+      // 1. Send an email notification to your business email
+      // 2. Send a confirmation email to the client
+      // 3. Review the existing website and provide a quote
+      
+      res.json({ 
+        success: true, 
+        message: "Website update request received. We'll assess your current site and email you a quote within 24 hours." 
+      });
+    } catch (error) {
+      console.error("Website update request error:", error);
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ success: false, message: "Invalid form data", errors: error.errors });
+      } else {
+        res.status(500).json({ success: false, message: "Failed to submit website update request" });
+      }
+    }
+  });
+
+  // Admin endpoint to get website update requests
+  app.get("/api/admin/website-updates", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Authentication required" 
+        });
+      }
+
+      const updates = await storage.getWebsiteUpdateRequests();
+      res.json({ success: true, data: updates });
+    } catch (error) {
+      console.error("Error fetching website update requests:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch website update requests" });
+    }
+  });
+
+  // Update website update request status
+  app.patch("/api/admin/website-updates/:id/status", async (req, res) => {
+    try {
+      const { password } = req.query;
+      const { id } = req.params;
+      const { status } = req.body;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Authentication required" 
+        });
+      }
+
+      if (!status || !['pending', 'assessed', 'quoted', 'in-progress', 'completed', 'cancelled'].includes(status)) {
+        return res.status(400).json({ success: false, message: "Invalid status" });
+      }
+
+      const updatedRequest = await storage.updateWebsiteUpdateRequestStatus(id, status);
+      
+      if (!updatedRequest) {
+        return res.status(404).json({ success: false, message: "Website update request not found" });
+      }
+
+      res.json({ success: true, data: updatedRequest });
+    } catch (error) {
+      console.error("Error updating website update request status:", error);
+      res.status(500).json({ success: false, message: "Failed to update website update request status" });
     }
   });
 

@@ -154,6 +154,55 @@ export const insertClientOnboardingSchema = createInsertSchema(clientOnboarding)
 export type ClientOnboarding = typeof clientOnboarding.$inferSelect;
 export type InsertClientOnboarding = z.infer<typeof insertClientOnboardingSchema>;
 
+// Website update requests table
+export const websiteUpdateRequests = pgTable("website_update_requests", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  
+  // Contact Information
+  fullName: varchar("full_name").notNull(),
+  email: varchar("email").notNull(),
+  phone: varchar("phone").notNull(),
+  businessName: varchar("business_name").notNull(),
+  
+  // Website Information
+  websiteDomain: varchar("website_domain").notNull(),
+  currentHostingProvider: varchar("current_hosting_provider"),
+  hasWPAccess: varchar("has_wp_access"), // 'yes', 'no'
+  wpLoginDetails: text("wp_login_details"), // if they want to share it
+  
+  // Update Type
+  updateType: varchar("update_type").notNull(), // 'basic', 'medium', 'larger'
+  updateDescription: text("update_description").notNull(),
+  specificChanges: text("specific_changes"),
+  
+  // Payment Information
+  estimatedCost: varchar("estimated_cost"),
+  accountHolderName: varchar("account_holder_name"),
+  sortCode: varchar("sort_code"),
+  accountNumber: varchar("account_number"),
+  address: varchar("address"),
+  city: varchar("city"),
+  postcode: varchar("postcode"),
+  
+  // Terms agreement
+  agreedToTerms: boolean("agreed_to_terms").default(false),
+  agreedToDirectDebit: boolean("agreed_to_direct_debit").default(false),
+  
+  status: varchar("status").notNull().default("pending"), // 'pending', 'quoted', 'approved', 'in_progress', 'completed'
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertWebsiteUpdateRequestSchema = createInsertSchema(websiteUpdateRequests).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  status: true,
+});
+
+export type WebsiteUpdateRequest = typeof websiteUpdateRequests.$inferSelect;
+export type InsertWebsiteUpdateRequest = z.infer<typeof insertWebsiteUpdateRequestSchema>;
+
 // Consultation requests table for custom pricing
 export const consultationRequests = pgTable("consultation_requests", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),

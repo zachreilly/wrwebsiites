@@ -12,6 +12,7 @@ import AdminPaymentsPage from "@/pages/admin-payments";
 import PaymentPage from "@/pages/payment";
 import OnboardingPage from "@/pages/onboarding";
 import ConsultationPage from "@/pages/consultation";
+import WebsiteUpdateRequest from "@/pages/website-update-request";
 import CustomerLogin from "@/pages/customer-login";
 import CustomerDashboard from "@/pages/customer-dashboard";
 import PortfolioPage from "@/pages/portfolio";
@@ -25,6 +26,7 @@ function Router() {
       <Route path="/payment" component={PaymentPage} />
       <Route path="/onboarding" component={OnboardingPage} />
       <Route path="/consultation" component={ConsultationPage} />
+      <Route path="/website-update-request" component={WebsiteUpdateRequest} />
       <Route path="/portfolio" component={PortfolioPage} />
       <Route path="/customer/login" component={CustomerLogin} />
       <Route path="/customer/dashboard/:customerId?" component={CustomerDashboard} />

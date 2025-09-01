@@ -365,6 +365,23 @@ export default function AdminPage() {
     retry: false,
   });
 
+  // Website updates data query
+  const { data: websiteUpdatesData } = useQuery({
+    queryKey: ['/api/admin/website-updates', sessionPassword],
+    enabled: isAuthenticated && !!sessionPassword,
+    queryFn: async () => {
+      const response = await fetch(`/api/admin/website-updates?password=${encodeURIComponent(sessionPassword)}`);
+      const result = await response.json();
+      
+      if (!result.success) {
+        throw new Error(result.message || 'Failed to fetch website updates data');
+      }
+      
+      return result.data;
+    },
+    retry: false,
+  });
+
   // Mutation for updating client status
   const updateClientStatusMutation = useMutation({
     mutationFn: async ({ clientId, status }: { clientId: string; status: string }) => {
@@ -420,6 +437,39 @@ export default function AdminPage() {
       toast({
         title: "Consultation status updated",
         description: `Consultation has been ${variables.status}`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Update failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Mutation for updating website update status
+  const updateWebsiteUpdateStatus = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+      const response = await fetch(`/api/admin/website-updates/${id}/status?password=${encodeURIComponent(sessionPassword)}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      const result = await response.json();
+      if (!result.success) {
+        throw new Error(result.message || 'Failed to update website update status');
+      }
+      return result.data;
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/website-updates'] });
+      toast({
+        title: "Website update status updated",
+        description: `Request has been marked as ${variables.status}`,
       });
     },
     onError: (error: Error) => {
@@ -531,12 +581,13 @@ export default function AdminPage() {
           </div>
         ) : analyticsData ? (
           <Tabs defaultValue="analytics" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-6">
+            <TabsList className="grid w-full grid-cols-7">
               <TabsTrigger value="analytics">Website Analytics</TabsTrigger>
               <TabsTrigger value="conversion">Sales Conversion</TabsTrigger>
               <TabsTrigger value="clients">Client Inquiries</TabsTrigger>
               <TabsTrigger value="customers">Customer Portal</TabsTrigger>
               <TabsTrigger value="consultations">Consultations</TabsTrigger>
+              <TabsTrigger value="website-updates">Website Updates</TabsTrigger>
               <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
             </TabsList>
 
@@ -1043,6 +1094,136 @@ export default function AdminPage() {
                       </p>
                     </div>
                   )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Website Updates Tab */}
+            <TabsContent value="website-updates" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Settings className="w-5 h-5 mr-2" />
+                    Website Update Requests
+                  </CardTitle>
+                  <CardDescription>
+                    Review requests from clients wanting to update their existing websites
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {websiteUpdatesData?.data && websiteUpdatesData.data.length > 0 ? (
+                      <div className="space-y-4">
+                        {websiteUpdatesData.data.map((update: any) => {
+                          const statusColors: Record<string, string> = {
+                            pending: 'bg-yellow-100 text-yellow-800',
+                            assessed: 'bg-blue-100 text-blue-800', 
+                            quoted: 'bg-purple-100 text-purple-800',
+                            'in-progress': 'bg-orange-100 text-orange-800',
+                            completed: 'bg-green-100 text-green-800',
+                            cancelled: 'bg-red-100 text-red-800'
+                          };
+                          const statusColor = statusColors[update.status] || 'bg-gray-100 text-gray-800';
+
+                          const categoryPricingMap: Record<string, string> = {
+                            basic: '£40-£75',
+                            medium: '£100-£250', 
+                            major: '£500+',
+                            unsure: 'TBD'
+                          };
+                          const categoryPricing = categoryPricingMap[update.updateCategory] || 'Quote Required';
+
+                          return (
+                            <div key={update.id} className="border border-slate-200 rounded-lg p-6 bg-white">
+                              <div className="flex justify-between items-start mb-4">
+                                <div>
+                                  <h3 className="font-semibold text-slate-900">{update.name}</h3>
+                                  <p className="text-slate-600">{update.email}</p>
+                                  {update.businessName && (
+                                    <p className="text-sm text-slate-500">{update.businessName}</p>
+                                  )}
+                                </div>
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColor}`}>
+                                  {update.status.charAt(0).toUpperCase() + update.status.slice(1).replace('-', ' ')}
+                                </span>
+                              </div>
+                              
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                  <span className="font-medium text-slate-900">Current Website:</span>
+                                  <a href={update.currentWebsite} target="_blank" rel="noopener noreferrer" 
+                                     className="text-blue-600 hover:underline ml-2 inline-flex items-center">
+                                    {update.currentWebsite}
+                                    <ExternalLink className="w-3 h-3 ml-1" />
+                                  </a>
+                                </div>
+                                <div>
+                                  <span className="font-medium text-slate-900">Update Category:</span>
+                                  <span className="ml-2 text-slate-700">
+                                    {update.updateCategory.charAt(0).toUpperCase() + update.updateCategory.slice(1)} 
+                                    ({categoryPricing})
+                                  </span>
+                                </div>
+                                {update.timeline && (
+                                  <div>
+                                    <span className="font-medium text-slate-900">Timeline:</span>
+                                    <span className="ml-2 text-slate-700">{update.timeline}</span>
+                                  </div>
+                                )}
+                                {update.budget && (
+                                  <div>
+                                    <span className="font-medium text-slate-900">Budget:</span>
+                                    <span className="ml-2 text-slate-700">{update.budget}</span>
+                                  </div>
+                                )}
+                              </div>
+                              
+                              <div className="mb-4">
+                                <span className="font-medium text-slate-900">Description:</span>
+                                <p className="text-slate-700 mt-1">{update.description}</p>
+                              </div>
+
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm text-slate-500">
+                                  Submitted: {new Date(update.createdAt).toLocaleDateString()}
+                                </span>
+                                <div className="flex space-x-2">
+                                  <Select 
+                                    value={update.status} 
+                                    onValueChange={(newStatus) => {
+                                      updateWebsiteUpdateStatus.mutate({ id: update.id, status: newStatus });
+                                    }}
+                                  >
+                                    <SelectTrigger className="w-40">
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="pending">Pending</SelectItem>
+                                      <SelectItem value="assessed">Assessed</SelectItem>
+                                      <SelectItem value="quoted">Quoted</SelectItem>
+                                      <SelectItem value="in-progress">In Progress</SelectItem>
+                                      <SelectItem value="completed">Completed</SelectItem>
+                                      <SelectItem value="cancelled">Cancelled</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="text-center py-12">
+                        <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <Settings className="w-8 h-8 text-slate-400" />
+                        </div>
+                        <p className="text-slate-600 mb-2">No website update requests yet</p>
+                        <p className="text-sm text-slate-500">
+                          When clients request website updates, they will appear here for review and quoting.
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
