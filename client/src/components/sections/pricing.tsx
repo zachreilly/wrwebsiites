@@ -57,7 +57,8 @@ export default function Pricing() {
           )}
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-7xl mx-auto">
+        {/* Basic and Premium Packages - Side by Side */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
           {/* Basic Package */}
           <div className="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
             <div className="text-center mb-8">
@@ -186,54 +187,79 @@ export default function Pricing() {
               Get Started - Premium
             </Button>
           </div>
+        </div>
 
-          {/* Website Updates Package */}
-          <div className="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+        {/* Website Updates Package - Full Width Below */}
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-gradient-to-r from-emerald-50 to-green-50 p-8 rounded-xl shadow-lg border border-emerald-200">
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">Update Your Website</h3>
-              <p className="text-slate-600 mb-6">Already have a website? Let us enhance it with new features, content updates, or a complete redesign to keep your business competitive.</p>
-              <div className="text-4xl font-bold text-slate-900 mb-2">
+              <h3 className="text-3xl font-bold text-slate-900 mb-2">Update Your Website</h3>
+              <p className="text-lg text-slate-600 mb-6 max-w-3xl mx-auto">Already have a website? Let us enhance it with new features, content updates, or a complete redesign to keep your business competitive.</p>
+              <div className="text-4xl font-bold text-emerald-700 mb-2">
                 Quote
-                <span className="text-sm font-normal text-slate-600 ml-2">on request</span>
+                <span className="text-lg font-normal text-slate-600 ml-2">on request</span>
               </div>
-              <div className="text-lg font-semibold text-slate-900">
+              <div className="text-xl font-semibold text-slate-900">
                 Payment after completion
               </div>
-              <p className="text-xs text-slate-500 mt-2">No upfront costs - pay only when satisfied</p>
+              <p className="text-sm text-slate-500 mt-2">No upfront costs - pay only when satisfied</p>
             </div>
-            <ul className="space-y-3 mb-8">
-              <li className="flex items-center text-slate-700">
-                <span className="text-emerald-500 mr-3">✓</span>
-                <strong>Basic updates: £40–£75</strong> (content changes, small fixes)
-              </li>
-              <li className="flex items-center text-slate-700">
-                <span className="text-emerald-500 mr-3">✓</span>
-                <strong>Medium updates: £100–£250</strong> (new pages, design tweaks, plugins)
-              </li>
-              <li className="flex items-center text-slate-700">
-                <span className="text-emerald-500 mr-3">✓</span>
-                <strong>Larger revamp: £500+</strong> (complete redesign, major functionality)
-              </li>
-              <li className="flex items-center text-slate-700">
-                <span className="text-emerald-500 mr-3">✓</span>
-                <strong>Professional assessment of your current site</strong>
-              </li>
-              <li className="flex items-center text-slate-700">
-                <span className="text-emerald-500 mr-3">✓</span>
-                <strong>Quote provided within 24 hours</strong>
-              </li>
-              <li className="flex items-center text-slate-700">
-                <span className="text-emerald-500 mr-3">✓</span>
-                <strong>Payment collected after work completion</strong>
-              </li>
-            </ul>
-            <Button 
-              onClick={() => setLocation('/website-update-request')}
-              className="w-full bg-emerald-600 text-white hover:bg-emerald-700"
-              size="lg"
-            >
-              Request Quote
-            </Button>
+            
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <div className="text-center">
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-emerald-200 h-full">
+                  <h4 className="text-xl font-bold text-emerald-700 mb-3">Basic Updates</h4>
+                  <div className="text-2xl font-bold text-slate-900 mb-2">£40–£75</div>
+                  <ul className="text-sm text-slate-600 space-y-1">
+                    <li>• Content changes</li>
+                    <li>• Small fixes</li>
+                    <li>• Text updates</li>
+                    <li>• Image replacements</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-emerald-200 h-full">
+                  <h4 className="text-xl font-bold text-emerald-700 mb-3">Medium Updates</h4>
+                  <div className="text-2xl font-bold text-slate-900 mb-2">£100–£250</div>
+                  <ul className="text-sm text-slate-600 space-y-1">
+                    <li>• New pages</li>
+                    <li>• Design tweaks</li>
+                    <li>• Plugin additions</li>
+                    <li>• Feature enhancements</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-emerald-200 h-full">
+                  <h4 className="text-xl font-bold text-emerald-700 mb-3">Major Revamp</h4>
+                  <div className="text-2xl font-bold text-slate-900 mb-2">£500+</div>
+                  <ul className="text-sm text-slate-600 space-y-1">
+                    <li>• Complete redesign</li>
+                    <li>• Major functionality</li>
+                    <li>• New architecture</li>
+                    <li>• Full rebuild</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <div className="bg-white p-4 rounded-lg border border-emerald-200 mb-6 inline-block">
+                <p className="text-emerald-700 font-semibold">✓ Professional assessment • ✓ Quote within 24 hours • ✓ Payment after completion</p>
+              </div>
+              <div>
+                <Button 
+                  onClick={() => setLocation('/website-update-request')}
+                  className="bg-emerald-600 text-white hover:bg-emerald-700 px-8 py-3 text-lg"
+                  size="lg"
+                >
+                  Request Quote
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
 
