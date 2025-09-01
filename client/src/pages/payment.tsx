@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Shield, CreditCard, Users, CheckCircle, User, Globe, FileText, Palette, Settings } from "lucide-react";
+import { getCurrentPricing, isDiscountActive } from "@shared/pricing";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { termsAndConditions, directDebitGuarantee } from "@/components/legal/terms-and-conditions";
@@ -199,20 +200,34 @@ export default function PaymentPage() {
     return formatted.slice(0, 8);
   };
 
-  const packageDetails = {
-    basic: {
-      name: "Basic Static Website",
-      setupFee: 50,
-      monthlyFee: 10,
-      features: ["Mobile-responsive design", "Up to 5 pages", "Basic SEO", "Contact form", "1 month support"]
-    },
-    premium: {
-      name: "Premium Hosting and Domain Website",
-      setupFee: 150, 
-      monthlyFee: 10,
-      features: ["Everything in Basic", "Custom domain included", "Advanced SEO", "Analytics setup", "3 months support", "Content management"]
-    }
+  const getPackageDetails = () => {
+    const basicPricing = getCurrentPricing('basic');
+    const premiumPricing = getCurrentPricing('premium');
+    const discountActive = isDiscountActive();
+    
+    return {
+      basic: {
+        name: "Basic Static Website",
+        setupFee: basicPricing.setupPrice,
+        monthlyFee: basicPricing.monthlyPrice,
+        originalSetupFee: discountActive ? basicPricing.originalSetupPrice : undefined,
+        originalMonthlyFee: discountActive && basicPricing.originalMonthlyPrice !== basicPricing.monthlyPrice ? basicPricing.originalMonthlyPrice : undefined,
+        isDiscounted: basicPricing.isDiscounted,
+        features: ["Mobile-responsive design", "Up to 5 pages", "Basic SEO", "Contact form", "1 month support"]
+      },
+      premium: {
+        name: "Premium Hosting and Domain Website",
+        setupFee: premiumPricing.setupPrice,
+        monthlyFee: premiumPricing.monthlyPrice,
+        originalSetupFee: discountActive ? premiumPricing.originalSetupPrice : undefined,
+        originalMonthlyFee: discountActive && premiumPricing.originalMonthlyPrice !== premiumPricing.monthlyPrice ? premiumPricing.originalMonthlyPrice : undefined,
+        isDiscounted: premiumPricing.isDiscounted,
+        features: ["Everything in Basic", "Custom domain included", "Advanced SEO", "Analytics setup", "3 months support", "Content management"]
+      }
+    };
   };
+
+  const packageDetails = getPackageDetails();
 
   const calculateTotal = () => {
     if (!formData.package) return 0;
@@ -426,9 +441,18 @@ export default function PaymentPage() {
                         <h3 className="font-semibold text-slate-900 mb-3">{packageDetails[formData.package as keyof typeof packageDetails].name}</h3>
                         <div className="flex items-center gap-4 mb-4">
                           <span className="text-2xl font-bold text-emerald-600">
+                            {packageDetails[formData.package as keyof typeof packageDetails].isDiscounted && packageDetails[formData.package as keyof typeof packageDetails].originalSetupFee && (
+                              <span className="text-lg text-red-500 line-through mr-2">£{packageDetails[formData.package as keyof typeof packageDetails].originalSetupFee! + (formData.googleBusinessSetup ? 25 : 0)}</span>
+                            )}
                             £{calculateTotal()} setup
+                            {packageDetails[formData.package as keyof typeof packageDetails].isDiscounted && (
+                              <span className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">SAVE 50%</span>
+                            )}
                           </span>
                           <span className="text-lg text-slate-600">
+                            {packageDetails[formData.package as keyof typeof packageDetails].isDiscounted && packageDetails[formData.package as keyof typeof packageDetails].originalMonthlyFee && (
+                              <span className="text-red-500 line-through mr-2">£{packageDetails[formData.package as keyof typeof packageDetails].originalMonthlyFee}</span>
+                            )}
                             + £{packageDetails[formData.package as keyof typeof packageDetails].monthlyFee}/month
                           </span>
                         </div>
@@ -437,7 +461,12 @@ export default function PaymentPage() {
                         <div className="mb-4 text-sm text-slate-600">
                           <div className="flex justify-between">
                             <span>Base package:</span>
-                            <span>£{packageDetails[formData.package as keyof typeof packageDetails].setupFee}</span>
+                            <span>
+                              {packageDetails[formData.package as keyof typeof packageDetails].isDiscounted && packageDetails[formData.package as keyof typeof packageDetails].originalSetupFee && (
+                                <span className="text-red-500 line-through mr-2">£{packageDetails[formData.package as keyof typeof packageDetails].originalSetupFee}</span>
+                              )}
+                              £{packageDetails[formData.package as keyof typeof packageDetails].setupFee}
+                            </span>
                           </div>
                           {formData.googleBusinessSetup && (
                             <div className="flex justify-between">

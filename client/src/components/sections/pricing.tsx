@@ -1,8 +1,27 @@
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
+import { getCurrentPricing, getDiscountEndDateFormatted, isDiscountActive } from "@shared/pricing";
+import { useEffect, useState } from "react";
 
 export default function Pricing() {
   const [, setLocation] = useLocation();
+  const [basicPricing, setBasicPricing] = useState(getCurrentPricing('basic'));
+  const [premiumPricing, setPremiumPricing] = useState(getCurrentPricing('premium'));
+  const [discountActive, setDiscountActive] = useState(isDiscountActive());
+
+  useEffect(() => {
+    // Update pricing every minute to check for discount expiry
+    const interval = setInterval(() => {
+      const newDiscountActive = isDiscountActive();
+      if (newDiscountActive !== discountActive) {
+        setDiscountActive(newDiscountActive);
+        setBasicPricing(getCurrentPricing('basic'));
+        setPremiumPricing(getCurrentPricing('premium'));
+      }
+    }, 60000); // Check every minute
+
+    return () => clearInterval(interval);
+  }, [discountActive]);
   
   const scrollToContact = () => {
     const element = document.getElementById('contact');
@@ -15,13 +34,27 @@ export default function Pricing() {
     <section id="pricing" className="py-20 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center bg-accent/20 text-accent px-4 py-2 rounded-full text-sm font-medium mb-4">
-            Special Launch Rates
-          </div>
-          <h2 className="text-4xl font-bold text-slate-900 mb-4">Our Pricing – Special Launch Rates</h2>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Right now, our prices are much lower than usual because we're just starting our business and building up our portfolio. This is a great opportunity to get a professional website for a fraction of the usual cost.
-          </p>
+          {discountActive ? (
+            <>
+              <div className="inline-flex items-center bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
+                🔥 Limited Time Discount - Ends {getDiscountEndDateFormatted()}
+              </div>
+              <h2 className="text-4xl font-bold text-slate-900 mb-4">Special Launch Pricing - Save 50%!</h2>
+              <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+                Get your professional website at half price! This limited-time offer ends in one week - don't miss out on these incredible savings.
+              </p>
+            </>
+          ) : (
+            <>
+              <div className="inline-flex items-center bg-accent/20 text-accent px-4 py-2 rounded-full text-sm font-medium mb-4">
+                Professional Web Development
+              </div>
+              <h2 className="text-4xl font-bold text-slate-900 mb-4">Our Standard Pricing</h2>
+              <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+                Professional website development and hosting services for your business.
+              </p>
+            </>
+          )}
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -31,10 +64,21 @@ export default function Pricing() {
               <h3 className="text-2xl font-bold text-slate-900 mb-2">Basic Static Website</h3>
               <p className="text-slate-600 mb-6">A professional 1–3 page site to get your business online</p>
               <div className="text-4xl font-bold text-slate-900 mb-2">
-                £50
+                {basicPricing.isDiscounted && basicPricing.originalSetupPrice && (
+                  <span className="text-2xl text-red-500 line-through mr-3">£{basicPricing.originalSetupPrice}</span>
+                )}
+                £{basicPricing.setupPrice}
                 <span className="text-sm font-normal text-slate-600 ml-2">setup</span>
+                {basicPricing.isDiscounted && (
+                  <div className="inline-block ml-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full">SAVE 50%</div>
+                )}
               </div>
-              <div className="text-lg font-semibold text-slate-900">+ £10 per month</div>
+              <div className="text-lg font-semibold text-slate-900">
+                {basicPricing.isDiscounted && basicPricing.originalMonthlyPrice && basicPricing.originalMonthlyPrice !== basicPricing.monthlyPrice && (
+                  <span className="text-red-500 line-through mr-2">£{basicPricing.originalMonthlyPrice}</span>
+                )}
+                + £{basicPricing.monthlyPrice} per month
+              </div>
             </div>
             <ul className="space-y-4 mb-8">
               <li className="flex items-center text-slate-600">
@@ -72,10 +116,21 @@ export default function Pricing() {
               <h3 className="text-2xl font-bold text-slate-900 mb-2">Premium Hosting and Domain Website</h3>
               <p className="text-slate-600 mb-6">A more customised, multi-page site with extra features to showcase your business in style</p>
               <div className="text-4xl font-bold text-slate-900 mb-2">
-                £150
+                {premiumPricing.isDiscounted && premiumPricing.originalSetupPrice && (
+                  <span className="text-2xl text-red-500 line-through mr-3">£{premiumPricing.originalSetupPrice}</span>
+                )}
+                £{premiumPricing.setupPrice}
                 <span className="text-sm font-normal text-slate-600 ml-2">setup</span>
+                {premiumPricing.isDiscounted && (
+                  <div className="inline-block ml-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full">SAVE 50%</div>
+                )}
               </div>
-              <div className="text-lg font-semibold text-slate-900">+ £10 per month</div>
+              <div className="text-lg font-semibold text-slate-900">
+                {premiumPricing.isDiscounted && premiumPricing.originalMonthlyPrice && premiumPricing.originalMonthlyPrice !== premiumPricing.monthlyPrice && (
+                  <span className="text-red-500 line-through mr-2">£{premiumPricing.originalMonthlyPrice}</span>
+                )}
+                + £{premiumPricing.monthlyPrice} per month
+              </div>
             </div>
             <ul className="space-y-4 mb-8">
               <li className="flex items-center text-slate-600">
