@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent, MessageSquare, Calculator, Check, Clock, ExternalLink, Star, Trash2, Edit, Plus, Camera, Tag } from "lucide-react";
+import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent, MessageSquare, Calculator, Check, Clock, ExternalLink, Star, Trash2, Edit, Plus, Camera, Tag, Bell, AlertCircle } from "lucide-react";
 import type { PortfolioItem } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { PortfolioForm } from "@/components/PortfolioForm";
@@ -235,6 +235,17 @@ export default function AdminPage() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  // Fetch payment requests for notifications
+  const { data: paymentRequests } = useQuery({
+    queryKey: ['/api/admin/payments'],
+    queryFn: async () => {
+      const response = await apiRequest("GET", `/api/admin/payments?password=${sessionPassword}`);
+      return response.json();
+    },
+    enabled: !!sessionPassword && isAuthenticated,
+    refetchInterval: 30000, // Check every 30 seconds for new payments
+  });
+
   // Calculate days since request
   const getDaysWaiting = (createdAt: string) => {
     const requestDate = new Date(createdAt);
@@ -243,6 +254,32 @@ export default function AdminPage() {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
   };
+
+  // Calculate new payment notifications
+  const getNewPaymentCount = () => {
+    if (!paymentRequests?.success || !paymentRequests?.data) return 0;
+    
+    const oneDayAgo = new Date();
+    oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+    
+    return paymentRequests.data.filter((payment: any) => {
+      const paymentDate = new Date(payment.createdAt);
+      return paymentDate > oneDayAgo;
+    }).length;
+  };
+
+  const newPaymentCount = getNewPaymentCount();
+
+  // Show toast notification for new payments
+  useEffect(() => {
+    if (newPaymentCount > 0 && isAuthenticated) {
+      toast({
+        title: "🎉 New Payment Request!",
+        description: `You have ${newPaymentCount} new payment request${newPaymentCount !== 1 ? 's' : ''} from potential customers`,
+        duration: 5000,
+      });
+    }
+  }, [newPaymentCount, isAuthenticated, toast]);
 
   // Check if there's a stored session
   useEffect(() => {
@@ -567,15 +604,44 @@ export default function AdminPage() {
             <Button 
               onClick={() => window.open('/admin/payments', '_blank')} 
               variant="outline"
-              className="bg-emerald-600 text-white hover:bg-emerald-700"
+              className="bg-emerald-600 text-white hover:bg-emerald-700 relative"
             >
+              <Bell className="w-4 h-4 mr-2" />
               View Payments
+              {newPaymentCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                  {newPaymentCount}
+                </span>
+              )}
             </Button>
             <Button onClick={handleLogout} variant="outline">
               Logout
             </Button>
           </div>
         </div>
+
+        {/* New Payment Notifications */}
+        {newPaymentCount > 0 && (
+          <div className="mb-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
+            <div className="flex items-center">
+              <AlertCircle className="w-5 h-5 text-yellow-600 mr-3" />
+              <div>
+                <h3 className="text-sm font-medium text-yellow-800">
+                  {newPaymentCount} New Payment Request{newPaymentCount !== 1 ? 's' : ''}!
+                </h3>
+                <p className="text-sm text-yellow-700 mt-1">
+                  You have {newPaymentCount} new payment request{newPaymentCount !== 1 ? 's' : ''} from the last 24 hours. 
+                  <button 
+                    onClick={() => window.open('/admin/payments', '_blank')}
+                    className="ml-2 underline hover:no-underline font-medium"
+                  >
+                    Review them now →
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {isLoading ? (
           <div className="flex items-center justify-center h-64">
