@@ -21,7 +21,6 @@ export default function Contact() {
                 <h4 className="font-semibold text-slate-900 mb-2">Call Us Direct</h4>
                 <p className="text-slate-600 mb-2">Speak with us directly about your project</p>
                 <div className="space-y-1">
-                  <a href="tel:07397985279" className="block text-primary font-medium hover:text-secondary">07397985279</a>
                   <a href="tel:07535778637" className="block text-primary font-medium hover:text-secondary">07535778637</a>
                 </div>
               </div>
