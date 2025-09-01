@@ -133,63 +133,38 @@ export default function Pricing() {
               </div>
             </div>
             <ul className="space-y-3 mb-8">
-              <li className="flex items-start text-slate-700">
-                <span className="text-emerald-500 mr-3 mt-1">✓</span>
-                <div>
-                  <strong>Unlimited pages</strong> - As many pages as your business needs
-                </div>
+              <li className="flex items-center text-slate-700">
+                <span className="text-emerald-500 mr-3">✓</span>
+                <strong>Unlimited pages & custom design</strong>
               </li>
-              <li className="flex items-start text-slate-700">
-                <span className="text-emerald-500 mr-3 mt-1">✓</span>
-                <div>
-                  <strong>Custom professional domain</strong> - We register and set up your own .co.uk or .com domain (worth £12/year)
-                </div>
+              <li className="flex items-center text-slate-700">
+                <span className="text-emerald-500 mr-3">✓</span>
+                <strong>Professional domain & email included</strong>
               </li>
-              <li className="flex items-start text-slate-700">
-                <span className="text-emerald-500 mr-3 mt-1">✓</span>
-                <div>
-                  <strong>Bespoke design & branding</strong> - Unique design tailored to your business, not a template
-                </div>
+              <li className="flex items-center text-slate-700">
+                <span className="text-emerald-500 mr-3">✓</span>
+                <strong>Advanced SEO & Google optimization</strong>
               </li>
-              <li className="flex items-start text-slate-700">
-                <span className="text-emerald-500 mr-3 mt-1">✓</span>
-                <div>
-                  <strong>Advanced SEO & Google optimization</strong> - Better search rankings to get more customers
-                </div>
+              <li className="flex items-center text-slate-700">
+                <span className="text-emerald-500 mr-3">✓</span>
+                <strong>Analytics & performance tracking</strong>
               </li>
-              <li className="flex items-start text-slate-700">
-                <span className="text-emerald-500 mr-3 mt-1">✓</span>
-                <div>
-                  <strong>Professional email setup</strong> - Get your own business email (e.g., info@yourbusiness.co.uk)
-                </div>
+              <li className="flex items-center text-slate-700">
+                <span className="text-emerald-500 mr-3">✓</span>
+                <strong>Content management system</strong>
               </li>
-              <li className="flex items-start text-slate-700">
-                <span className="text-emerald-500 mr-3 mt-1">✓</span>
-                <div>
-                  <strong>Analytics & performance tracking</strong> - See how many visitors you get and where they come from
-                </div>
-              </li>
-              <li className="flex items-start text-slate-700">
-                <span className="text-emerald-500 mr-3 mt-1">✓</span>
-                <div>
-                  <strong>Priority support for 3 months</strong> - Fast response times and dedicated help
-                </div>
-              </li>
-              <li className="flex items-start text-slate-700">
-                <span className="text-emerald-500 mr-3 mt-1">✓</span>
-                <div>
-                  <strong>Content management system</strong> - Easy way to update your website yourself
-                </div>
+              <li className="flex items-center text-slate-700">
+                <span className="text-emerald-500 mr-3">✓</span>
+                <strong>3 months priority support</strong>
               </li>
             </ul>
             
             {/* Value Highlight */}
             <div className="bg-emerald-50 p-4 rounded-lg mb-6 border border-emerald-200">
               <div className="text-center">
-                <p className="text-emerald-800 font-semibold text-sm mb-2">💰 INCREDIBLE VALUE</p>
-                <p className="text-emerald-700 text-sm">
-                  Domain (£12/year) + Professional email (£60/year) + Custom design (£500+) = 
-                  <span className="font-bold"> Over £570 worth of services included FREE!</span>
+                <p className="text-emerald-800 font-semibold text-sm mb-1">💰 INCREDIBLE VALUE</p>
+                <p className="text-emerald-700 text-sm font-bold">
+                  Over £570 worth of services included FREE!
                 </p>
               </div>
             </div>
