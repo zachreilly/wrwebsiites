@@ -24,73 +24,8 @@ export default function Navigation() {
             </div>
           </div>
           
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="flex items-center space-x-1">
-              {/* Main Navigation Links */}
-              <button 
-                onClick={() => scrollToSection('home')} 
-                className="text-white hover:text-emerald-100 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg hover:bg-emerald-700"
-              >
-                Home
-              </button>
-              <button 
-                onClick={() => scrollToSection('services')} 
-                className="text-white hover:text-emerald-100 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg hover:bg-emerald-700"
-              >
-                Services
-              </button>
-              <button 
-                onClick={() => scrollToSection('pricing')} 
-                className="text-white hover:text-emerald-100 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg hover:bg-emerald-700"
-              >
-                Pricing
-              </button>
-              <button 
-                onClick={() => window.location.href = '/portfolio'} 
-                className="text-white hover:text-emerald-100 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg hover:bg-emerald-700"
-                data-testid="button-portfolio"
-              >
-                Portfolio
-              </button>
-              <button 
-                onClick={() => scrollToSection('about')} 
-                className="text-white hover:text-emerald-100 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg hover:bg-emerald-700"
-              >
-                About
-              </button>
-              
-              {/* Divider */}
-              <div className="h-6 w-px bg-emerald-400 mx-4"></div>
-              
-              {/* Secondary Links */}
-              <button 
-                onClick={() => window.location.href = '/customer/login'} 
-                className="text-emerald-100 hover:text-white px-3 py-2 text-sm font-medium transition-colors"
-                data-testid="button-customer-portal"
-              >
-                Customer Portal
-              </button>
-              
-              {/* CTA Buttons */}
-              <Button 
-                variant="outline"
-                onClick={() => window.location.href = '/consultation'} 
-                className="ml-2 border-white text-white hover:bg-white hover:text-emerald-600"
-              >
-                Custom Quote
-              </Button>
-              <Button 
-                onClick={() => window.location.href = '/payment'} 
-                className="ml-2 bg-white text-emerald-600 hover:bg-emerald-50"
-              >
-                Get Started
-              </Button>
-            </div>
-          </div>
-          
-          {/* Mobile menu button */}
-          <div className="md:hidden">
+          {/* Menu button - shows on all screen sizes */}
+          <div>
             <Button
               variant="ghost"
               size="sm"
@@ -105,7 +40,7 @@ export default function Navigation() {
       
       {/* Mobile Navigation Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-emerald-600 border-t border-emerald-700">
+        <div className="bg-emerald-600 border-t border-emerald-700">
           <div className="px-4 pt-4 pb-4 space-y-2">
             {/* Main Navigation */}
             <div className="space-y-1">
