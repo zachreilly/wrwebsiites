@@ -2,14 +2,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { X, Plus, Loader2 } from "lucide-react";
+import { X, Upload, Loader2, Image } from "lucide-react";
+import { ObjectUploader } from "@/components/ObjectUploader";
 
 interface PortfolioFormProps {
   sessionPassword: string;
@@ -20,13 +20,12 @@ interface PortfolioFormData {
   projectTitle: string;
   clientName: string;
   projectType: string;
-  description: string;
+  imageUrl: string;
   technologiesUsed: string;
   projectUrl: string;
   completionDate: string;
   isFeatured: boolean;
   isPublic: boolean;
-  imageUrls: string[];
 }
 
 export function PortfolioForm({ sessionPassword, onClose }: PortfolioFormProps) {
@@ -37,21 +36,17 @@ export function PortfolioForm({ sessionPassword, onClose }: PortfolioFormProps) 
     projectTitle: '',
     clientName: '',
     projectType: '',
-    description: '',
+    imageUrl: '',
     technologiesUsed: '',
     projectUrl: '',
     completionDate: '',
     isFeatured: false,
-    isPublic: true,
-    imageUrls: ['']
+    isPublic: true
   });
 
   const createPortfolioMutation = useMutation({
     mutationFn: async (data: PortfolioFormData) => {
-      const response = await apiRequest("POST", `/api/admin/portfolio?password=${sessionPassword}`, {
-        ...data,
-        imageUrls: data.imageUrls.filter(url => url.trim() !== '')
-      });
+      const response = await apiRequest("POST", `/api/admin/portfolio?password=${sessionPassword}`, data);
       return response.json();
     },
     onSuccess: () => {
@@ -75,34 +70,33 @@ export function PortfolioForm({ sessionPassword, onClose }: PortfolioFormProps) 
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleImageUrlChange = (index: number, value: string) => {
-    const newImageUrls = [...formData.imageUrls];
-    newImageUrls[index] = value;
-    setFormData(prev => ({ ...prev, imageUrls: newImageUrls }));
+  const handleGetUploadParameters = async () => {
+    const response = await apiRequest("POST", "/api/objects/upload");
+    const data = await response.json();
+    return {
+      method: "PUT" as const,
+      url: data.uploadURL,
+    };
   };
 
-  const addImageUrl = () => {
-    setFormData(prev => ({ 
-      ...prev, 
-      imageUrls: [...prev.imageUrls, ''] 
-    }));
-  };
-
-  const removeImageUrl = (index: number) => {
-    if (formData.imageUrls.length > 1) {
-      const newImageUrls = formData.imageUrls.filter((_, i) => i !== index);
-      setFormData(prev => ({ ...prev, imageUrls: newImageUrls }));
-    }
+  const handleImageUploadComplete = (uploadedImageUrl: string) => {
+    // Normalize the uploaded URL to use our object serving endpoint
+    const normalizedUrl = uploadedImageUrl.replace('https://storage.googleapis.com/', '/objects/');
+    setFormData(prev => ({ ...prev, imageUrl: normalizedUrl }));
+    toast({
+      title: "Image uploaded",
+      description: "Your project image has been uploaded successfully",
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     // Basic validation
-    if (!formData.projectTitle || !formData.clientName || !formData.projectType || !formData.description) {
+    if (!formData.projectTitle || !formData.clientName || !formData.projectType || !formData.imageUrl) {
       toast({
         title: "Missing Information",
-        description: "Please fill in all required fields",
+        description: "Please fill in all required fields including uploading an image",
         variant: "destructive",
       });
       return;
@@ -196,16 +190,29 @@ export function PortfolioForm({ sessionPassword, onClose }: PortfolioFormProps) 
               </div>
 
               <div>
-                <Label htmlFor="description">Project Description *</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  placeholder="Describe the project, what was built, key features, challenges solved..."
-                  rows={4}
-                  required
-                  data-testid="textarea-description"
-                />
+                <Label>Project Image *</Label>
+                <div className="space-y-3">
+                  <ObjectUploader
+                    onGetUploadParameters={handleGetUploadParameters}
+                    onComplete={handleImageUploadComplete}
+                    buttonClassName="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    Upload Project Image
+                  </ObjectUploader>
+                  
+                  {formData.imageUrl && (
+                    <div className="mt-3 p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                      <div className="flex items-center gap-2 text-emerald-700">
+                        <Image className="w-4 h-4" />
+                        <span className="text-sm font-medium">Image uploaded successfully!</span>
+                      </div>
+                      <p className="text-xs text-emerald-600 mt-1 break-all">
+                        {formData.imageUrl}
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -234,58 +241,6 @@ export function PortfolioForm({ sessionPassword, onClose }: PortfolioFormProps) 
               </div>
             </div>
 
-            {/* Project Images */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-slate-900 border-b border-slate-200 pb-2">
-                Project Images
-              </h3>
-              
-              <div className="space-y-3">
-                {formData.imageUrls.map((url, index) => (
-                  <div key={index} className="flex gap-2">
-                    <div className="flex-1">
-                      <Label htmlFor={`imageUrl-${index}`}>
-                        Image URL {index + 1} {index === 0 && "*"}
-                      </Label>
-                      <Input
-                        id={`imageUrl-${index}`}
-                        type="url"
-                        value={url}
-                        onChange={(e) => handleImageUrlChange(index, e.target.value)}
-                        placeholder="https://example.com/image.jpg"
-                        required={index === 0}
-                        data-testid={`input-image-url-${index}`}
-                      />
-                    </div>
-                    {formData.imageUrls.length > 1 && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeImageUrl(index)}
-                        className="mt-6"
-                        data-testid={`button-remove-image-${index}`}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    )}
-                  </div>
-                ))}
-                
-                {formData.imageUrls.length < 5 && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={addImageUrl}
-                    className="w-full"
-                    data-testid="button-add-image"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Another Image
-                  </Button>
-                )}
-              </div>
-            </div>
 
             {/* Settings */}
             <div className="space-y-4">

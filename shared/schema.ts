@@ -448,7 +448,7 @@ export const portfolioItems = pgTable("portfolio_items", {
   projectTitle: varchar("project_title").notNull(),
   clientName: varchar("client_name").notNull(),
   websiteUrl: varchar("website_url").notNull(),
-  description: text("description").notNull(),
+  imageUrl: varchar("image_url").notNull(), // Main project image
   
   // Screenshot/image
   screenshotUrl: varchar("screenshot_url"), // URL to screenshot image
