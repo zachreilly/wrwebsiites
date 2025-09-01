@@ -25,7 +25,7 @@ export default function Navigation() {
           </div>
           
           {/* Desktop Navigation */}
-          <div className="hidden lg:block">
+          <div className="hidden md:block">
             <div className="flex items-center space-x-1">
               {/* Main Navigation Links */}
               <button 
@@ -90,7 +90,7 @@ export default function Navigation() {
           </div>
           
           {/* Mobile menu button */}
-          <div className="lg:hidden">
+          <div className="md:hidden">
             <Button
               variant="ghost"
               size="sm"
@@ -105,7 +105,7 @@ export default function Navigation() {
       
       {/* Mobile Navigation Menu */}
       {isMenuOpen && (
-        <div className="lg:hidden bg-emerald-600 border-t border-emerald-700">
+        <div className="md:hidden bg-emerald-600 border-t border-emerald-700">
           <div className="px-4 pt-4 pb-4 space-y-2">
             {/* Main Navigation */}
             <div className="space-y-1">
