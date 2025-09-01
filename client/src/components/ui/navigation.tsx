@@ -102,7 +102,7 @@ export default function Navigation() {
                   window.location.href = '/consultation';
                   setIsMenuOpen(false);
                 }} 
-                className="w-full border-white text-white hover:bg-white hover:text-emerald-600"
+                className="w-full border-2 border-yellow-300 text-yellow-300 hover:bg-yellow-300 hover:text-emerald-600 font-semibold"
               >
                 Custom Quote
               </Button>
