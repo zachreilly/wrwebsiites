@@ -148,12 +148,12 @@ export default function PortfolioPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {portfolioItems.map((item, index) => (
                 <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-200" data-testid={`card-portfolio-${index}`}>
-                  {/* Screenshot */}
-                  {item.screenshotUrl && (
+                  {/* Project Image */}
+                  {item.imageUrl && (
                     <div className="aspect-video overflow-hidden bg-gray-100">
                       <img 
-                        src={item.screenshotUrl} 
-                        alt={`${item.projectTitle} screenshot`}
+                        src={item.imageUrl} 
+                        alt={`${item.projectTitle} preview`}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
@@ -197,9 +197,6 @@ export default function PortfolioPage() {
                   </CardHeader>
 
                   <CardContent>
-                    <CardDescription className="text-gray-600 mb-4">
-                      {item.description}
-                    </CardDescription>
 
                     {/* Features */}
                     {item.features && (

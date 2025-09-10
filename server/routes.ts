@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertContactRequestSchema, insertPageViewSchema, insertClickEventSchema, insertAdminSessionSchema, insertClientOnboardingSchema, insertConsultationRequestSchema, insertWebsiteUpdateRequestSchema, customers, projects } from "@shared/schema";
+import { insertContactRequestSchema, insertPageViewSchema, insertClickEventSchema, insertAdminSessionSchema, insertClientOnboardingSchema, insertConsultationRequestSchema, insertWebsiteUpdateRequestSchema, insertPortfolioItemSchema, customers, projects } from "@shared/schema";
 import { z } from "zod";
 import { db } from "./db";
 import { eq, desc, count } from "drizzle-orm";
@@ -775,15 +775,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ success: false, message: "Authentication required" });
       }
 
-      // Parse and validate the portfolio data
-      const portfolioData = req.body;
+      // Parse and validate the portfolio data using Zod schema
+      const portfolioData = insertPortfolioItemSchema.parse(req.body);
       
-      // Basic validation
-      if (!portfolioData.projectTitle || !portfolioData.clientName || !portfolioData.websiteUrl || !portfolioData.description || !portfolioData.projectType) {
-        return res.status(400).json({ success: false, message: "Required fields missing" });
-      }
+      // Normalize the image URL for object storage
+      const objectStorageService = new ObjectStorageService();
+      const normalizedImageUrl = objectStorageService.normalizeObjectEntityPath(portfolioData.imageUrl);
+      
+      const portfolioDataWithNormalizedUrl = {
+        ...portfolioData,
+        imageUrl: normalizedImageUrl
+      };
 
-      const newItem = await storage.createPortfolioItem(portfolioData);
+      const newItem = await storage.createPortfolioItem(portfolioDataWithNormalizedUrl);
       res.json({ success: true, data: newItem });
     } catch (error) {
       console.error("Portfolio creation error:", error);

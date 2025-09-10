@@ -21,9 +21,9 @@ interface PortfolioFormData {
   clientName: string;
   projectType: string;
   imageUrl: string;
-  technologiesUsed: string;
-  projectUrl: string;
-  completionDate: string;
+  features: string;
+  websiteUrl: string;
+  projectCompletedDate: string;
   isFeatured: boolean;
   isPublic: boolean;
 }
@@ -37,9 +37,9 @@ export function PortfolioForm({ sessionPassword, onClose }: PortfolioFormProps) 
     clientName: '',
     projectType: '',
     imageUrl: '',
-    technologiesUsed: '',
-    projectUrl: '',
-    completionDate: '',
+    features: '',
+    websiteUrl: '',
+    projectCompletedDate: '',
     isFeatured: false,
     isPublic: true
   });
@@ -80,9 +80,8 @@ export function PortfolioForm({ sessionPassword, onClose }: PortfolioFormProps) 
   };
 
   const handleImageUploadComplete = (uploadedImageUrl: string) => {
-    // Normalize the uploaded URL to use our object serving endpoint
-    const normalizedUrl = uploadedImageUrl.replace('https://storage.googleapis.com/', '/objects/');
-    setFormData(prev => ({ ...prev, imageUrl: normalizedUrl }));
+    // Store the raw upload URL - the backend will normalize it when saving
+    setFormData(prev => ({ ...prev, imageUrl: uploadedImageUrl }));
     toast({
       title: "Image uploaded",
       description: "Your project image has been uploaded successfully",
@@ -92,11 +91,11 @@ export function PortfolioForm({ sessionPassword, onClose }: PortfolioFormProps) 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Basic validation
-    if (!formData.projectTitle || !formData.clientName || !formData.projectType || !formData.imageUrl) {
+    // Basic validation - updated to match schema requirements
+    if (!formData.projectTitle || !formData.clientName || !formData.projectType || !formData.imageUrl || !formData.websiteUrl) {
       toast({
         title: "Missing Information",
-        description: "Please fill in all required fields including uploading an image",
+        description: "Please fill in all required fields including project title, client name, project type, image upload, and website URL",
         variant: "destructive",
       });
       return;
@@ -178,12 +177,12 @@ export function PortfolioForm({ sessionPassword, onClose }: PortfolioFormProps) 
                 </div>
                 
                 <div>
-                  <Label htmlFor="completionDate">Completion Date</Label>
+                  <Label htmlFor="projectCompletedDate">Completion Date</Label>
                   <Input
-                    id="completionDate"
+                    id="projectCompletedDate"
                     type="date"
-                    value={formData.completionDate}
-                    onChange={(e) => handleInputChange('completionDate', e.target.value)}
+                    value={formData.projectCompletedDate}
+                    onChange={(e) => handleInputChange('projectCompletedDate', e.target.value)}
                     data-testid="input-completion-date"
                   />
                 </div>
@@ -217,24 +216,25 @@ export function PortfolioForm({ sessionPassword, onClose }: PortfolioFormProps) 
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="technologiesUsed">Technologies Used</Label>
+                  <Label htmlFor="features">Technologies Used</Label>
                   <Input
-                    id="technologiesUsed"
-                    value={formData.technologiesUsed}
-                    onChange={(e) => handleInputChange('technologiesUsed', e.target.value)}
+                    id="features"
+                    value={formData.features}
+                    onChange={(e) => handleInputChange('features', e.target.value)}
                     placeholder="e.g., React, Node.js, Tailwind CSS"
                     data-testid="input-technologies"
                   />
                 </div>
                 
                 <div>
-                  <Label htmlFor="projectUrl">Live Project URL</Label>
+                  <Label htmlFor="websiteUrl">Live Project URL *</Label>
                   <Input
-                    id="projectUrl"
+                    id="websiteUrl"
                     type="url"
-                    value={formData.projectUrl}
-                    onChange={(e) => handleInputChange('projectUrl', e.target.value)}
+                    value={formData.websiteUrl}
+                    onChange={(e) => handleInputChange('websiteUrl', e.target.value)}
                     placeholder="https://example.com"
+                    required
                     data-testid="input-project-url"
                   />
                 </div>
