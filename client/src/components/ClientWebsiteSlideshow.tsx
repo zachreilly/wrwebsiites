@@ -36,6 +36,12 @@ const CLIENT_WEBSITES: ClientWebsite[] = [
     url: "https://MeatLikeItUsedToBeCo.replit.app",
     description: "Premium quality meats sourced locally with traditional butchery methods",
     industry: "Food & Butchery"
+  },
+  {
+    name: "Sea World Eats",
+    url: "https://sea-world-eats.replit.app/",
+    description: "Fresh seafood and ocean-inspired dining experience with sustainable ingredients",
+    industry: "Restaurant & Dining"
   }
 ];
 
