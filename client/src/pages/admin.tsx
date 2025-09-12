@@ -158,7 +158,6 @@ function PortfolioManagement({ sessionPassword }: PortfolioManagementProps) {
                         )}
                       </div>
                       
-                      <p className="text-gray-700 mt-3">{item.description}</p>
                       
                       {item.clientRating && (
                         <div className="flex items-center mt-2">
@@ -209,13 +208,6 @@ function PortfolioManagement({ sessionPassword }: PortfolioManagementProps) {
                     </div>
                   </div>
                   
-                  {item.testimonialText && (
-                    <blockquote className="border-l-4 border-emerald-200 pl-4 mt-4 bg-emerald-50 p-3 rounded-r">
-                      <p className="text-sm italic text-gray-700">
-                        "{item.testimonialText}"
-                      </p>
-                    </blockquote>
-                  )}
                 </div>
               </div>
             </Card>

@@ -80,12 +80,12 @@ export default function PortfolioPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-teal-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600 shadow-lg border-b-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col items-center">
-            <div className="self-start mb-4">
+      <div className="bg-gradient-to-r from-emerald-600 to-green-600 shadow-lg border-b-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col items-center min-h-[200px] justify-center">
+            <div className="absolute top-6 left-6">
               <Button 
                 variant="ghost" 
                 onClick={() => setLocation('/')}
@@ -96,11 +96,11 @@ export default function PortfolioPage() {
                 Back to Home
               </Button>
             </div>
-            <div className="text-center">
-              <h1 className="text-4xl font-bold text-white drop-shadow-lg" data-testid="text-portfolio-title">
+            <div className="text-center max-w-4xl mx-auto">
+              <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg mb-6" data-testid="text-portfolio-title">
                 Our Portfolio
               </h1>
-              <p className="text-lg text-emerald-100 mt-2 drop-shadow">
+              <p className="text-xl md:text-2xl text-green-100 drop-shadow max-w-2xl mx-auto leading-relaxed">
                 Showcasing successful websites we've built for our clients
               </p>
             </div>
@@ -134,19 +134,19 @@ export default function PortfolioPage() {
             <div className="text-center mb-12">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="bg-gradient-to-br from-white to-emerald-50 p-6 rounded-xl shadow-lg border-0 hover:shadow-xl transition-all duration-300">
-                  <div className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-2">
+                  <div className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent mb-2">
                     {portfolioItems.length}+
                   </div>
                   <div className="text-gray-700 font-medium">Websites Built</div>
                 </div>
-                <div className="bg-gradient-to-br from-white to-purple-50 p-6 rounded-xl shadow-lg border-0 hover:shadow-xl transition-all duration-300">
-                  <div className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+                <div className="bg-gradient-to-br from-white to-emerald-50 p-6 rounded-xl shadow-lg border-0 hover:shadow-xl transition-all duration-300">
+                  <div className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent mb-2">
                     {new Set(portfolioItems.map(item => item.industry).filter(Boolean)).size}+
                   </div>
                   <div className="text-gray-700 font-medium">Industries Served</div>
                 </div>
-                <div className="bg-gradient-to-br from-white to-blue-50 p-6 rounded-xl shadow-lg border-0 hover:shadow-xl transition-all duration-300">
-                  <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+                <div className="bg-gradient-to-br from-white to-emerald-50 p-6 rounded-xl shadow-lg border-0 hover:shadow-xl transition-all duration-300">
+                  <div className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent mb-2">
                     {portfolioItems.filter(item => item.clientRating && item.clientRating >= 4).length}+
                   </div>
                   <div className="text-gray-700 font-medium">Happy Clients</div>
@@ -214,7 +214,7 @@ export default function PortfolioPage() {
                         <h4 className="font-semibold text-sm text-gray-900 mb-2">Features:</h4>
                         <div className="flex flex-wrap gap-2">
                           {JSON.parse(item.features).slice(0, 3).map((feature: string, idx: number) => (
-                            <Badge key={idx} className="text-xs bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 border-indigo-200 hover:from-indigo-200 hover:to-purple-200 transition-colors">
+                            <Badge key={idx} className="text-xs bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-800 border-emerald-200 hover:from-emerald-200 hover:to-green-200 transition-colors">
                               {feature}
                             </Badge>
                           ))}
