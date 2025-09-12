@@ -229,14 +229,6 @@ export default function PortfolioPage() {
                       </div>
                     )}
 
-                    {/* Testimonial */}
-                    {item.testimonialText && (
-                      <blockquote className="border-l-4 border-gradient-to-b from-emerald-400 to-teal-400 bg-gradient-to-r from-emerald-50 to-transparent pl-4 mb-4 rounded-r-md">
-                        <p className="text-sm italic text-gray-700">
-                          "{item.testimonialText}"
-                        </p>
-                      </blockquote>
-                    )}
 
                     <div className="flex justify-between items-center pt-4">
                       <Button
