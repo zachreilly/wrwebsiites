@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { Button } from '@/components/ui/button';
@@ -40,6 +40,8 @@ const CLIENT_WEBSITES: ClientWebsite[] = [
 ];
 
 export default function ClientWebsiteSlideshow() {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { 
       loop: true,
@@ -51,18 +53,40 @@ export default function ClientWebsiteSlideshow() {
   );
 
   const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
+    if (emblaApi) {
+      emblaApi.scrollPrev();
+    }
   }, [emblaApi]);
 
   const scrollNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
+    if (emblaApi) {
+      emblaApi.scrollNext();
+    }
+  }, [emblaApi]);
+
+  const scrollTo = useCallback((index: number) => {
+    if (emblaApi) {
+      emblaApi.scrollTo(index);
+    }
+  }, [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
   useEffect(() => {
-    if (emblaApi) {
-      // Optional: Add any additional setup here
-    }
-  }, [emblaApi]);
+    if (!emblaApi) return;
+
+    onSelect(); // Set initial selected index
+    emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', onSelect);
+
+    return () => {
+      emblaApi.off('select', onSelect);
+      emblaApi.off('reInit', onSelect);
+    };
+  }, [emblaApi, onSelect]);
 
   return (
     <div className="bg-white py-16 border-b">
@@ -161,9 +185,14 @@ export default function ClientWebsiteSlideshow() {
           {CLIENT_WEBSITES.map((_, index) => (
             <button
               key={index}
-              className="w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400 transition-colors duration-200"
-              onClick={() => emblaApi?.scrollTo(index)}
-              data-testid={`button-slide-dot-${index}`}
+              className={`w-3 h-3 rounded-full transition-colors duration-200 ${
+                index === selectedIndex 
+                  ? 'bg-emerald-600' 
+                  : 'bg-gray-300 hover:bg-gray-400'
+              }`}
+              onClick={() => scrollTo(index)}
+              data-testid={`slideshow-dot-${index}`}
+              aria-current={index === selectedIndex ? 'true' : 'false'}
             />
           ))}
         </div>
