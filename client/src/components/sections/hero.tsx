@@ -40,13 +40,6 @@ export default function Hero() {
               </Button>
             </div>
           </div>
-          <div className="flex justify-center">
-            <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm">
-              <div className="text-3xl font-bold text-emerald-500 mb-2">24/7</div>
-              <div className="text-slate-600">Support Available</div>
-              <div className="text-sm text-slate-500 mt-2">We're here when you need us</div>
-            </div>
-          </div>
         </div>
       </div>
     </section>

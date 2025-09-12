@@ -25,13 +25,13 @@ export default function PortfolioPage() {
   const getProjectTypeColor = (type: string) => {
     switch (type) {
       case 'basic':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md';
       case 'premium':
-        return 'bg-purple-100 text-purple-800';
+        return 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md';
       case 'custom':
-        return 'bg-emerald-100 text-emerald-800';
+        return 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-md';
     }
   };
 
@@ -43,7 +43,7 @@ export default function PortfolioPage() {
           <Star
             key={star}
             className={`w-4 h-4 ${
-              star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+              star <= rating ? 'text-yellow-500 fill-current drop-shadow-sm' : 'text-gray-300'
             }`}
           />
         ))}
@@ -54,20 +54,23 @@ export default function PortfolioPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-white flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+      <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-teal-50 to-blue-50 flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-white flex items-center justify-center">
-        <Card className="w-full max-w-md">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-teal-50 to-blue-50 flex items-center justify-center">
+        <Card className="w-full max-w-md shadow-xl border-0">
           <CardContent className="p-6 text-center">
-            <h2 className="text-lg font-semibold mb-2">Error Loading Portfolio</h2>
+            <h2 className="text-lg font-semibold mb-2 text-gray-900">Error Loading Portfolio</h2>
             <p className="text-gray-600 mb-4">Please try again later</p>
-            <Button onClick={() => setLocation('/')}>
+            <Button 
+              onClick={() => setLocation('/')}
+              className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-md"
+            >
               Return to Homepage
             </Button>
           </CardContent>
@@ -77,29 +80,29 @@ export default function PortfolioPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-teal-50 to-blue-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600 shadow-lg border-b-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
+          <div className="flex flex-col items-center">
+            <div className="self-start mb-4">
               <Button 
                 variant="ghost" 
                 onClick={() => setLocation('/')}
-                className="mr-4"
                 data-testid="button-back-home"
+                className="text-white hover:bg-white/20 hover:text-white border-white/20"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Home
               </Button>
-              <div>
-                <h1 className="text-4xl font-bold text-gray-900" data-testid="text-portfolio-title">
-                  Our Portfolio
-                </h1>
-                <p className="text-lg text-gray-600 mt-2">
-                  Showcasing successful websites we've built for our clients
-                </p>
-              </div>
+            </div>
+            <div className="text-center">
+              <h1 className="text-4xl font-bold text-white drop-shadow-lg" data-testid="text-portfolio-title">
+                Our Portfolio
+              </h1>
+              <p className="text-lg text-emerald-100 mt-2 drop-shadow">
+                Showcasing successful websites we've built for our clients
+              </p>
             </div>
           </div>
         </div>
@@ -111,13 +114,16 @@ export default function PortfolioPage() {
       {/* Portfolio Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {portfolioItems.length === 0 ? (
-          <Card className="text-center py-12">
+          <Card className="text-center py-12 bg-gradient-to-br from-white to-emerald-50 shadow-xl border-0">
             <CardContent>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Coming Soon!</h2>
               <p className="text-gray-600 mb-6">
                 We're currently building our portfolio showcase. Check back soon to see our amazing client projects!
               </p>
-              <Button onClick={() => setLocation('/')}>
+              <Button 
+                onClick={() => setLocation('/')}
+                className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-md"
+              >
                 Explore Our Services
               </Button>
             </CardContent>
@@ -127,23 +133,23 @@ export default function PortfolioPage() {
             {/* Stats Section */}
             <div className="text-center mb-12">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="bg-white p-6 rounded-lg shadow-sm border">
-                  <div className="text-3xl font-bold text-emerald-600 mb-2">
+                <div className="bg-gradient-to-br from-white to-emerald-50 p-6 rounded-xl shadow-lg border-0 hover:shadow-xl transition-all duration-300">
+                  <div className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-2">
                     {portfolioItems.length}+
                   </div>
-                  <div className="text-gray-600">Websites Built</div>
+                  <div className="text-gray-700 font-medium">Websites Built</div>
                 </div>
-                <div className="bg-white p-6 rounded-lg shadow-sm border">
-                  <div className="text-3xl font-bold text-emerald-600 mb-2">
+                <div className="bg-gradient-to-br from-white to-purple-50 p-6 rounded-xl shadow-lg border-0 hover:shadow-xl transition-all duration-300">
+                  <div className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
                     {new Set(portfolioItems.map(item => item.industry).filter(Boolean)).size}+
                   </div>
-                  <div className="text-gray-600">Industries Served</div>
+                  <div className="text-gray-700 font-medium">Industries Served</div>
                 </div>
-                <div className="bg-white p-6 rounded-lg shadow-sm border">
-                  <div className="text-3xl font-bold text-emerald-600 mb-2">
+                <div className="bg-gradient-to-br from-white to-blue-50 p-6 rounded-xl shadow-lg border-0 hover:shadow-xl transition-all duration-300">
+                  <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
                     {portfolioItems.filter(item => item.clientRating && item.clientRating >= 4).length}+
                   </div>
-                  <div className="text-gray-600">Happy Clients</div>
+                  <div className="text-gray-700 font-medium">Happy Clients</div>
                 </div>
               </div>
             </div>
@@ -151,7 +157,7 @@ export default function PortfolioPage() {
             {/* Portfolio Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {portfolioItems.map((item, index) => (
-                <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-200" data-testid={`card-portfolio-${index}`}>
+                <Card key={item.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0 shadow-lg bg-gradient-to-br from-white to-gray-50" data-testid={`card-portfolio-${index}`}>
                   {/* Project Image */}
                   {item.imageUrl && (
                     <div className="aspect-video overflow-hidden bg-gray-100">
@@ -208,7 +214,7 @@ export default function PortfolioPage() {
                         <h4 className="font-semibold text-sm text-gray-900 mb-2">Features:</h4>
                         <div className="flex flex-wrap gap-2">
                           {JSON.parse(item.features).slice(0, 3).map((feature: string, idx: number) => (
-                            <Badge key={idx} variant="secondary" className="text-xs">
+                            <Badge key={idx} className="text-xs bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 border-indigo-200 hover:from-indigo-200 hover:to-purple-200 transition-colors">
                               {feature}
                             </Badge>
                           ))}
@@ -225,7 +231,7 @@ export default function PortfolioPage() {
 
                     {/* Testimonial */}
                     {item.testimonialText && (
-                      <blockquote className="border-l-4 border-emerald-200 pl-4 mb-4">
+                      <blockquote className="border-l-4 border-gradient-to-b from-emerald-400 to-teal-400 bg-gradient-to-r from-emerald-50 to-transparent pl-4 mb-4 rounded-r-md">
                         <p className="text-sm italic text-gray-700">
                           "{item.testimonialText}"
                         </p>
@@ -238,14 +244,15 @@ export default function PortfolioPage() {
                         size="sm"
                         onClick={() => window.open(item.websiteUrl, '_blank')}
                         data-testid={`button-view-site-${index}`}
+                        className="border-emerald-200 text-emerald-700 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white hover:border-transparent transition-all duration-300"
                       >
                         <ExternalLink className="w-4 h-4 mr-2" />
                         View Site
                       </Button>
                       
                       {item.isFeatured && (
-                        <Badge variant="default" className="bg-yellow-100 text-yellow-800">
-                          Featured
+                        <Badge className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white shadow-md animate-pulse">
+                          ⭐ Featured
                         </Badge>
                       )}
                     </div>
@@ -255,7 +262,7 @@ export default function PortfolioPage() {
             </div>
 
             {/* Call to Action */}
-            <div className="text-center mt-12 bg-white p-8 rounded-lg shadow-sm border">
+            <div className="text-center mt-12 bg-gradient-to-br from-white via-emerald-50 to-teal-50 p-8 rounded-xl shadow-lg border-0">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 Ready to Join Our Success Stories?
               </h2>
@@ -266,7 +273,7 @@ export default function PortfolioPage() {
               <div className="flex justify-center gap-4">
                 <Button 
                   onClick={() => setLocation('/payment')}
-                  className="bg-emerald-600 hover:bg-emerald-700"
+                  className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
                   data-testid="button-get-started"
                 >
                   Get Started Today
@@ -275,6 +282,7 @@ export default function PortfolioPage() {
                   variant="outline" 
                   onClick={() => setLocation('/consultation')}
                   data-testid="button-custom-quote"
+                  className="border-emerald-500 text-emerald-700 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white hover:border-transparent shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
                 >
                   Get Custom Quote
                 </Button>
