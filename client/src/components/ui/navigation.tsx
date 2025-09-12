@@ -17,16 +17,16 @@ export default function Navigation() {
   return (
     <nav className="bg-emerald-600 shadow-sm sticky top-0 z-50 border-b border-emerald-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-24">
           {/* Logo */}
           <div className="flex items-center">
             <img 
               src={logoImage} 
               alt="wrwebsites logo" 
-              className="h-12 w-12 rounded-full"
+              className="h-20 w-20 rounded-full"
               data-testid="logo-image"
             />
-            <span className="ml-3 text-xl font-bold text-white">wrwebsites</span>
+            <span className="ml-4 text-4xl font-bold text-white">wrwebsites</span>
           </div>
           
           {/* Menu button - shows on all screen sizes */}
