@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, ExternalLink, Star, Calendar, Tag, User } from "lucide-react";
+import { ArrowLeft, ExternalLink, Calendar, Tag, User } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import type { PortfolioItem } from "@shared/schema";
@@ -35,22 +35,6 @@ export default function PortfolioPage() {
     }
   };
 
-  const renderStars = (rating: number | null) => {
-    if (!rating) return null;
-    return (
-      <div className="flex items-center">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <Star
-            key={star}
-            className={`w-4 h-4 ${
-              star <= rating ? 'text-yellow-500 fill-current drop-shadow-sm' : 'text-gray-300'
-            }`}
-          />
-        ))}
-        <span className="ml-2 text-sm text-gray-600">({rating}/5)</span>
-      </div>
-    );
-  };
 
   if (isLoading) {
     return (
@@ -147,9 +131,9 @@ export default function PortfolioPage() {
                 </div>
                 <div className="bg-gradient-to-br from-white to-emerald-50 p-6 rounded-xl shadow-lg border-0 hover:shadow-xl transition-all duration-300">
                   <div className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent mb-2">
-                    {portfolioItems.filter(item => item.clientRating && item.clientRating >= 4).length}+
+                    100%
                   </div>
-                  <div className="text-gray-700 font-medium">Happy Clients</div>
+                  <div className="text-gray-700 font-medium">Client Satisfaction</div>
                 </div>
               </div>
             </div>
@@ -222,12 +206,6 @@ export default function PortfolioPage() {
                       </div>
                     )}
 
-                    {/* Rating */}
-                    {item.clientRating && (
-                      <div className="mb-4">
-                        {renderStars(item.clientRating)}
-                      </div>
-                    )}
 
 
                     <div className="flex justify-between items-center pt-4">
