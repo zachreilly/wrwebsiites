@@ -7,6 +7,7 @@ import { ArrowLeft, ExternalLink, Star, Calendar, Tag, User } from "lucide-react
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import type { PortfolioItem } from "@shared/schema";
+import ClientWebsiteSlideshow from "@/components/ClientWebsiteSlideshow";
 
 export default function PortfolioPage() {
   const [, setLocation] = useLocation();
@@ -103,6 +104,9 @@ export default function PortfolioPage() {
           </div>
         </div>
       </div>
+
+      {/* Client Website Slideshow */}
+      <ClientWebsiteSlideshow />
 
       {/* Portfolio Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
