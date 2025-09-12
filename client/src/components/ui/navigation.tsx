@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logoImage from "@assets/wrwebsites logo _1757645298545.png";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,9 +20,13 @@ export default function Navigation() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <div className="text-2xl font-bold text-white">
-              wrwebsites
-            </div>
+            <img 
+              src={logoImage} 
+              alt="wrwebsites logo" 
+              className="h-12 w-12 rounded-full"
+              data-testid="logo-image"
+            />
+            <span className="ml-3 text-xl font-bold text-white">wrwebsites</span>
           </div>
           
           {/* Menu button - shows on all screen sizes */}
