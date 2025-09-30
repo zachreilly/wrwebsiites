@@ -79,12 +79,21 @@ export default function OnboardingPage() {
 
   const submitMutation = useMutation({
     mutationFn: (data: ClientInfoForm) => apiRequest("POST", "/api/client-onboarding", data),
-    onSuccess: () => {
-      setIsSubmitted(true);
+    onSuccess: (response: any) => {
       toast({
         title: "Information Submitted Successfully!",
-        description: "We'll be in touch within 24 hours to get started on your website.",
+        description: "Redirecting to payment setup...",
       });
+      
+      // Redirect to payment setup with client info
+      const params = new URLSearchParams({
+        email: form.getValues('email'),
+        name: form.getValues('fullName'),
+        businessName: form.getValues('businessName'),
+        package: form.getValues('selectedPackage'),
+        clientId: response?.id || ''
+      });
+      window.location.href = `/payment-setup?${params.toString()}`;
     },
     onError: (error) => {
       toast({

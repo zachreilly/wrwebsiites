@@ -11,6 +11,7 @@ import AdminPage from "@/pages/admin";
 import AdminPaymentsPage from "@/pages/admin-payments";
 import PaymentPage from "@/pages/payment";
 import OnboardingPage from "@/pages/onboarding";
+import PaymentSetupPage from "@/pages/payment-setup";
 import ConsultationPage from "@/pages/consultation";
 import WebsiteUpdateRequest from "@/pages/website-update-request";
 import CustomerLogin from "@/pages/customer-login";
@@ -25,6 +26,7 @@ function Router() {
       <Route path="/admin/payments" component={AdminPaymentsPage} />
       <Route path="/payment" component={PaymentPage} />
       <Route path="/onboarding" component={OnboardingPage} />
+      <Route path="/payment-setup" component={PaymentSetupPage} />
       <Route path="/consultation" component={ConsultationPage} />
       <Route path="/website-update-request" component={WebsiteUpdateRequest} />
       <Route path="/portfolio" component={PortfolioPage} />
