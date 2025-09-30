@@ -29,8 +29,24 @@ export default function Navigation() {
             <span className="ml-4 text-4xl font-bold text-white">wrwebsites</span>
           </div>
           
-          {/* Menu button - shows on all screen sizes */}
-          <div>
+          {/* Portfolio and Customer Portal Links + Menu button */}
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              onClick={() => window.location.href = '/portfolio'}
+              className="text-white hover:text-emerald-100 hover:bg-emerald-700"
+              data-testid="button-portfolio-header"
+            >
+              Portfolio
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => window.location.href = '/customer/login'}
+              className="text-white hover:text-emerald-100 hover:bg-emerald-700"
+              data-testid="button-customer-portal-header"
+            >
+              Customer Portal
+            </Button>
             <Button
               variant="ghost"
               size="sm"
