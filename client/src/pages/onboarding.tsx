@@ -53,6 +53,10 @@ export default function OnboardingPage() {
   const { toast } = useToast();
   const totalSteps = 5;
 
+  // Get package from URL parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const packageFromUrl = urlParams.get('package') as 'basic' | 'premium' | null;
+
   const form = useForm<ClientInfoForm>({
     resolver: zodResolver(clientInfoSchema),
     defaultValues: {
@@ -73,7 +77,7 @@ export default function OnboardingPage() {
       wantsContactForm: false,
       socialMediaLinks: "",
       specialRequests: "",
-      selectedPackage: "basic"
+      selectedPackage: packageFromUrl || "basic"
     },
   });
 
