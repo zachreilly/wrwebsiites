@@ -83,8 +83,8 @@ export default function PaymentPageSimple() {
                     // For website updates, redirect to a contact form or new update-specific page
                     window.location.href = '/website-update-request';
                   } else {
-                    // For new websites, continue with the normal payment flow
-                    window.location.href = `/payment?package=${selectedPackage}`;
+                    // For new websites, continue to onboarding flow
+                    window.location.href = `/onboarding?package=${selectedPackage}`;
                   }
                 }} 
                 className="w-full"
