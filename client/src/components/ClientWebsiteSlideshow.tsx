@@ -116,16 +116,22 @@ export default function ClientWebsiteSlideshow() {
                   <Card className="mx-auto max-w-4xl overflow-hidden shadow-lg">
                     <CardContent className="p-0">
                       {/* Website Preview */}
-                      <div className="aspect-video bg-gray-100 relative overflow-hidden">
-                        <iframe
-                          src={website.url}
-                          title={`Preview of ${website.name}`}
-                          className="w-full h-full border-0"
-                          loading="lazy"
-                          data-testid={`iframe-website-${index}`}
-                        />
-                        {/* Overlay for better visibility of controls */}
-                        <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-200" />
+                      <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden group cursor-pointer" onClick={() => window.open(website.url, '_blank')}>
+                        <div className="w-full h-full flex items-center justify-center">
+                          {/* Placeholder for website preview */}
+                          <div className="text-center p-8">
+                            <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center">
+                              <ExternalLink className="w-8 h-8 text-emerald-600" />
+                            </div>
+                            <h4 className="text-xl font-semibold text-gray-800 mb-2">{website.name}</h4>
+                            <p className="text-gray-600 mb-4">{website.industry}</p>
+                            <div className="inline-block px-4 py-2 bg-emerald-600 text-white rounded-lg group-hover:bg-emerald-700 transition-colors">
+                              Click to Visit Live Site
+                            </div>
+                          </div>
+                        </div>
+                        {/* Hover overlay */}
+                        <div className="absolute inset-0 bg-emerald-600 bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200" />
                       </div>
                       
                       {/* Website Info */}

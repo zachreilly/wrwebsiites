@@ -144,11 +144,13 @@ export default function PortfolioPage() {
                 <Card key={item.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0 shadow-lg bg-gradient-to-br from-white to-gray-50" data-testid={`card-portfolio-${index}`}>
                   {/* Project Image */}
                   {item.imageUrl && (
-                    <div className="aspect-video overflow-hidden bg-gray-100">
+                    <div className="aspect-video overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                       <img 
                         src={item.imageUrl} 
                         alt={`${item.projectTitle} preview`}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
+                        loading="lazy"
+                        decoding="async"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.style.display = 'none';
