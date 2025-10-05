@@ -23,10 +23,10 @@ export default function Navigation() {
             <img 
               src={logoImage} 
               alt="wrwebsites logo" 
-              className="h-20 w-20 rounded-full"
+              className="h-16 w-16 sm:h-20 sm:w-20 rounded-full"
               data-testid="logo-image"
             />
-            <span className="ml-4 text-4xl font-bold text-white">wrwebsites</span>
+            <span className="ml-2 sm:ml-4 text-2xl sm:text-4xl font-bold text-white">wrwebsites</span>
           </div>
           
           {/* Portfolio and Customer Portal Links + Menu button */}
@@ -34,7 +34,7 @@ export default function Navigation() {
             <Button
               variant="ghost"
               onClick={() => window.location.href = '/portfolio'}
-              className="text-white hover:text-emerald-100 hover:bg-emerald-700"
+              className="hidden md:flex text-white hover:text-emerald-100 hover:bg-emerald-700"
               data-testid="button-portfolio-header"
             >
               Portfolio
@@ -42,7 +42,7 @@ export default function Navigation() {
             <Button
               variant="ghost"
               onClick={() => window.location.href = '/customer/login'}
-              className="text-white hover:text-emerald-100 hover:bg-emerald-700"
+              className="hidden md:flex text-white hover:text-emerald-100 hover:bg-emerald-700"
               data-testid="button-customer-portal-header"
             >
               Customer Portal
