@@ -14,6 +14,18 @@ interface ClientWebsite {
 
 const CLIENT_WEBSITES: ClientWebsite[] = [
   {
+    name: "Ainsworth Farm Cattery",
+    url: "https://ainsworthfarm.replit.app",
+    description: "Premium cat boarding services in a comfortable, caring environment",
+    industry: "Pet Care"
+  },
+  {
+    name: "BSP Sales",
+    url: "https://bspsales.replit.app",
+    description: "Professional sales and business services with expert consultation",
+    industry: "Sales & Services"
+  },
+  {
     name: "Plumb Perfect",
     url: "https://plumb-perfect-zachreilly06.replit.app",
     description: "Professional plumbing services with emergency call-outs and quality workmanship",
@@ -24,12 +36,6 @@ const CLIENT_WEBSITES: ClientWebsite[] = [
     url: "https://TheBarbershop.replit.app",
     description: "Traditional barbering with modern style and professional grooming services",
     industry: "Beauty & Grooming"
-  },
-  {
-    name: "Ainsworth Farm Cattery",
-    url: "https://Ainsworthfarm-Cattery.replit.app",
-    description: "Premium cat boarding services in a comfortable, caring environment",
-    industry: "Pet Care"
   },
   {
     name: "Meat Like It Used To Be Co",
