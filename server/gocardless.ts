@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import { storage } from './storage';
 
-// Use dynamic import for GoCardless to handle CommonJS module
+// Use require for GoCardless CommonJS modules
+const gocardless = require('gocardless-nodejs');
+const constants = require('gocardless-nodejs/constants');
+
+// GoCardless client instance
 let gc: any;
 
 async function initializeGoCardless() {
@@ -13,23 +17,18 @@ async function initializeGoCardless() {
     }
 
     try {
-      // For now, we'll create a mock GoCardless client since the import is problematic
-      // In production, you would properly configure this
-      gc = {
-        customers: {
-          create: async () => ({ id: 'mock_customer_id' }),
-          find: async () => ({ id: 'mock_customer_id' })
-        },
-        mandates: {
-          create: async () => ({ id: 'mock_mandate_id' }),
-          find: async () => ({ id: 'mock_mandate_id' })
-        },
-        subscriptions: {
-          create: async () => ({ id: 'mock_subscription_id' }),
-          find: async () => ({ id: 'mock_subscription_id' })
-        }
-      };
-      console.log('GoCardless mock client initialized');
+      const environment = process.env.GOCARDLESS_ENVIRONMENT || 'sandbox';
+      const accessToken = process.env.GOCARDLESS_API_KEY;
+      
+      // Determine environment constant
+      const environmentConstant = environment === 'live' 
+        ? constants.Environments.Live 
+        : constants.Environments.Sandbox;
+      
+      // Initialize GoCardless client
+      gc = gocardless(accessToken, environmentConstant);
+      
+      console.log(`GoCardless client initialized in ${environment} mode`);
     } catch (error) {
       console.error('Failed to initialize GoCardless:', error);
       gc = null;
