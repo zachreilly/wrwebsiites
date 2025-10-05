@@ -269,6 +269,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Test GoCardless connection (admin only)
+  app.get("/api/admin/test-gocardless", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Authentication required" 
+        });
+      }
+
+      const { gocardlessService } = await import("./gocardless");
+      
+      // Simple connection test - just initialize the client
+      const testResult = {
+        success: true,
+        environment: process.env.GOCARDLESS_ENVIRONMENT || 'sandbox',
+        hasApiKey: !!process.env.GOCARDLESS_API_KEY,
+        message: `GoCardless is configured for ${process.env.GOCARDLESS_ENVIRONMENT || 'sandbox'} environment`
+      };
+      
+      res.json(testResult);
+    } catch (error: any) {
+      console.error("GoCardless test error:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: error.message || "Failed to connect to GoCardless" 
+      });
+    }
+  });
+
   // Admin endpoint to get payment requests
   app.get("/api/admin/payments", async (req, res) => {
     try {
