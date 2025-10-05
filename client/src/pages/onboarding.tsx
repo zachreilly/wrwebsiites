@@ -197,7 +197,7 @@ export default function OnboardingPage() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="basic">Basic Static Website - £50 + £10/month</SelectItem>
+                              <SelectItem value="basic">Basic Static Website - £75 + £10/month</SelectItem>
                               <SelectItem value="premium">Premium Hosting & Domain - £150 + £10/month</SelectItem>
                             </SelectContent>
                           </Select>

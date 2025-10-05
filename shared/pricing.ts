@@ -23,8 +23,8 @@ export const pricingConfig: PricingConfig = {
   
   basicTier: {
     name: "Basic Static Website",
-    setupPrice: 50,           // Current discounted price
-    originalSetupPrice: 100,  // Original price to show crossed out
+    setupPrice: 75,           // Current discounted price
+    originalSetupPrice: 150,  // Original price to show crossed out
     monthlyPrice: 10,         // Current discounted price
     originalMonthlyPrice: 20, // Original price after discount ends
     features: [

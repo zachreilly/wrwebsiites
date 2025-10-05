@@ -40,7 +40,7 @@ export default function PaymentPageSimple() {
                   <SelectValue placeholder="Choose your service" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="basic">Basic Static Website - £50 setup + £10/month</SelectItem>
+                  <SelectItem value="basic">Basic Static Website - £75 setup + £10/month</SelectItem>
                   <SelectItem value="premium">Premium Hosting and Domain Website - £150 setup + £10/month</SelectItem>
                   <SelectItem value="update">Update Your Website - Quote on Request</SelectItem>
                 </SelectContent>

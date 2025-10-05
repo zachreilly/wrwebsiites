@@ -260,7 +260,7 @@ export async function setupDirectDebit(req: Request, res: Response) {
     });
 
     // Calculate setup fee
-    const setupFee = packageType === 'premium' ? 15000 : 5000; // £150 or £50 in pence
+    const setupFee = packageType === 'premium' ? 15000 : 7500; // £150 or £75 in pence
     const googleFee = googleBusinessSetup ? 2500 : 0; // £25 in pence
     const totalSetupFee = setupFee + googleFee;
 

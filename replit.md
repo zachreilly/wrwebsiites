@@ -2,19 +2,19 @@
 
 ## Overview
 
-wrwebsites is a professional web development service application built as a full-stack solution for showcasing web development services and handling client inquiries. The application serves as a marketing website for a web development agency that specializes in static website development, hosting, and ongoing support services. The website features affordable launch pricing with two package tiers: Basic Static Website (£50 setup + £10/month) and Premium Static Website (£150 setup + £10/month). Contact information includes phone numbers 07397985279 and 07535778637, and email zachhreillyy@gmail.com.
+wrwebsites is a professional web development service application built as a full-stack solution for showcasing web development services and handling client inquiries. The application serves as a marketing website for a web development agency that specializes in static website development, hosting, and ongoing support services. The website features affordable launch pricing with two package tiers: Basic Static Website (£75 setup + £10/month) and Premium Static Website (£150 setup + £10/month). Contact information includes phone numbers 07397985279 and 07535778637, and email zachhreillyy@gmail.com.
 
 ## Recent Changes (August 20, 2025)
 
 - Updated branding from "WebCraft Pro" to "wrwebsites" throughout the application
 - Implemented content from user's business description including pricing structure, service descriptions, and contact information
-- Updated pricing section to reflect two-tier structure: Basic (£50 + £10/month) and Premium (£150 + £10/month) packages
+- Updated pricing section to reflect two-tier structure: Basic (£75 + £10/month) and Premium (£150 + £10/month) packages
 - Modified services section to match user's specific service descriptions for static websites and domain/hosting
 - **Completely removed contact forms** per user request - website now only displays direct contact information (email and phone)
 - **Added comprehensive traffic analytics system** with PostgreSQL database integration
 - **Implemented password-protected admin dashboard** at `/admin` with analytics visualization (password: BADMAN123)
 - Added real-time page view and click event tracking with automatic data collection
-- **Implemented direct debit payment system** with secure customer data collection for both Basic (£50 + £10/month) and Premium (£150 + £10/month) packages
+- **Implemented direct debit payment system** with secure customer data collection for both Basic (£75 + £10/month) and Premium (£150 + £10/month) packages
 - **Enhanced payment funnel** at `/payment` with 5-step process: package selection, client details, domain info (premium only), payment setup, and thank you page
 - **Integrated comprehensive client onboarding system** with detailed data collection replacing static checklists
 - **Updated pricing section buttons** to link directly to payment page with pre-selected packages
