@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { CheckCircle, ArrowLeft, ArrowRight, User, Globe, FileText, Palette, Settings, Layout } from "lucide-react";
+import { CheckCircle, ArrowLeft, ArrowRight, User, Globe, FileText, Palette, Settings, Layout, Sun, Moon, Sparkles } from "lucide-react";
 
 const clientInfoSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -22,6 +22,7 @@ const clientInfoSchema = z.object({
   
   // Template Selection
   templateStyle: z.string().min(1, "Please select a template style"),
+  templateVariation: z.enum(["light", "dark"]).default("light"),
   layoutPreference: z.string().min(1, "Please select a layout preference"),
   
   // Domain & Hosting (Premium only)
@@ -69,6 +70,7 @@ export default function OnboardingPage() {
       email: "",
       phone: "",
       templateStyle: "",
+      templateVariation: "light",
       layoutPreference: "",
       hasDomain: "",
       existingDomain: "",
@@ -279,143 +281,336 @@ export default function OnboardingPage() {
 
                 {/* Step 2: Template Selection */}
                 {currentStep === 2 && (
-                  <div className="space-y-6">
-                    <div className="text-center mb-6">
-                      <h3 className="text-lg font-semibold text-slate-900 mb-2">Choose Your Website Style</h3>
-                      <p className="text-slate-600">Select the template style and color scheme that best represents your brand</p>
+                  <div className="space-y-8">
+                    <div className="text-center mb-8">
+                      <div className="inline-flex items-center justify-center p-2 bg-gradient-to-r from-emerald-100 to-blue-100 rounded-full mb-4">
+                        <Sparkles className="w-5 h-5 text-emerald-600 mr-2" />
+                        <span className="text-sm font-semibold text-emerald-900">Choose Your Perfect Design</span>
+                      </div>
+                      <h3 className="text-2xl font-bold text-slate-900 mb-3">Select Your Website Template</h3>
+                      <p className="text-slate-600 max-w-2xl mx-auto">Pick a style that matches your brand personality. Each template is fully customizable with your chosen colors.</p>
                     </div>
+
+                    {/* Light/Dark Toggle */}
+                    <FormField
+                      control={form.control}
+                      name="templateVariation"
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className="flex items-center justify-center gap-3 mb-6">
+                            <span className="text-sm font-medium text-slate-600">Theme Variation:</span>
+                            <div className="inline-flex rounded-lg border-2 border-slate-200 p-1 bg-slate-50">
+                              <button
+                                type="button"
+                                onClick={() => field.onChange("light")}
+                                className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
+                                  field.value === "light"
+                                    ? "bg-white text-slate-900 shadow-sm"
+                                    : "text-slate-500 hover:text-slate-700"
+                                }`}
+                                data-testid="variation-light"
+                              >
+                                <Sun className="w-4 h-4" />
+                                Light
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => field.onChange("dark")}
+                                className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
+                                  field.value === "dark"
+                                    ? "bg-slate-900 text-white shadow-sm"
+                                    : "text-slate-500 hover:text-slate-700"
+                                }`}
+                                data-testid="variation-dark"
+                              >
+                                <Moon className="w-4 h-4" />
+                                Dark
+                              </button>
+                            </div>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
 
                     <FormField
                       control={form.control}
                       name="templateStyle"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-base font-semibold mb-4 block">Template Style</FormLabel>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
                             {[
                               { 
                                 value: "modern", 
-                                label: "Modern", 
-                                desc: "Clean, contemporary design with bold typography",
-                                preview: (
-                                  <div className="bg-white rounded-lg p-4 border border-slate-200">
-                                    <div className="h-8 bg-slate-900 rounded mb-3 flex items-center px-3">
-                                      <div className="w-16 h-2 bg-emerald-400 rounded"></div>
-                                      <div className="ml-auto flex gap-1">
-                                        <div className="w-8 h-1 bg-white rounded"></div>
-                                        <div className="w-8 h-1 bg-white rounded"></div>
-                                        <div className="w-8 h-1 bg-white rounded"></div>
-                                      </div>
-                                    </div>
-                                    <div className="space-y-2">
-                                      <div className="h-16 bg-gradient-to-r from-emerald-100 to-emerald-50 rounded flex items-center justify-center">
-                                        <div className="w-20 h-4 bg-emerald-600 rounded"></div>
-                                      </div>
-                                      <div className="grid grid-cols-3 gap-2">
-                                        <div className="h-12 bg-slate-100 rounded"></div>
-                                        <div className="h-12 bg-slate-100 rounded"></div>
-                                        <div className="h-12 bg-slate-100 rounded"></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                )
+                                label: "Modern Pro", 
+                                desc: "Clean lines, bold typography, perfect for tech & startups",
+                                category: "Popular"
                               },
                               { 
                                 value: "classic", 
-                                label: "Classic", 
-                                desc: "Traditional, professional layout",
-                                preview: (
-                                  <div className="bg-white rounded-lg p-4 border border-slate-200">
-                                    <div className="text-center mb-3">
-                                      <div className="w-12 h-3 bg-slate-700 rounded mx-auto mb-2"></div>
-                                      <div className="flex gap-1 justify-center">
-                                        <div className="w-10 h-1.5 bg-slate-400 rounded"></div>
-                                        <div className="w-10 h-1.5 bg-slate-400 rounded"></div>
-                                        <div className="w-10 h-1.5 bg-slate-400 rounded"></div>
-                                      </div>
-                                    </div>
-                                    <div className="space-y-2">
-                                      <div className="h-16 bg-slate-100 rounded border border-slate-300"></div>
-                                      <div className="grid grid-cols-2 gap-2">
-                                        <div className="h-14 bg-slate-50 rounded border border-slate-200"></div>
-                                        <div className="h-14 bg-slate-50 rounded border border-slate-200"></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                )
+                                label: "Classic Business", 
+                                desc: "Traditional elegance for professional services",
+                                category: "Professional"
                               },
                               { 
                                 value: "minimalist", 
                                 label: "Minimalist", 
-                                desc: "Simple, focused, and elegant",
-                                preview: (
-                                  <div className="bg-white rounded-lg p-4 border border-slate-200">
-                                    <div className="flex justify-between items-center mb-4">
-                                      <div className="w-10 h-2 bg-slate-900 rounded"></div>
-                                      <div className="flex gap-3">
-                                        <div className="w-6 h-1 bg-slate-300 rounded"></div>
-                                        <div className="w-6 h-1 bg-slate-300 rounded"></div>
-                                      </div>
-                                    </div>
-                                    <div className="space-y-3">
-                                      <div className="h-20 flex items-center justify-center">
-                                        <div className="w-24 h-3 bg-slate-900 rounded"></div>
-                                      </div>
-                                      <div className="h-1 bg-slate-200 rounded w-full"></div>
-                                      <div className="space-y-1.5">
-                                        <div className="h-1 bg-slate-100 rounded w-3/4"></div>
-                                        <div className="h-1 bg-slate-100 rounded w-full"></div>
-                                        <div className="h-1 bg-slate-100 rounded w-2/3"></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                )
+                                desc: "Simple & focused, maximum impact with minimal design",
+                                category: "Popular"
                               },
                               { 
                                 value: "bold", 
-                                label: "Bold", 
-                                desc: "Eye-catching with vibrant elements",
-                                preview: (
-                                  <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-4">
-                                    <div className="flex justify-between items-center mb-3">
-                                      <div className="w-12 h-3 bg-yellow-400 rounded"></div>
-                                      <div className="flex gap-1">
-                                        <div className="w-6 h-6 bg-white/20 rounded"></div>
-                                        <div className="w-6 h-6 bg-white/20 rounded"></div>
+                                label: "Bold Impact", 
+                                desc: "Eye-catching vibrancy for creative businesses",
+                                category: "Creative"
+                              },
+                              { 
+                                value: "creative", 
+                                label: "Creative Studio", 
+                                desc: "Artistic layouts for agencies & portfolios",
+                                category: "Creative"
+                              },
+                              { 
+                                value: "corporate", 
+                                label: "Corporate Elite", 
+                                desc: "Enterprise-grade design for established companies",
+                                category: "Professional"
+                              },
+                              { 
+                                value: "elegant", 
+                                label: "Elegant Luxury", 
+                                desc: "Sophisticated style for premium brands",
+                                category: "Premium"
+                              },
+                              { 
+                                value: "tech", 
+                                label: "Tech Forward", 
+                                desc: "Futuristic design for technology companies",
+                                category: "Tech"
+                              }
+                            ].map((template) => {
+                              const templateVariation = form.watch("templateVariation");
+                              const isLight = templateVariation === "light";
+                              
+                              // Generate preview based on template type and variation
+                              let previewContent;
+                              const bgColor = isLight ? "bg-white" : "bg-slate-900";
+                              const textColor = isLight ? "text-slate-900" : "text-white";
+                              const borderColor = isLight ? "border-slate-200" : "border-slate-700";
+                              
+                              if (template.value === "modern") {
+                                previewContent = (
+                                  <div className={`${bgColor} rounded-lg p-4 border ${borderColor} shadow-sm`}>
+                                    <div className={`h-7 ${isLight ? "bg-slate-900" : "bg-white"} rounded mb-3 flex items-center px-3`}>
+                                      <div className="w-14 h-2 bg-emerald-500 rounded"></div>
+                                      <div className="ml-auto flex gap-2">
+                                        <div className={`w-6 h-1 ${isLight ? "bg-white" : "bg-slate-900"} rounded`}></div>
+                                        <div className={`w-6 h-1 ${isLight ? "bg-white" : "bg-slate-900"} rounded`}></div>
                                       </div>
                                     </div>
-                                    <div className="space-y-2">
-                                      <div className="h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded flex items-center justify-center">
-                                        <div className="w-16 h-3 bg-white rounded"></div>
+                                    <div className="h-24 bg-gradient-to-r from-emerald-500 to-blue-500 rounded mb-2 flex items-center justify-center">
+                                      <div className="w-20 h-5 bg-white/90 rounded"></div>
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-2">
+                                      <div className={`h-14 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded`}></div>
+                                      <div className={`h-14 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded`}></div>
+                                      <div className={`h-14 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded`}></div>
+                                    </div>
+                                  </div>
+                                );
+                              } else if (template.value === "classic") {
+                                previewContent = (
+                                  <div className={`${bgColor} rounded-lg p-4 border ${borderColor} shadow-sm`}>
+                                    <div className="text-center mb-3">
+                                      <div className={`w-16 h-4 ${isLight ? "bg-slate-700" : "bg-slate-300"} rounded mx-auto mb-2`}></div>
+                                      <div className="flex gap-1 justify-center mb-3">
+                                        <div className={`w-8 h-1 ${isLight ? "bg-slate-400" : "bg-slate-600"} rounded`}></div>
+                                        <div className={`w-8 h-1 ${isLight ? "bg-slate-400" : "bg-slate-600"} rounded`}></div>
+                                        <div className={`w-8 h-1 ${isLight ? "bg-slate-400" : "bg-slate-600"} rounded`}></div>
                                       </div>
-                                      <div className="grid grid-cols-2 gap-2">
-                                        <div className="h-12 bg-white/10 rounded border-2 border-yellow-400"></div>
-                                        <div className="h-12 bg-white/10 rounded border-2 border-yellow-400"></div>
+                                    </div>
+                                    <div className={`h-20 ${isLight ? "bg-slate-100 border-slate-300" : "bg-slate-800 border-slate-600"} rounded border mb-2`}></div>
+                                    <div className="grid grid-cols-2 gap-2">
+                                      <div className={`h-12 ${isLight ? "bg-slate-50 border-slate-200" : "bg-slate-800/50 border-slate-700"} rounded border`}></div>
+                                      <div className={`h-12 ${isLight ? "bg-slate-50 border-slate-200" : "bg-slate-800/50 border-slate-700"} rounded border`}></div>
+                                    </div>
+                                  </div>
+                                );
+                              } else if (template.value === "minimalist") {
+                                previewContent = (
+                                  <div className={`${bgColor} rounded-lg p-4 border ${borderColor} shadow-sm`}>
+                                    <div className="flex justify-between items-center mb-4">
+                                      <div className={`w-12 h-2 ${textColor} rounded`}></div>
+                                      <div className="flex gap-3">
+                                        <div className={`w-5 h-0.5 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded`}></div>
+                                        <div className={`w-5 h-0.5 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded`}></div>
+                                      </div>
+                                    </div>
+                                    <div className="h-24 flex items-center justify-center mb-4">
+                                      <div className={`w-28 h-4 ${textColor} rounded`}></div>
+                                    </div>
+                                    <div className={`h-px ${isLight ? "bg-slate-200" : "bg-slate-700"} w-full mb-3`}></div>
+                                    <div className="space-y-1.5">
+                                      <div className={`h-1 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded w-3/4`}></div>
+                                      <div className={`h-1 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded w-full`}></div>
+                                      <div className={`h-1 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded w-2/3`}></div>
+                                    </div>
+                                  </div>
+                                );
+                              } else if (template.value === "bold") {
+                                previewContent = (
+                                  <div className={`${isLight ? "bg-gradient-to-br from-slate-900 to-slate-800" : "bg-gradient-to-br from-slate-100 to-white"} rounded-lg p-4 shadow-sm`}>
+                                    <div className="flex justify-between items-center mb-3">
+                                      <div className={`w-14 h-3 ${isLight ? "bg-yellow-400" : "bg-purple-600"} rounded`}></div>
+                                      <div className="flex gap-1">
+                                        <div className={`w-5 h-5 ${isLight ? "bg-white/20" : "bg-slate-900/20"} rounded`}></div>
+                                        <div className={`w-5 h-5 ${isLight ? "bg-white/20" : "bg-slate-900/20"} rounded`}></div>
+                                      </div>
+                                    </div>
+                                    <div className={`h-20 ${isLight ? "bg-gradient-to-r from-yellow-400 to-orange-500" : "bg-gradient-to-r from-purple-600 to-pink-600"} rounded mb-2 flex items-center justify-center`}>
+                                      <div className={`w-18 h-3 ${isLight ? "bg-white" : "bg-white"} rounded`}></div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2">
+                                      <div className={`h-14 ${isLight ? "bg-white/10 border-2 border-yellow-400" : "bg-slate-900/10 border-2 border-purple-500"} rounded`}></div>
+                                      <div className={`h-14 ${isLight ? "bg-white/10 border-2 border-yellow-400" : "bg-slate-900/10 border-2 border-purple-500"} rounded`}></div>
+                                    </div>
+                                  </div>
+                                );
+                              } else if (template.value === "creative") {
+                                previewContent = (
+                                  <div className={`${bgColor} rounded-lg p-4 border ${borderColor} shadow-sm overflow-hidden`}>
+                                    <div className="flex items-center gap-2 mb-3">
+                                      <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full"></div>
+                                      <div className={`w-16 h-2 ${textColor} rounded`}></div>
+                                    </div>
+                                    <div className="relative h-20 mb-2">
+                                      <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-pink-400 to-orange-400 rounded-full opacity-50 blur-xl"></div>
+                                      <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full opacity-50 blur-xl"></div>
+                                      <div className="relative h-full flex items-center justify-center">
+                                        <div className={`w-24 h-4 ${textColor} rounded`}></div>
+                                      </div>
+                                    </div>
+                                    <div className="grid grid-cols-4 gap-1">
+                                      <div className="h-12 bg-gradient-to-br from-pink-500 to-red-500 rounded"></div>
+                                      <div className="h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded"></div>
+                                      <div className="h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded"></div>
+                                      <div className="h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded"></div>
+                                    </div>
+                                  </div>
+                                );
+                              } else if (template.value === "corporate") {
+                                previewContent = (
+                                  <div className={`${bgColor} rounded-lg p-4 border ${borderColor} shadow-sm`}>
+                                    <div className="flex justify-between items-center mb-3">
+                                      <div className="flex items-center gap-2">
+                                        <div className={`w-6 h-6 ${isLight ? "bg-blue-900" : "bg-blue-400"} rounded`}></div>
+                                        <div className={`w-16 h-2 ${textColor} rounded`}></div>
+                                      </div>
+                                      <div className="flex gap-2">
+                                        <div className={`w-10 h-1 ${isLight ? "bg-slate-600" : "bg-slate-400"} rounded`}></div>
+                                        <div className={`w-10 h-1 ${isLight ? "bg-slate-600" : "bg-slate-400"} rounded`}></div>
+                                      </div>
+                                    </div>
+                                    <div className={`h-18 ${isLight ? "bg-gradient-to-r from-blue-900 to-blue-700" : "bg-gradient-to-r from-blue-600 to-cyan-600"} rounded mb-2 px-3 flex items-center`}>
+                                      <div className="w-20 h-3 bg-white rounded"></div>
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-2">
+                                      <div className={`h-14 ${isLight ? "bg-slate-100 border border-slate-200" : "bg-slate-800 border border-slate-700"} rounded p-2`}>
+                                        <div className={`w-full h-2 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded mb-1`}></div>
+                                        <div className={`w-2/3 h-2 ${isLight ? "bg-slate-200" : "bg-slate-700"} rounded`}></div>
+                                      </div>
+                                      <div className={`h-14 ${isLight ? "bg-slate-100 border border-slate-200" : "bg-slate-800 border border-slate-700"} rounded p-2`}>
+                                        <div className={`w-full h-2 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded mb-1`}></div>
+                                        <div className={`w-2/3 h-2 ${isLight ? "bg-slate-200" : "bg-slate-700"} rounded`}></div>
+                                      </div>
+                                      <div className={`h-14 ${isLight ? "bg-slate-100 border border-slate-200" : "bg-slate-800 border border-slate-700"} rounded p-2`}>
+                                        <div className={`w-full h-2 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded mb-1`}></div>
+                                        <div className={`w-2/3 h-2 ${isLight ? "bg-slate-200" : "bg-slate-700"} rounded`}></div>
                                       </div>
                                     </div>
                                   </div>
-                                )
+                                );
+                              } else if (template.value === "elegant") {
+                                previewContent = (
+                                  <div className={`${bgColor} rounded-lg p-4 border ${borderColor} shadow-sm`}>
+                                    <div className="text-center mb-4">
+                                      <div className="w-10 h-10 mx-auto mb-2 border-2 border-amber-600 rounded-full flex items-center justify-center">
+                                        <div className="w-4 h-4 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full"></div>
+                                      </div>
+                                      <div className={`w-20 h-2 ${textColor} rounded mx-auto mb-2`}></div>
+                                      <div className="h-px w-16 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto"></div>
+                                    </div>
+                                    <div className={`h-16 ${isLight ? "bg-gradient-to-br from-amber-50 to-orange-50" : "bg-gradient-to-br from-amber-900/20 to-orange-900/20"} rounded mb-2 border ${isLight ? "border-amber-200" : "border-amber-800"}`}></div>
+                                    <div className="grid grid-cols-2 gap-2">
+                                      <div className={`h-12 ${isLight ? "bg-slate-50" : "bg-slate-800"} rounded border ${isLight ? "border-slate-200" : "border-slate-700"}`}></div>
+                                      <div className={`h-12 ${isLight ? "bg-slate-50" : "bg-slate-800"} rounded border ${isLight ? "border-slate-200" : "border-slate-700"}`}></div>
+                                    </div>
+                                  </div>
+                                );
+                              } else if (template.value === "tech") {
+                                previewContent = (
+                                  <div className={`${isLight ? "bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900" : "bg-gradient-to-br from-cyan-950 via-blue-950 to-slate-950"} rounded-lg p-4 shadow-sm relative overflow-hidden`}>
+                                    <div className="absolute inset-0 bg-grid-white/5 bg-[size:20px_20px]"></div>
+                                    <div className="relative">
+                                      <div className="flex justify-between items-center mb-3">
+                                        <div className="w-14 h-2 bg-cyan-400 rounded shadow-lg shadow-cyan-500/50"></div>
+                                        <div className="flex gap-1">
+                                          <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full"></div>
+                                          <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
+                                          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
+                                        </div>
+                                      </div>
+                                      <div className="h-20 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded border border-cyan-500/30 mb-2 flex items-center justify-center backdrop-blur-sm">
+                                        <div className="w-20 h-3 bg-white rounded shadow-lg"></div>
+                                      </div>
+                                      <div className="grid grid-cols-3 gap-1.5">
+                                        <div className="h-12 bg-cyan-500/10 rounded border border-cyan-500/30"></div>
+                                        <div className="h-12 bg-blue-500/10 rounded border border-blue-500/30"></div>
+                                        <div className="h-12 bg-purple-500/10 rounded border border-purple-500/30"></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
                               }
-                            ].map((template) => (
-                              <div
-                                key={template.value}
-                                onClick={() => field.onChange(template.value)}
-                                className={`border-2 rounded-lg cursor-pointer transition-all ${
-                                  field.value === template.value
-                                    ? "border-emerald-600 bg-emerald-50 ring-2 ring-emerald-200"
-                                    : "border-gray-200 hover:border-emerald-300"
-                                }`}
-                                data-testid={`template-${template.value}`}
-                              >
-                                <div className="p-3">
-                                  {template.preview}
+                              
+                              return (
+                                <div
+                                  key={template.value}
+                                  onClick={() => field.onChange(template.value)}
+                                  className={`group relative border-2 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 ${
+                                    field.value === template.value
+                                      ? "border-emerald-600 bg-emerald-50 ring-4 ring-emerald-200 shadow-lg scale-105"
+                                      : "border-gray-200 hover:border-emerald-400 bg-white"
+                                  }`}
+                                  data-testid={`template-${template.value}`}
+                                >
+                                  {/* Category Badge */}
+                                  <div className="absolute -top-2 left-4 z-10">
+                                    <span className={`px-2 py-0.5 text-xs font-bold rounded-full ${
+                                      template.category === "Popular" ? "bg-emerald-500 text-white" :
+                                      template.category === "Creative" ? "bg-purple-500 text-white" :
+                                      template.category === "Professional" ? "bg-blue-600 text-white" :
+                                      template.category === "Premium" ? "bg-amber-500 text-white" :
+                                      "bg-cyan-500 text-white"
+                                    }`}>
+                                      {template.category}
+                                    </span>
+                                  </div>
+                                  
+                                  <div className="p-4">
+                                    {previewContent}
+                                  </div>
+                                  <div className="p-4 pt-2 border-t border-gray-200">
+                                    <h4 className="font-bold text-slate-900 mb-1 flex items-center gap-2">
+                                      {template.label}
+                                      {field.value === template.value && (
+                                        <CheckCircle className="w-4 h-4 text-emerald-600" />
+                                      )}
+                                    </h4>
+                                    <p className="text-xs text-slate-600 leading-relaxed">{template.desc}</p>
+                                  </div>
                                 </div>
-                                <div className="p-4 pt-2 border-t">
-                                  <h4 className="font-semibold text-slate-900 mb-1">{template.label}</h4>
-                                  <p className="text-sm text-slate-600">{template.desc}</p>
-                                </div>
-                              </div>
-                            ))}
+                              );
+                            })}
                           </div>
                           <FormMessage />
                         </FormItem>

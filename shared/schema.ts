@@ -98,7 +98,8 @@ export const paymentRequests = pgTable("payment_requests", {
   googleBusinessSetup: boolean("google_business_setup").default(false), // £25 add-on
   
   // Template & Design Preferences
-  templateStyle: varchar("template_style"), // 'modern', 'classic', 'minimalist', 'bold'
+  templateStyle: varchar("template_style"), // 'modern', 'classic', 'minimalist', 'bold', 'creative', 'corporate', 'elegant', 'tech'
+  templateVariation: varchar("template_variation").default("light"), // 'light' or 'dark'
   colorScheme: varchar("color_scheme"), // 'gradient-emerald', 'gradient-blue', 'solid-navy', etc.
   layoutPreference: varchar("layout_preference"), // 'single-page', 'multi-page'
   
@@ -134,7 +135,8 @@ export const clientOnboarding = pgTable("client_onboarding", {
   
   // Design Preferences
   hasLogo: text("has_logo").default("false"), // stored as string for consistency
-  templateStyle: varchar("template_style"), // 'modern', 'classic', 'minimalist', 'bold'
+  templateStyle: varchar("template_style"), // 'modern', 'classic', 'minimalist', 'bold', 'creative', 'corporate', 'elegant', 'tech'
+  templateVariation: varchar("template_variation").default("light"), // 'light' or 'dark'
   colorScheme: varchar("color_scheme").notNull(),
   layoutPreference: varchar("layout_preference"), // 'single-page', 'multi-page'
   exampleWebsites: text("example_websites"),
