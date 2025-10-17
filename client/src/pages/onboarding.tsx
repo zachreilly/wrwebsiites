@@ -742,7 +742,9 @@ export default function OnboardingPage() {
                                       template.category === "Creative" ? "bg-purple-500 text-white" :
                                       template.category === "Professional" ? "bg-blue-600 text-white" :
                                       template.category === "Premium" ? "bg-amber-500 text-white" :
-                                      "bg-cyan-500 text-white"
+                                      template.category === "Minimal" ? "bg-slate-500 text-white" :
+                                      template.category === "Tech" ? "bg-cyan-500 text-white" :
+                                      "bg-gray-500 text-white"
                                     }`}>
                                       {template.category}
                                     </span>
