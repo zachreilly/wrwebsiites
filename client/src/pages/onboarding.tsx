@@ -391,7 +391,7 @@ export default function OnboardingPage() {
                                 value: "magazine", 
                                 label: "Magazine Style", 
                                 desc: "Large images, editorial layouts, and content-focused typography",
-                                category: "Popular"
+                                category: "Minimal"
                               }
                             ].map((template) => {
                               const templateVariation = form.watch("templateVariation");
