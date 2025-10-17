@@ -558,21 +558,21 @@ export default function OnboardingPage() {
                               } else if (template.value === "corporate") {
                                 previewContent = (
                                   <div className={`${bgColor} rounded-lg p-3 border ${borderColor} shadow-sm`}>
-                                    {/* Professional header with square logo + navigation */}
-                                    <div className="flex justify-between items-center mb-2 pb-2 border-b border-slate-300">
+                                    {/* Professional header with square logo */}
+                                    <div className="flex items-center mb-2 pb-2 border-b border-slate-300">
                                       <div className="flex items-center gap-1.5">
                                         <div className={`w-6 h-6 ${isLight ? "bg-blue-900" : "bg-blue-400"} rounded-sm border-2 ${isLight ? "border-blue-700" : "border-blue-300"}`}></div>
                                         <div className={`w-16 h-2 ${textColor} rounded font-semibold`}></div>
                                       </div>
-                                      <div className="flex gap-1">
-                                        <div className={`w-6 h-1.5 ${isLight ? "bg-slate-600" : "bg-slate-400"} rounded`}></div>
-                                        <div className={`w-6 h-1.5 ${isLight ? "bg-slate-600" : "bg-slate-400"} rounded`}></div>
-                                        <div className={`w-6 h-1.5 ${isLight ? "bg-blue-900 font-bold" : "bg-blue-400 font-bold"} rounded`}></div>
-                                      </div>
                                     </div>
-                                    {/* Professional blue banner */}
-                                    <div className={`h-16 ${isLight ? "bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700" : "bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-600"} rounded mb-2 px-3 flex items-center border ${isLight ? "border-blue-800" : "border-blue-500"}`}>
+                                    {/* Professional blue banner with navigation */}
+                                    <div className={`h-16 ${isLight ? "bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700" : "bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-600"} rounded mb-2 px-3 flex items-center justify-between border ${isLight ? "border-blue-800" : "border-blue-500"}`}>
                                       <div className="w-20 h-3 bg-white rounded font-semibold shadow"></div>
+                                      <div className="flex gap-1">
+                                        <div className="w-4 h-1 bg-white/80 rounded"></div>
+                                        <div className="w-4 h-1 bg-white/80 rounded"></div>
+                                        <div className="w-4 h-1 bg-white rounded"></div>
+                                      </div>
                                     </div>
                                     {/* Three structured information cards */}
                                     <div className="grid grid-cols-3 gap-1.5">
