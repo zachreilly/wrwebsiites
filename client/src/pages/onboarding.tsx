@@ -12,13 +12,17 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { CheckCircle, ArrowLeft, ArrowRight, User, Globe, FileText, Palette, Settings } from "lucide-react";
+import { CheckCircle, ArrowLeft, ArrowRight, User, Globe, FileText, Palette, Settings, Layout } from "lucide-react";
 
 const clientInfoSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   businessName: z.string().min(1, "Business/Brand name is required"),
   email: z.string().email("Valid email is required"),
   phone: z.string().optional(),
+  
+  // Template Selection
+  templateStyle: z.string().min(1, "Please select a template style"),
+  layoutPreference: z.string().min(1, "Please select a layout preference"),
   
   // Domain & Hosting (Premium only)
   hasDomain: z.enum(["yes", "no", ""]).optional(),
@@ -51,7 +55,7 @@ export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
-  const totalSteps = 5;
+  const totalSteps = 6;
 
   // Get package from URL parameter
   const urlParams = new URLSearchParams(window.location.search);
@@ -64,6 +68,8 @@ export default function OnboardingPage() {
       businessName: "",
       email: "",
       phone: "",
+      templateStyle: "",
+      layoutPreference: "",
       hasDomain: "",
       existingDomain: "",
       desiredDomains: "",
@@ -173,10 +179,11 @@ export default function OnboardingPage() {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   {currentStep === 1 && <><User className="w-5 h-5 mr-2" />Package & Contact Information</>}
-                  {currentStep === 2 && <><Globe className="w-5 h-5 mr-2" />Domain & Hosting</>}
-                  {currentStep === 3 && <><FileText className="w-5 h-5 mr-2" />Website Content</>}
-                  {currentStep === 4 && <><Palette className="w-5 h-5 mr-2" />Design Preferences</>}
-                  {currentStep === 5 && <><Settings className="w-5 h-5 mr-2" />Additional Features</>}
+                  {currentStep === 2 && <><Layout className="w-5 h-5 mr-2" />Template Selection</>}
+                  {currentStep === 3 && <><Globe className="w-5 h-5 mr-2" />Domain & Hosting</>}
+                  {currentStep === 4 && <><FileText className="w-5 h-5 mr-2" />Website Content</>}
+                  {currentStep === 5 && <><Palette className="w-5 h-5 mr-2" />Design Preferences</>}
+                  {currentStep === 6 && <><Settings className="w-5 h-5 mr-2" />Additional Features</>}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -270,8 +277,123 @@ export default function OnboardingPage() {
                   </div>
                 )}
 
-                {/* Step 2: Domain & Hosting (Premium only) */}
+                {/* Step 2: Template Selection */}
                 {currentStep === 2 && (
+                  <div className="space-y-6">
+                    <div className="text-center mb-6">
+                      <h3 className="text-lg font-semibold text-slate-900 mb-2">Choose Your Website Style</h3>
+                      <p className="text-slate-600">Select the template style and color scheme that best represents your brand</p>
+                    </div>
+
+                    <FormField
+                      control={form.control}
+                      name="templateStyle"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Template Style</FormLabel>
+                          <div className="grid grid-cols-2 gap-4 mt-2">
+                            {[
+                              { value: "modern", label: "Modern", desc: "Clean, contemporary design with bold typography" },
+                              { value: "classic", label: "Classic", desc: "Traditional, professional layout" },
+                              { value: "minimalist", label: "Minimalist", desc: "Simple, focused, and elegant" },
+                              { value: "bold", label: "Bold", desc: "Eye-catching with vibrant elements" }
+                            ].map((template) => (
+                              <div
+                                key={template.value}
+                                onClick={() => field.onChange(template.value)}
+                                className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                                  field.value === template.value
+                                    ? "border-emerald-600 bg-emerald-50"
+                                    : "border-gray-200 hover:border-emerald-300"
+                                }`}
+                                data-testid={`template-${template.value}`}
+                              >
+                                <h4 className="font-semibold text-slate-900 mb-1">{template.label}</h4>
+                                <p className="text-sm text-slate-600">{template.desc}</p>
+                              </div>
+                            ))}
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="colorScheme"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Color Scheme</FormLabel>
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                            {[
+                              { value: "gradient-emerald", label: "Emerald", colors: "from-emerald-400 to-green-600" },
+                              { value: "gradient-blue", label: "Ocean Blue", colors: "from-blue-400 to-blue-600" },
+                              { value: "gradient-purple", label: "Purple", colors: "from-purple-400 to-pink-600" },
+                              { value: "solid-navy", label: "Navy", colors: "from-blue-900 to-blue-900" },
+                              { value: "solid-charcoal", label: "Charcoal", colors: "from-gray-800 to-gray-800" },
+                              { value: "gradient-sunset", label: "Sunset", colors: "from-orange-400 to-red-600" }
+                            ].map((color) => (
+                              <div
+                                key={color.value}
+                                onClick={() => field.onChange(color.value)}
+                                className={`p-3 border-2 rounded-lg cursor-pointer transition-all ${
+                                  field.value === color.value
+                                    ? "border-emerald-600 ring-2 ring-emerald-200"
+                                    : "border-gray-200 hover:border-emerald-300"
+                                }`}
+                                data-testid={`color-${color.value}`}
+                              >
+                                <div className={`h-12 rounded bg-gradient-to-r ${color.colors} mb-2`}></div>
+                                <p className="text-sm font-medium text-center text-slate-900">{color.label}</p>
+                              </div>
+                            ))}
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="layoutPreference"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Layout Preference</FormLabel>
+                          <div className="grid grid-cols-2 gap-4 mt-2">
+                            <div
+                              onClick={() => field.onChange("single-page")}
+                              className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                                field.value === "single-page"
+                                  ? "border-emerald-600 bg-emerald-50"
+                                  : "border-gray-200 hover:border-emerald-300"
+                              }`}
+                              data-testid="layout-single-page"
+                            >
+                              <h4 className="font-semibold text-slate-900 mb-1">Single Page</h4>
+                              <p className="text-sm text-slate-600">All content on one scrollable page</p>
+                            </div>
+                            <div
+                              onClick={() => field.onChange("multi-page")}
+                              className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                                field.value === "multi-page"
+                                  ? "border-emerald-600 bg-emerald-50"
+                                  : "border-gray-200 hover:border-emerald-300"
+                              }`}
+                              data-testid="layout-multi-page"
+                            >
+                              <h4 className="font-semibold text-slate-900 mb-1">Multi-Page</h4>
+                              <p className="text-sm text-slate-600">Separate pages with navigation menu</p>
+                            </div>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
+
+                {/* Step 3: Domain & Hosting (Premium only) */}
+                {currentStep === 3 && (
                   <div className="space-y-4">
                     {selectedPackage === "premium" ? (
                       <>
@@ -348,8 +470,8 @@ export default function OnboardingPage() {
                   </div>
                 )}
 
-                {/* Step 3: Website Content */}
-                {currentStep === 3 && (
+                {/* Step 4: Website Content */}
+                {currentStep === 4 && (
                   <div className="space-y-4">
                     <FormField
                       control={form.control}
@@ -430,8 +552,8 @@ export default function OnboardingPage() {
                   </div>
                 )}
 
-                {/* Step 4: Design Preferences */}
-                {currentStep === 4 && (
+                {/* Step 5: Design Preferences */}
+                {currentStep === 5 && (
                   <div className="space-y-4">
                     <FormField
                       control={form.control}
@@ -495,8 +617,8 @@ export default function OnboardingPage() {
                   </div>
                 )}
 
-                {/* Step 5: Additional Features */}
-                {currentStep === 5 && (
+                {/* Step 6: Additional Features */}
+                {currentStep === 6 && (
                   <div className="space-y-4">
                     <FormField
                       control={form.control}
