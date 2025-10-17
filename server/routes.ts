@@ -349,6 +349,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin endpoint to update payment request project status
+  app.patch("/api/admin/payments/:requestId/status", async (req, res) => {
+    try {
+      const { password } = req.query;
+      const { requestId } = req.params;
+      const { projectStatus } = req.body;
+
+      // Validate password
+      if (!password || typeof password !== 'string' || password !== 'BADMAN123') {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Authentication required" 
+        });
+      }
+
+      // Validate projectStatus
+      const validStatuses = ['pending_payment', 'paid_pending_build', 'built_awaiting_approval', 'approved', 'published'];
+      if (!validStatuses.includes(projectStatus)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid project status"
+        });
+      }
+
+      // Update the payment request
+      const updated = await storage.updatePaymentRequestStatus(requestId, projectStatus);
+
+      res.json({
+        success: true,
+        data: updated
+      });
+    } catch (error) {
+      console.error("Error updating payment request status:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to update project status"
+      });
+    }
+  });
+
   // Consultation request endpoint
   app.post("/api/consultation", async (req, res) => {
     try {

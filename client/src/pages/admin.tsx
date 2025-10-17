@@ -937,6 +937,15 @@ export default function AdminPage() {
                                 <div className="space-y-3">
                                   <h4 className="font-medium text-slate-800 border-b pb-1">Design & Features</h4>
                                   <div className="space-y-2 text-sm">
+                                    {client.templateStyle && (
+                                      <p><span className="font-medium">Template Style:</span> <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded text-xs font-medium">{client.templateStyle}</span></p>
+                                    )}
+                                    {client.colorScheme && (
+                                      <p><span className="font-medium">Color Scheme:</span> <span className="px-2 py-0.5 bg-blue-100 text-blue-800 rounded text-xs font-medium">{client.colorScheme}</span></p>
+                                    )}
+                                    {client.layoutPreference && (
+                                      <p><span className="font-medium">Layout:</span> <span className="px-2 py-0.5 bg-purple-100 text-purple-800 rounded text-xs font-medium">{client.layoutPreference}</span></p>
+                                    )}
                                     <p><span className="font-medium">Brand Colors:</span> {client.brandColors || 'Not provided'}</p>
                                     <p><span className="font-medium">Style Preference:</span> {client.stylePreference || 'Not provided'}</p>
                                     <p><span className="font-medium">Want Contact Form:</span> {client.wantContactForm || 'Not specified'}</p>

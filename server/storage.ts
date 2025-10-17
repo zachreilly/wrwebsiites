@@ -78,6 +78,7 @@ export interface IStorage {
   // Payment request operations
   createPaymentRequest(request: InsertPaymentRequest): Promise<PaymentRequest>;
   getPaymentRequests(): Promise<PaymentRequest[]>;
+  updatePaymentRequestStatus(requestId: string, projectStatus: string): Promise<PaymentRequest>;
   
   // Client onboarding operations
   createClientOnboarding(client: InsertClientOnboarding): Promise<ClientOnboarding>;
@@ -299,6 +300,23 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(paymentRequests)
       .orderBy(desc(paymentRequests.createdAt));
+  }
+
+  async updatePaymentRequestStatus(requestId: string, projectStatus: string): Promise<PaymentRequest> {
+    const [updated] = await db
+      .update(paymentRequests)
+      .set({ 
+        projectStatus,
+        updatedAt: new Date()
+      })
+      .where(eq(paymentRequests.id, requestId))
+      .returning();
+    
+    if (!updated) {
+      throw new Error('Payment request not found');
+    }
+    
+    return updated;
   }
 
   // Client onboarding operations
