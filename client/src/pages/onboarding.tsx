@@ -342,50 +342,56 @@ export default function OnboardingPage() {
                               { 
                                 value: "modern", 
                                 label: "Modern Pro", 
-                                desc: "Clean lines, bold typography, perfect for tech & startups",
+                                desc: "Clean geometric layouts with bold headings and bright accent colors",
                                 category: "Popular"
                               },
                               { 
                                 value: "classic", 
                                 label: "Classic Business", 
-                                desc: "Traditional elegance for professional services",
+                                desc: "Centered layouts, serif fonts, and traditional navigation bars",
                                 category: "Professional"
                               },
                               { 
                                 value: "minimalist", 
                                 label: "Minimalist", 
-                                desc: "Simple & focused, maximum impact with minimal design",
+                                desc: "Maximum whitespace, simple lines, focus on essential content only",
                                 category: "Popular"
                               },
                               { 
                                 value: "bold", 
                                 label: "Bold Impact", 
-                                desc: "Eye-catching vibrancy for creative businesses",
+                                desc: "Dark backgrounds, vibrant gradients, and high-contrast elements",
                                 category: "Creative"
                               },
                               { 
                                 value: "creative", 
                                 label: "Creative Studio", 
-                                desc: "Artistic layouts for agencies & portfolios",
+                                desc: "Colorful gradients, overlapping elements, and artistic blur effects",
                                 category: "Creative"
                               },
                               { 
                                 value: "corporate", 
                                 label: "Corporate Elite", 
-                                desc: "Enterprise-grade design for established companies",
+                                desc: "Professional blue tones, grid layouts, and structured information cards",
                                 category: "Professional"
                               },
                               { 
                                 value: "elegant", 
                                 label: "Elegant Luxury", 
-                                desc: "Sophisticated style for premium brands",
+                                desc: "Gold accents, centered content, and refined decorative elements",
                                 category: "Premium"
                               },
                               { 
                                 value: "tech", 
                                 label: "Tech Forward", 
-                                desc: "Futuristic design for technology companies",
+                                desc: "Neon glows, grid patterns, and futuristic cyber-inspired design",
                                 category: "Tech"
+                              },
+                              { 
+                                value: "magazine", 
+                                label: "Magazine Style", 
+                                desc: "Large images, editorial layouts, and content-focused typography",
+                                category: "Popular"
                               }
                             ].map((template) => {
                               const templateVariation = form.watch("templateVariation");
@@ -399,132 +405,191 @@ export default function OnboardingPage() {
                               
                               if (template.value === "modern") {
                                 previewContent = (
-                                  <div className={`${bgColor} rounded-lg p-4 border ${borderColor} shadow-sm`}>
-                                    <div className={`h-7 ${isLight ? "bg-slate-900" : "bg-white"} rounded mb-3 flex items-center px-3`}>
-                                      <div className="w-14 h-2 bg-emerald-500 rounded"></div>
-                                      <div className="ml-auto flex gap-2">
-                                        <div className={`w-6 h-1 ${isLight ? "bg-white" : "bg-slate-900"} rounded`}></div>
-                                        <div className={`w-6 h-1 ${isLight ? "bg-white" : "bg-slate-900"} rounded`}></div>
+                                  <div className={`${bgColor} rounded-lg p-3 border ${borderColor} shadow-sm`}>
+                                    {/* Distinctive top navbar with logo + menu */}
+                                    <div className={`h-8 ${isLight ? "bg-slate-900" : "bg-white"} rounded mb-2 flex items-center px-3 gap-2`}>
+                                      <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                                      <div className="w-12 h-1.5 bg-emerald-500 rounded"></div>
+                                      <div className="ml-auto flex gap-1.5">
+                                        <div className={`w-8 h-1 ${isLight ? "bg-white" : "bg-slate-900"} rounded`}></div>
+                                        <div className={`w-8 h-1 ${isLight ? "bg-white" : "bg-slate-900"} rounded`}></div>
+                                        <div className={`w-8 h-1 ${isLight ? "bg-white" : "bg-slate-900"} rounded`}></div>
                                       </div>
                                     </div>
-                                    <div className="h-24 bg-gradient-to-r from-emerald-500 to-blue-500 rounded mb-2 flex items-center justify-center">
-                                      <div className="w-20 h-5 bg-white/90 rounded"></div>
+                                    {/* Large hero with gradient */}
+                                    <div className="h-20 bg-gradient-to-r from-emerald-500 via-emerald-400 to-blue-500 rounded mb-2 flex flex-col items-center justify-center gap-1.5 p-2">
+                                      <div className="w-24 h-3 bg-white rounded"></div>
+                                      <div className="w-16 h-1.5 bg-white/80 rounded"></div>
+                                      <div className="w-12 h-2.5 bg-white rounded-full mt-1"></div>
                                     </div>
-                                    <div className="grid grid-cols-3 gap-2">
-                                      <div className={`h-14 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded`}></div>
-                                      <div className={`h-14 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded`}></div>
-                                      <div className={`h-14 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded`}></div>
+                                    {/* Three equal cards */}
+                                    <div className="grid grid-cols-3 gap-1.5">
+                                      <div className={`h-14 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded p-1.5`}>
+                                        <div className={`w-full h-2 ${isLight ? "bg-emerald-500" : "bg-emerald-400"} rounded mb-1`}></div>
+                                        <div className={`w-3/4 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
+                                      </div>
+                                      <div className={`h-14 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded p-1.5`}>
+                                        <div className={`w-full h-2 ${isLight ? "bg-blue-500" : "bg-blue-400"} rounded mb-1`}></div>
+                                        <div className={`w-3/4 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
+                                      </div>
+                                      <div className={`h-14 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded p-1.5`}>
+                                        <div className={`w-full h-2 ${isLight ? "bg-purple-500" : "bg-purple-400"} rounded mb-1`}></div>
+                                        <div className={`w-3/4 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
+                                      </div>
                                     </div>
                                   </div>
                                 );
                               } else if (template.value === "classic") {
                                 previewContent = (
-                                  <div className={`${bgColor} rounded-lg p-4 border ${borderColor} shadow-sm`}>
-                                    <div className="text-center mb-3">
-                                      <div className={`w-16 h-4 ${isLight ? "bg-slate-700" : "bg-slate-300"} rounded mx-auto mb-2`}></div>
-                                      <div className="flex gap-1 justify-center mb-3">
-                                        <div className={`w-8 h-1 ${isLight ? "bg-slate-400" : "bg-slate-600"} rounded`}></div>
-                                        <div className={`w-8 h-1 ${isLight ? "bg-slate-400" : "bg-slate-600"} rounded`}></div>
-                                        <div className={`w-8 h-1 ${isLight ? "bg-slate-400" : "bg-slate-600"} rounded`}></div>
+                                  <div className={`${bgColor} rounded-lg p-3 border ${borderColor} shadow-sm`}>
+                                    {/* Centered header with serif-style logo */}
+                                    <div className="text-center mb-2">
+                                      <div className={`w-6 h-6 ${isLight ? "bg-blue-900" : "bg-blue-300"} rounded mx-auto mb-1.5 border-2 ${isLight ? "border-blue-700" : "border-blue-500"}`}></div>
+                                      <div className={`w-20 h-2.5 ${isLight ? "bg-slate-700" : "bg-slate-300"} rounded mx-auto mb-2`}></div>
+                                      {/* Traditional horizontal nav */}
+                                      <div className="flex gap-1.5 justify-center mb-2 pb-2 border-b border-slate-300">
+                                        <div className={`w-10 h-1.5 ${isLight ? "bg-slate-500" : "bg-slate-500"} rounded`}></div>
+                                        <div className={`w-10 h-1.5 ${isLight ? "bg-slate-500" : "bg-slate-500"} rounded`}></div>
+                                        <div className={`w-10 h-1.5 ${isLight ? "bg-slate-500" : "bg-slate-500"} rounded`}></div>
                                       </div>
                                     </div>
-                                    <div className={`h-20 ${isLight ? "bg-slate-100 border-slate-300" : "bg-slate-800 border-slate-600"} rounded border mb-2`}></div>
+                                    {/* Banner area with border */}
+                                    <div className={`h-16 ${isLight ? "bg-slate-100 border-slate-300" : "bg-slate-800 border-slate-600"} rounded border-2 mb-2 flex items-center justify-center p-2`}>
+                                      <div className={`w-20 h-2.5 ${isLight ? "bg-slate-600" : "bg-slate-400"} rounded`}></div>
+                                    </div>
+                                    {/* Two column layout */}
                                     <div className="grid grid-cols-2 gap-2">
-                                      <div className={`h-12 ${isLight ? "bg-slate-50 border-slate-200" : "bg-slate-800/50 border-slate-700"} rounded border`}></div>
-                                      <div className={`h-12 ${isLight ? "bg-slate-50 border-slate-200" : "bg-slate-800/50 border-slate-700"} rounded border`}></div>
+                                      <div className={`h-12 ${isLight ? "bg-slate-50 border-slate-300" : "bg-slate-800/50 border-slate-600"} rounded border-2 p-2`}>
+                                        <div className={`w-full h-1.5 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded mb-1`}></div>
+                                        <div className={`w-2/3 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
+                                      </div>
+                                      <div className={`h-12 ${isLight ? "bg-slate-50 border-slate-300" : "bg-slate-800/50 border-slate-600"} rounded border-2 p-2`}>
+                                        <div className={`w-full h-1.5 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded mb-1`}></div>
+                                        <div className={`w-2/3 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
+                                      </div>
                                     </div>
                                   </div>
                                 );
                               } else if (template.value === "minimalist") {
                                 previewContent = (
-                                  <div className={`${bgColor} rounded-lg p-4 border ${borderColor} shadow-sm`}>
-                                    <div className="flex justify-between items-center mb-4">
-                                      <div className={`w-12 h-2 ${textColor} rounded`}></div>
-                                      <div className="flex gap-3">
-                                        <div className={`w-5 h-0.5 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded`}></div>
-                                        <div className={`w-5 h-0.5 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded`}></div>
+                                  <div className={`${bgColor} rounded-lg p-5 border ${borderColor} shadow-sm`}>
+                                    {/* Super minimal top nav - just text links */}
+                                    <div className="flex justify-between items-center mb-5">
+                                      <div className={`w-10 h-1.5 ${textColor} rounded`}></div>
+                                      <div className="flex gap-4">
+                                        <div className={`w-6 h-0.5 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
+                                        <div className={`w-6 h-0.5 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
                                       </div>
                                     </div>
-                                    <div className="h-24 flex items-center justify-center mb-4">
-                                      <div className={`w-28 h-4 ${textColor} rounded`}></div>
+                                    {/* Large centered heading with tons of space */}
+                                    <div className="h-20 flex items-center justify-center mb-5">
+                                      <div className={`w-32 h-3 ${textColor} rounded`}></div>
                                     </div>
-                                    <div className={`h-px ${isLight ? "bg-slate-200" : "bg-slate-700"} w-full mb-3`}></div>
-                                    <div className="space-y-1.5">
-                                      <div className={`h-1 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded w-3/4`}></div>
-                                      <div className={`h-1 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded w-full`}></div>
-                                      <div className={`h-1 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded w-2/3`}></div>
+                                    {/* Single divider line */}
+                                    <div className={`h-px ${isLight ? "bg-slate-200" : "bg-slate-700"} w-20 mx-auto mb-4`}></div>
+                                    {/* Minimal text lines with lots of whitespace */}
+                                    <div className="space-y-2 px-4">
+                                      <div className={`h-0.5 ${isLight ? "bg-slate-200" : "bg-slate-700"} rounded w-2/3 mx-auto`}></div>
+                                      <div className={`h-0.5 ${isLight ? "bg-slate-200" : "bg-slate-700"} rounded w-full mx-auto`}></div>
+                                      <div className={`h-0.5 ${isLight ? "bg-slate-200" : "bg-slate-700"} rounded w-1/2 mx-auto`}></div>
                                     </div>
                                   </div>
                                 );
                               } else if (template.value === "bold") {
                                 previewContent = (
-                                  <div className={`${isLight ? "bg-gradient-to-br from-slate-900 to-slate-800" : "bg-gradient-to-br from-slate-100 to-white"} rounded-lg p-4 shadow-sm`}>
-                                    <div className="flex justify-between items-center mb-3">
-                                      <div className={`w-14 h-3 ${isLight ? "bg-yellow-400" : "bg-purple-600"} rounded`}></div>
-                                      <div className="flex gap-1">
-                                        <div className={`w-5 h-5 ${isLight ? "bg-white/20" : "bg-slate-900/20"} rounded`}></div>
-                                        <div className={`w-5 h-5 ${isLight ? "bg-white/20" : "bg-slate-900/20"} rounded`}></div>
+                                  <div className={`${isLight ? "bg-gradient-to-br from-slate-900 via-slate-800 to-black" : "bg-gradient-to-br from-white via-slate-50 to-slate-100"} rounded-lg p-3 shadow-lg border-2 ${isLight ? "border-yellow-400/30" : "border-purple-500/30"}`}>
+                                    {/* Bold header with strong accent */}
+                                    <div className="flex justify-between items-center mb-2">
+                                      <div className="flex items-center gap-1">
+                                        <div className={`w-3 h-3 ${isLight ? "bg-yellow-400" : "bg-purple-600"} rounded-sm rotate-45`}></div>
+                                        <div className={`w-14 h-2.5 ${isLight ? "bg-yellow-400" : "bg-purple-600"} rounded font-black`}></div>
+                                      </div>
+                                      <div className="flex gap-1.5">
+                                        <div className={`w-6 h-6 ${isLight ? "bg-white/20 border border-yellow-400" : "bg-slate-900/20 border border-purple-500"} rounded`}></div>
+                                        <div className={`w-6 h-6 ${isLight ? "bg-white/20 border border-yellow-400" : "bg-slate-900/20 border border-purple-500"} rounded`}></div>
                                       </div>
                                     </div>
-                                    <div className={`h-20 ${isLight ? "bg-gradient-to-r from-yellow-400 to-orange-500" : "bg-gradient-to-r from-purple-600 to-pink-600"} rounded mb-2 flex items-center justify-center`}>
-                                      <div className={`w-18 h-3 ${isLight ? "bg-white" : "bg-white"} rounded`}></div>
+                                    {/* Huge bold hero with strong gradient */}
+                                    <div className={`h-20 ${isLight ? "bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500" : "bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600"} rounded-lg mb-2 flex items-center justify-center shadow-xl`}>
+                                      <div className="w-24 h-4 bg-white rounded font-black shadow-lg"></div>
                                     </div>
+                                    {/* Two strong CTA boxes */}
                                     <div className="grid grid-cols-2 gap-2">
-                                      <div className={`h-14 ${isLight ? "bg-white/10 border-2 border-yellow-400" : "bg-slate-900/10 border-2 border-purple-500"} rounded`}></div>
-                                      <div className={`h-14 ${isLight ? "bg-white/10 border-2 border-yellow-400" : "bg-slate-900/10 border-2 border-purple-500"} rounded`}></div>
+                                      <div className={`h-14 ${isLight ? "bg-white/10 border-3 border-yellow-400" : "bg-slate-900/10 border-3 border-purple-500"} rounded-lg flex items-center justify-center`}>
+                                        <div className={`w-12 h-2 ${isLight ? "bg-yellow-400" : "bg-purple-500"} rounded`}></div>
+                                      </div>
+                                      <div className={`h-14 ${isLight ? "bg-white/10 border-3 border-yellow-400" : "bg-slate-900/10 border-3 border-purple-500"} rounded-lg flex items-center justify-center`}>
+                                        <div className={`w-12 h-2 ${isLight ? "bg-yellow-400" : "bg-purple-500"} rounded`}></div>
+                                      </div>
                                     </div>
                                   </div>
                                 );
                               } else if (template.value === "creative") {
                                 previewContent = (
-                                  <div className={`${bgColor} rounded-lg p-4 border ${borderColor} shadow-sm overflow-hidden`}>
-                                    <div className="flex items-center gap-2 mb-3">
-                                      <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full"></div>
-                                      <div className={`w-16 h-2 ${textColor} rounded`}></div>
-                                    </div>
-                                    <div className="relative h-20 mb-2">
-                                      <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-pink-400 to-orange-400 rounded-full opacity-50 blur-xl"></div>
-                                      <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full opacity-50 blur-xl"></div>
-                                      <div className="relative h-full flex items-center justify-center">
-                                        <div className={`w-24 h-4 ${textColor} rounded`}></div>
+                                  <div className={`${bgColor} rounded-lg p-3 border ${borderColor} shadow-sm overflow-hidden relative`}>
+                                    {/* Artistic header with gradient circle logo */}
+                                    <div className="flex items-center gap-2 mb-2 relative z-10">
+                                      <div className="w-7 h-7 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-600 rounded-full shadow-lg"></div>
+                                      <div className={`w-14 h-2 ${textColor} rounded`}></div>
+                                      <div className="ml-auto flex gap-1">
+                                        <div className="w-1 h-1 bg-pink-500 rounded-full"></div>
+                                        <div className="w-1 h-1 bg-purple-500 rounded-full"></div>
+                                        <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
                                       </div>
                                     </div>
-                                    <div className="grid grid-cols-4 gap-1">
-                                      <div className="h-12 bg-gradient-to-br from-pink-500 to-red-500 rounded"></div>
-                                      <div className="h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded"></div>
-                                      <div className="h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded"></div>
-                                      <div className="h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded"></div>
+                                    {/* Overlapping gradient blobs - signature creative style */}
+                                    <div className="relative h-20 mb-2 rounded-lg overflow-hidden">
+                                      <div className="absolute -top-4 -left-4 w-20 h-20 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full opacity-60 blur-2xl"></div>
+                                      <div className="absolute top-2 right-0 w-24 h-24 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full opacity-60 blur-2xl"></div>
+                                      <div className="absolute -bottom-2 left-1/3 w-16 h-16 bg-gradient-to-br from-orange-400 to-yellow-500 rounded-full opacity-60 blur-2xl"></div>
+                                      <div className="relative h-full flex items-center justify-center backdrop-blur-sm">
+                                        <div className={`w-24 h-3 ${textColor} rounded shadow-lg`}></div>
+                                      </div>
+                                    </div>
+                                    {/* Colorful feature cards */}
+                                    <div className="grid grid-cols-4 gap-1.5">
+                                      <div className="h-12 bg-gradient-to-br from-pink-500 to-red-600 rounded-lg shadow-md"></div>
+                                      <div className="h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-md"></div>
+                                      <div className="h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg shadow-md"></div>
+                                      <div className="h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg shadow-md"></div>
                                     </div>
                                   </div>
                                 );
                               } else if (template.value === "corporate") {
                                 previewContent = (
-                                  <div className={`${bgColor} rounded-lg p-4 border ${borderColor} shadow-sm`}>
-                                    <div className="flex justify-between items-center mb-3">
-                                      <div className="flex items-center gap-2">
-                                        <div className={`w-6 h-6 ${isLight ? "bg-blue-900" : "bg-blue-400"} rounded`}></div>
-                                        <div className={`w-16 h-2 ${textColor} rounded`}></div>
+                                  <div className={`${bgColor} rounded-lg p-3 border ${borderColor} shadow-sm`}>
+                                    {/* Professional header with square logo + navigation */}
+                                    <div className="flex justify-between items-center mb-2 pb-2 border-b border-slate-300">
+                                      <div className="flex items-center gap-1.5">
+                                        <div className={`w-6 h-6 ${isLight ? "bg-blue-900" : "bg-blue-400"} rounded-sm border-2 ${isLight ? "border-blue-700" : "border-blue-300"}`}></div>
+                                        <div className={`w-16 h-2 ${textColor} rounded font-semibold`}></div>
                                       </div>
                                       <div className="flex gap-2">
-                                        <div className={`w-10 h-1 ${isLight ? "bg-slate-600" : "bg-slate-400"} rounded`}></div>
-                                        <div className={`w-10 h-1 ${isLight ? "bg-slate-600" : "bg-slate-400"} rounded`}></div>
+                                        <div className={`w-10 h-1.5 ${isLight ? "bg-slate-600" : "bg-slate-400"} rounded`}></div>
+                                        <div className={`w-10 h-1.5 ${isLight ? "bg-slate-600" : "bg-slate-400"} rounded`}></div>
+                                        <div className={`w-10 h-1.5 ${isLight ? "bg-blue-900 font-bold" : "bg-blue-400 font-bold"} rounded`}></div>
                                       </div>
                                     </div>
-                                    <div className={`h-18 ${isLight ? "bg-gradient-to-r from-blue-900 to-blue-700" : "bg-gradient-to-r from-blue-600 to-cyan-600"} rounded mb-2 px-3 flex items-center`}>
-                                      <div className="w-20 h-3 bg-white rounded"></div>
+                                    {/* Professional blue banner */}
+                                    <div className={`h-16 ${isLight ? "bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700" : "bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-600"} rounded mb-2 px-3 flex items-center border ${isLight ? "border-blue-800" : "border-blue-500"}`}>
+                                      <div className="w-20 h-3 bg-white rounded font-semibold shadow"></div>
                                     </div>
-                                    <div className="grid grid-cols-3 gap-2">
-                                      <div className={`h-14 ${isLight ? "bg-slate-100 border border-slate-200" : "bg-slate-800 border border-slate-700"} rounded p-2`}>
-                                        <div className={`w-full h-2 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded mb-1`}></div>
-                                        <div className={`w-2/3 h-2 ${isLight ? "bg-slate-200" : "bg-slate-700"} rounded`}></div>
+                                    {/* Three structured information cards */}
+                                    <div className="grid grid-cols-3 gap-1.5">
+                                      <div className={`h-14 ${isLight ? "bg-slate-100 border-2 border-slate-300" : "bg-slate-800 border-2 border-slate-600"} rounded p-1.5`}>
+                                        <div className={`w-4 h-4 ${isLight ? "bg-blue-600" : "bg-blue-400"} rounded mb-1`}></div>
+                                        <div className={`w-full h-1.5 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded mb-0.5`}></div>
+                                        <div className={`w-2/3 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
                                       </div>
-                                      <div className={`h-14 ${isLight ? "bg-slate-100 border border-slate-200" : "bg-slate-800 border border-slate-700"} rounded p-2`}>
-                                        <div className={`w-full h-2 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded mb-1`}></div>
-                                        <div className={`w-2/3 h-2 ${isLight ? "bg-slate-200" : "bg-slate-700"} rounded`}></div>
+                                      <div className={`h-14 ${isLight ? "bg-slate-100 border-2 border-slate-300" : "bg-slate-800 border-2 border-slate-600"} rounded p-1.5`}>
+                                        <div className={`w-4 h-4 ${isLight ? "bg-blue-600" : "bg-blue-400"} rounded mb-1`}></div>
+                                        <div className={`w-full h-1.5 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded mb-0.5`}></div>
+                                        <div className={`w-2/3 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
                                       </div>
-                                      <div className={`h-14 ${isLight ? "bg-slate-100 border border-slate-200" : "bg-slate-800 border border-slate-700"} rounded p-2`}>
-                                        <div className={`w-full h-2 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded mb-1`}></div>
-                                        <div className={`w-2/3 h-2 ${isLight ? "bg-slate-200" : "bg-slate-700"} rounded`}></div>
+                                      <div className={`h-14 ${isLight ? "bg-slate-100 border-2 border-slate-300" : "bg-slate-800 border-2 border-slate-600"} rounded p-1.5`}>
+                                        <div className={`w-4 h-4 ${isLight ? "bg-blue-600" : "bg-blue-400"} rounded mb-1`}></div>
+                                        <div className={`w-full h-1.5 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded mb-0.5`}></div>
+                                        <div className={`w-2/3 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
                                       </div>
                                     </div>
                                   </div>
@@ -532,40 +597,127 @@ export default function OnboardingPage() {
                               } else if (template.value === "elegant") {
                                 previewContent = (
                                   <div className={`${bgColor} rounded-lg p-4 border ${borderColor} shadow-sm`}>
-                                    <div className="text-center mb-4">
-                                      <div className="w-10 h-10 mx-auto mb-2 border-2 border-amber-600 rounded-full flex items-center justify-center">
-                                        <div className="w-4 h-4 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full"></div>
+                                    {/* Elegant centered header with decorative circle logo */}
+                                    <div className="text-center mb-3">
+                                      <div className="w-10 h-10 mx-auto mb-2 border-2 border-amber-600 rounded-full flex items-center justify-center shadow-lg">
+                                        <div className="w-5 h-5 bg-gradient-to-br from-amber-400 to-amber-700 rounded-full"></div>
                                       </div>
-                                      <div className={`w-20 h-2 ${textColor} rounded mx-auto mb-2`}></div>
-                                      <div className="h-px w-16 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto"></div>
+                                      <div className={`w-24 h-2.5 ${textColor} rounded mx-auto mb-2 font-serif`}></div>
+                                      {/* Decorative divider */}
+                                      <div className="flex items-center justify-center gap-1 mb-2">
+                                        <div className="h-px w-8 bg-gradient-to-r from-transparent to-amber-500"></div>
+                                        <div className="w-1.5 h-1.5 bg-amber-600 rounded-full"></div>
+                                        <div className="h-px w-8 bg-gradient-to-l from-transparent to-amber-500"></div>
+                                      </div>
                                     </div>
-                                    <div className={`h-16 ${isLight ? "bg-gradient-to-br from-amber-50 to-orange-50" : "bg-gradient-to-br from-amber-900/20 to-orange-900/20"} rounded mb-2 border ${isLight ? "border-amber-200" : "border-amber-800"}`}></div>
+                                    {/* Luxurious content area with gold accent */}
+                                    <div className={`h-14 ${isLight ? "bg-gradient-to-br from-amber-50 via-orange-50 to-amber-50" : "bg-gradient-to-br from-amber-900/20 via-orange-900/20 to-amber-900/20"} rounded mb-2 border-2 ${isLight ? "border-amber-200" : "border-amber-800"} p-2 flex items-center justify-center`}>
+                                      <div className={`w-16 h-2 ${isLight ? "bg-amber-700" : "bg-amber-400"} rounded`}></div>
+                                    </div>
+                                    {/* Two refined feature boxes */}
                                     <div className="grid grid-cols-2 gap-2">
-                                      <div className={`h-12 ${isLight ? "bg-slate-50" : "bg-slate-800"} rounded border ${isLight ? "border-slate-200" : "border-slate-700"}`}></div>
-                                      <div className={`h-12 ${isLight ? "bg-slate-50" : "bg-slate-800"} rounded border ${isLight ? "border-slate-200" : "border-slate-700"}`}></div>
+                                      <div className={`h-12 ${isLight ? "bg-slate-50 border-2 border-slate-200" : "bg-slate-800 border-2 border-slate-700"} rounded p-2 flex flex-col justify-center`}>
+                                        <div className="w-1 h-1 bg-amber-600 rounded-full mb-1 mx-auto"></div>
+                                        <div className={`w-full h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
+                                      </div>
+                                      <div className={`h-12 ${isLight ? "bg-slate-50 border-2 border-slate-200" : "bg-slate-800 border-2 border-slate-700"} rounded p-2 flex flex-col justify-center`}>
+                                        <div className="w-1 h-1 bg-amber-600 rounded-full mb-1 mx-auto"></div>
+                                        <div className={`w-full h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
+                                      </div>
                                     </div>
                                   </div>
                                 );
                               } else if (template.value === "tech") {
                                 previewContent = (
-                                  <div className={`${isLight ? "bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900" : "bg-gradient-to-br from-cyan-950 via-blue-950 to-slate-950"} rounded-lg p-4 shadow-sm relative overflow-hidden`}>
-                                    <div className="absolute inset-0 bg-grid-white/5 bg-[size:20px_20px]"></div>
-                                    <div className="relative">
-                                      <div className="flex justify-between items-center mb-3">
-                                        <div className="w-14 h-2 bg-cyan-400 rounded shadow-lg shadow-cyan-500/50"></div>
-                                        <div className="flex gap-1">
-                                          <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full"></div>
-                                          <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
-                                          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
+                                  <div className={`${isLight ? "bg-gradient-to-br from-slate-900 via-blue-950 to-purple-950" : "bg-gradient-to-br from-cyan-950 via-blue-950 to-slate-950"} rounded-lg p-3 shadow-xl relative overflow-hidden border ${isLight ? "border-cyan-500/30" : "border-cyan-400/20"}`}>
+                                    {/* Futuristic grid pattern background */}
+                                    <div className="absolute inset-0 opacity-30">
+                                      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+                                    </div>
+                                    <div className="relative z-10">
+                                      {/* Neon header */}
+                                      <div className="flex justify-between items-center mb-2">
+                                        <div className="flex items-center gap-1">
+                                          <div className="w-2 h-2 bg-cyan-400 rounded-sm shadow-lg shadow-cyan-500/80"></div>
+                                          <div className="w-14 h-2 bg-gradient-to-r from-cyan-400 to-blue-400 rounded shadow-lg shadow-cyan-500/50"></div>
+                                        </div>
+                                        <div className="flex gap-1.5">
+                                          <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400/80"></div>
+                                          <div className="w-1.5 h-1.5 bg-blue-400 rounded-full shadow-lg shadow-blue-400/80"></div>
+                                          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full shadow-lg shadow-purple-400/80"></div>
                                         </div>
                                       </div>
-                                      <div className="h-20 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded border border-cyan-500/30 mb-2 flex items-center justify-center backdrop-blur-sm">
-                                        <div className="w-20 h-3 bg-white rounded shadow-lg"></div>
+                                      {/* Cyber hero section */}
+                                      <div className="h-20 bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-purple-500/20 rounded-lg border-2 border-cyan-400/40 mb-2 flex items-center justify-center backdrop-blur-sm shadow-inner">
+                                        <div className="w-24 h-3.5 bg-white rounded shadow-2xl shadow-cyan-400/50"></div>
                                       </div>
+                                      {/* Three glowing feature cards */}
                                       <div className="grid grid-cols-3 gap-1.5">
-                                        <div className="h-12 bg-cyan-500/10 rounded border border-cyan-500/30"></div>
-                                        <div className="h-12 bg-blue-500/10 rounded border border-blue-500/30"></div>
-                                        <div className="h-12 bg-purple-500/10 rounded border border-purple-500/30"></div>
+                                        <div className="h-12 bg-cyan-500/10 rounded-lg border border-cyan-400/50 shadow-lg shadow-cyan-500/20 p-1.5">
+                                          <div className="w-full h-1.5 bg-cyan-400/50 rounded mb-1"></div>
+                                          <div className="w-2/3 h-1 bg-cyan-400/30 rounded"></div>
+                                        </div>
+                                        <div className="h-12 bg-blue-500/10 rounded-lg border border-blue-400/50 shadow-lg shadow-blue-500/20 p-1.5">
+                                          <div className="w-full h-1.5 bg-blue-400/50 rounded mb-1"></div>
+                                          <div className="w-2/3 h-1 bg-blue-400/30 rounded"></div>
+                                        </div>
+                                        <div className="h-12 bg-purple-500/10 rounded-lg border border-purple-400/50 shadow-lg shadow-purple-500/20 p-1.5">
+                                          <div className="w-full h-1.5 bg-purple-400/50 rounded mb-1"></div>
+                                          <div className="w-2/3 h-1 bg-purple-400/30 rounded"></div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              } else if (template.value === "magazine") {
+                                previewContent = (
+                                  <div className={`${bgColor} rounded-lg p-3 border ${borderColor} shadow-sm`}>
+                                    {/* Editorial header with bold masthead */}
+                                    <div className="mb-2">
+                                      <div className="flex gap-2 items-center mb-2 pb-1.5 border-b-2 border-slate-300">
+                                        <div className={`w-18 h-3 ${textColor} rounded-sm font-black`}></div>
+                                        <div className="flex gap-2 ml-auto text-xs">
+                                          <div className={`w-6 h-1 ${isLight ? "bg-slate-500" : "bg-slate-400"} rounded`}></div>
+                                          <div className={`w-6 h-1 ${isLight ? "bg-slate-500" : "bg-slate-400"} rounded`}></div>
+                                          <div className={`w-6 h-1 ${isLight ? "bg-slate-500" : "bg-slate-400"} rounded`}></div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {/* Featured article with large image + sidebar */}
+                                    <div className="grid grid-cols-3 gap-2 mb-2">
+                                      <div className={`col-span-2 h-22 ${isLight ? "bg-gradient-to-br from-slate-300 to-slate-200" : "bg-gradient-to-br from-slate-700 to-slate-600"} rounded-sm relative overflow-hidden shadow-md`}>
+                                        <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                                          <div className="w-12 h-12 border-4 border-white rounded"></div>
+                                        </div>
+                                        <div className="absolute bottom-2 left-2 right-2 bg-gradient-to-t from-black/80 to-transparent p-2 rounded">
+                                          <div className="w-3/4 h-2 bg-white rounded mb-0.5"></div>
+                                          <div className="w-1/2 h-1 bg-white/80 rounded"></div>
+                                        </div>
+                                      </div>
+                                      <div className="space-y-1.5">
+                                        <div className={`h-10 ${isLight ? "bg-slate-200 border border-slate-300" : "bg-slate-700 border border-slate-600"} rounded-sm p-1.5`}>
+                                          <div className={`w-full h-1 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded mb-0.5`}></div>
+                                          <div className={`w-2/3 h-0.5 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
+                                        </div>
+                                        <div className={`h-10 ${isLight ? "bg-slate-200 border border-slate-300" : "bg-slate-700 border border-slate-600"} rounded-sm p-1.5`}>
+                                          <div className={`w-full h-1 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded mb-0.5`}></div>
+                                          <div className={`w-2/3 h-0.5 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {/* Three article previews in row */}
+                                    <div className="grid grid-cols-3 gap-1.5">
+                                      <div className={`h-10 ${isLight ? "bg-slate-100 border border-slate-300" : "bg-slate-800 border border-slate-600"} rounded-sm p-1.5`}>
+                                        <div className={`w-full h-1.5 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded mb-1`}></div>
+                                        <div className={`w-2/3 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
+                                      </div>
+                                      <div className={`h-10 ${isLight ? "bg-slate-100 border border-slate-300" : "bg-slate-800 border border-slate-600"} rounded-sm p-1.5`}>
+                                        <div className={`w-full h-1.5 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded mb-1`}></div>
+                                        <div className={`w-2/3 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
+                                      </div>
+                                      <div className={`h-10 ${isLight ? "bg-slate-100 border border-slate-300" : "bg-slate-800 border border-slate-600"} rounded-sm p-1.5`}>
+                                        <div className={`w-full h-1.5 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded mb-1`}></div>
+                                        <div className={`w-2/3 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
                                       </div>
                                     </div>
                                   </div>
