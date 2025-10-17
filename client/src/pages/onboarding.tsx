@@ -290,26 +290,130 @@ export default function OnboardingPage() {
                       name="templateStyle"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Template Style</FormLabel>
-                          <div className="grid grid-cols-2 gap-4 mt-2">
+                          <FormLabel className="text-base font-semibold mb-4 block">Template Style</FormLabel>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
                             {[
-                              { value: "modern", label: "Modern", desc: "Clean, contemporary design with bold typography" },
-                              { value: "classic", label: "Classic", desc: "Traditional, professional layout" },
-                              { value: "minimalist", label: "Minimalist", desc: "Simple, focused, and elegant" },
-                              { value: "bold", label: "Bold", desc: "Eye-catching with vibrant elements" }
+                              { 
+                                value: "modern", 
+                                label: "Modern", 
+                                desc: "Clean, contemporary design with bold typography",
+                                preview: (
+                                  <div className="bg-white rounded-lg p-4 border border-slate-200">
+                                    <div className="h-8 bg-slate-900 rounded mb-3 flex items-center px-3">
+                                      <div className="w-16 h-2 bg-emerald-400 rounded"></div>
+                                      <div className="ml-auto flex gap-1">
+                                        <div className="w-8 h-1 bg-white rounded"></div>
+                                        <div className="w-8 h-1 bg-white rounded"></div>
+                                        <div className="w-8 h-1 bg-white rounded"></div>
+                                      </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                      <div className="h-16 bg-gradient-to-r from-emerald-100 to-emerald-50 rounded flex items-center justify-center">
+                                        <div className="w-20 h-4 bg-emerald-600 rounded"></div>
+                                      </div>
+                                      <div className="grid grid-cols-3 gap-2">
+                                        <div className="h-12 bg-slate-100 rounded"></div>
+                                        <div className="h-12 bg-slate-100 rounded"></div>
+                                        <div className="h-12 bg-slate-100 rounded"></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )
+                              },
+                              { 
+                                value: "classic", 
+                                label: "Classic", 
+                                desc: "Traditional, professional layout",
+                                preview: (
+                                  <div className="bg-white rounded-lg p-4 border border-slate-200">
+                                    <div className="text-center mb-3">
+                                      <div className="w-12 h-3 bg-slate-700 rounded mx-auto mb-2"></div>
+                                      <div className="flex gap-1 justify-center">
+                                        <div className="w-10 h-1.5 bg-slate-400 rounded"></div>
+                                        <div className="w-10 h-1.5 bg-slate-400 rounded"></div>
+                                        <div className="w-10 h-1.5 bg-slate-400 rounded"></div>
+                                      </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                      <div className="h-16 bg-slate-100 rounded border border-slate-300"></div>
+                                      <div className="grid grid-cols-2 gap-2">
+                                        <div className="h-14 bg-slate-50 rounded border border-slate-200"></div>
+                                        <div className="h-14 bg-slate-50 rounded border border-slate-200"></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )
+                              },
+                              { 
+                                value: "minimalist", 
+                                label: "Minimalist", 
+                                desc: "Simple, focused, and elegant",
+                                preview: (
+                                  <div className="bg-white rounded-lg p-4 border border-slate-200">
+                                    <div className="flex justify-between items-center mb-4">
+                                      <div className="w-10 h-2 bg-slate-900 rounded"></div>
+                                      <div className="flex gap-3">
+                                        <div className="w-6 h-1 bg-slate-300 rounded"></div>
+                                        <div className="w-6 h-1 bg-slate-300 rounded"></div>
+                                      </div>
+                                    </div>
+                                    <div className="space-y-3">
+                                      <div className="h-20 flex items-center justify-center">
+                                        <div className="w-24 h-3 bg-slate-900 rounded"></div>
+                                      </div>
+                                      <div className="h-1 bg-slate-200 rounded w-full"></div>
+                                      <div className="space-y-1.5">
+                                        <div className="h-1 bg-slate-100 rounded w-3/4"></div>
+                                        <div className="h-1 bg-slate-100 rounded w-full"></div>
+                                        <div className="h-1 bg-slate-100 rounded w-2/3"></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )
+                              },
+                              { 
+                                value: "bold", 
+                                label: "Bold", 
+                                desc: "Eye-catching with vibrant elements",
+                                preview: (
+                                  <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-4">
+                                    <div className="flex justify-between items-center mb-3">
+                                      <div className="w-12 h-3 bg-yellow-400 rounded"></div>
+                                      <div className="flex gap-1">
+                                        <div className="w-6 h-6 bg-white/20 rounded"></div>
+                                        <div className="w-6 h-6 bg-white/20 rounded"></div>
+                                      </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                      <div className="h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded flex items-center justify-center">
+                                        <div className="w-16 h-3 bg-white rounded"></div>
+                                      </div>
+                                      <div className="grid grid-cols-2 gap-2">
+                                        <div className="h-12 bg-white/10 rounded border-2 border-yellow-400"></div>
+                                        <div className="h-12 bg-white/10 rounded border-2 border-yellow-400"></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )
+                              }
                             ].map((template) => (
                               <div
                                 key={template.value}
                                 onClick={() => field.onChange(template.value)}
-                                className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                                className={`border-2 rounded-lg cursor-pointer transition-all ${
                                   field.value === template.value
-                                    ? "border-emerald-600 bg-emerald-50"
+                                    ? "border-emerald-600 bg-emerald-50 ring-2 ring-emerald-200"
                                     : "border-gray-200 hover:border-emerald-300"
                                 }`}
                                 data-testid={`template-${template.value}`}
                               >
-                                <h4 className="font-semibold text-slate-900 mb-1">{template.label}</h4>
-                                <p className="text-sm text-slate-600">{template.desc}</p>
+                                <div className="p-3">
+                                  {template.preview}
+                                </div>
+                                <div className="p-4 pt-2 border-t">
+                                  <h4 className="font-semibold text-slate-900 mb-1">{template.label}</h4>
+                                  <p className="text-sm text-slate-600">{template.desc}</p>
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -323,28 +427,32 @@ export default function OnboardingPage() {
                       name="colorScheme"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Color Scheme</FormLabel>
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                          <FormLabel className="text-base font-semibold mb-4 block">Choose Your Color Scheme</FormLabel>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mt-2">
                             {[
-                              { value: "gradient-emerald", label: "Emerald", colors: "from-emerald-400 to-green-600" },
-                              { value: "gradient-blue", label: "Ocean Blue", colors: "from-blue-400 to-blue-600" },
-                              { value: "gradient-purple", label: "Purple", colors: "from-purple-400 to-pink-600" },
-                              { value: "solid-navy", label: "Navy", colors: "from-blue-900 to-blue-900" },
-                              { value: "solid-charcoal", label: "Charcoal", colors: "from-gray-800 to-gray-800" },
-                              { value: "gradient-sunset", label: "Sunset", colors: "from-orange-400 to-red-600" }
+                              { value: "emerald-green", label: "Emerald", colors: "from-emerald-400 to-green-600" },
+                              { value: "ocean-blue", label: "Ocean Blue", colors: "from-blue-400 to-blue-600" },
+                              { value: "royal-purple", label: "Royal Purple", colors: "from-purple-500 to-purple-700" },
+                              { value: "sunset-orange", label: "Sunset", colors: "from-orange-400 to-red-600" },
+                              { value: "rose-pink", label: "Rose", colors: "from-pink-400 to-rose-600" },
+                              { value: "navy-blue", label: "Navy", colors: "from-blue-900 to-blue-950" },
+                              { value: "forest-green", label: "Forest", colors: "from-green-700 to-green-900" },
+                              { value: "crimson-red", label: "Crimson", colors: "from-red-500 to-red-700" },
+                              { value: "slate-gray", label: "Slate", colors: "from-slate-600 to-slate-800" },
+                              { value: "amber-gold", label: "Gold", colors: "from-amber-400 to-yellow-600" }
                             ].map((color) => (
                               <div
                                 key={color.value}
                                 onClick={() => field.onChange(color.value)}
-                                className={`p-3 border-2 rounded-lg cursor-pointer transition-all ${
+                                className={`p-2 border-2 rounded-lg cursor-pointer transition-all ${
                                   field.value === color.value
                                     ? "border-emerald-600 ring-2 ring-emerald-200"
                                     : "border-gray-200 hover:border-emerald-300"
                                 }`}
                                 data-testid={`color-${color.value}`}
                               >
-                                <div className={`h-12 rounded bg-gradient-to-r ${color.colors} mb-2`}></div>
-                                <p className="text-sm font-medium text-center text-slate-900">{color.label}</p>
+                                <div className={`h-16 rounded bg-gradient-to-br ${color.colors} mb-2 shadow-sm`}></div>
+                                <p className="text-xs font-medium text-center text-slate-900">{color.label}</p>
                               </div>
                             ))}
                           </div>
