@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { storage } from './storage';
+import { createRequire } from 'module';
 
-// Use require for GoCardless CommonJS modules
+// Use createRequire for GoCardless CommonJS modules
+const require = createRequire(import.meta.url);
 const gocardless = require('gocardless-nodejs');
 const constants = require('gocardless-nodejs/constants');
 
