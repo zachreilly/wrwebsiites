@@ -288,9 +288,32 @@ export class DatabaseStorage implements IStorage {
 
   // Payment request operations
   async createPaymentRequest(insertRequest: InsertPaymentRequest): Promise<PaymentRequest> {
+    // Auto-generate client code if not provided
+    let clientCode = insertRequest.clientCode;
+    if (!clientCode) {
+      // Get the latest client code number
+      const lastClient = await db
+        .select({ clientCode: paymentRequests.clientCode })
+        .from(paymentRequests)
+        .orderBy(desc(paymentRequests.createdAt))
+        .limit(1);
+      
+      let nextNumber = 1;
+      if (lastClient.length > 0 && lastClient[0].clientCode) {
+        // Extract number from format "WR-001"
+        const match = lastClient[0].clientCode.match(/WR-(\d+)/);
+        if (match) {
+          nextNumber = parseInt(match[1]) + 1;
+        }
+      }
+      
+      // Format as "WR-001", "WR-002", etc.
+      clientCode = `WR-${nextNumber.toString().padStart(3, '0')}`;
+    }
+    
     const [request] = await db
       .insert(paymentRequests)
-      .values(insertRequest)
+      .values({ ...insertRequest, clientCode })
       .returning();
     return request;
   }

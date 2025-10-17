@@ -8,6 +8,7 @@ import { ArrowLeft, CreditCard, Users, Phone, Mail, MapPin, Building, Lock, Layo
 
 interface PaymentRequest {
   id: string;
+  clientCode: string;
   package: string;
   firstName: string;
   lastName: string;
@@ -22,6 +23,7 @@ interface PaymentRequest {
   postcode: string;
   googleBusinessSetup: boolean;
   templateStyle?: string;
+  templateVariation?: string;
   colorScheme?: string;
   layoutPreference?: string;
   status: string;
@@ -313,7 +315,10 @@ export default function AdminPaymentsNew() {
                       <CardContent className="p-6">
                         <div className="flex justify-between items-start mb-4">
                           <div>
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center space-x-2 mb-2">
+                              <span className="inline-block px-3 py-1 text-sm font-bold rounded-lg bg-blue-600 text-white shadow-sm">
+                                {request.clientCode}
+                              </span>
                               <span className={`inline-block px-2 py-1 text-xs rounded-full font-medium ${
                                 request.package === 'premium' 
                                   ? 'bg-emerald-100 text-emerald-800' 
@@ -379,12 +384,20 @@ export default function AdminPaymentsNew() {
                               <Layout className="w-4 h-4 mr-2" />
                               Template Selection
                             </h4>
-                            <div className="grid grid-cols-3 gap-3 text-sm">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                               {request.templateStyle && (
                                 <div>
                                   <span className="text-emerald-700">Style:</span>
                                   <div className="font-medium px-2 py-1 bg-emerald-100 rounded text-emerald-800 inline-block ml-1">
                                     {request.templateStyle}
+                                  </div>
+                                </div>
+                              )}
+                              {request.templateVariation && (
+                                <div>
+                                  <span className="text-emerald-700">Theme:</span>
+                                  <div className="font-medium px-2 py-1 bg-slate-100 rounded text-slate-800 inline-block ml-1 capitalize">
+                                    {request.templateVariation}
                                   </div>
                                 </div>
                               )}

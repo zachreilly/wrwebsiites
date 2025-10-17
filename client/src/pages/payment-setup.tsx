@@ -31,6 +31,7 @@ type PaymentForm = z.infer<typeof paymentSchema>;
 export default function PaymentSetupPage() {
   const [, setLocation] = useLocation();
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [clientCode, setClientCode] = useState<string>('');
   const { toast } = useToast();
   
   // Get client info from URL parameters
@@ -78,8 +79,11 @@ export default function PaymentSetupPage() {
         googleBusinessSetup: false,
       });
     },
-    onSuccess: () => {
+    onSuccess: (response: any) => {
       setIsSubmitted(true);
+      if (response?.clientCode) {
+        setClientCode(response.clientCode);
+      }
       toast({
         title: "Payment Setup Complete!",
         description: "Your direct debit has been set up successfully.",
@@ -114,9 +118,24 @@ export default function PaymentSetupPage() {
               <CheckCircle className="w-10 h-10 text-emerald-600" />
             </div>
             <h2 className="text-3xl font-bold text-emerald-600 text-center mb-2">Payment Setup Complete!</h2>
-            <p className="text-slate-600 text-center mb-6">
+            <p className="text-slate-600 text-center mb-4">
               Your direct debit has been configured. We'll be in touch within 24 hours to begin your website project.
             </p>
+            
+            {/* Client Code Display */}
+            {clientCode && (
+              <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-6 mb-6">
+                <div className="text-center">
+                  <p className="text-sm font-medium text-blue-700 mb-2">Your Client Reference Code</p>
+                  <div className="inline-block px-6 py-3 bg-blue-600 text-white text-2xl font-bold rounded-lg shadow-lg">
+                    {clientCode}
+                  </div>
+                  <p className="text-xs text-blue-600 mt-3">
+                    Save this code - you'll need it when communicating with us about your website project
+                  </p>
+                </div>
+              </div>
+            )}
             
             <div className="bg-emerald-50 p-6 rounded-lg border border-emerald-200 mb-6">
               <h3 className="font-semibold text-emerald-800 mb-4">What Happens Next?</h3>

@@ -83,6 +83,7 @@ export type ClickEvent = typeof clickEvents.$inferSelect;
 // Payment requests table for direct debit setup
 export const paymentRequests = pgTable("payment_requests", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientCode: varchar("client_code").notNull().unique(), // e.g., "WR-001", "WR-002"
   package: varchar("package").notNull(), // 'basic' or 'premium'
   firstName: varchar("first_name").notNull(),
   lastName: varchar("last_name").notNull(),
