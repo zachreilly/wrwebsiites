@@ -4,7 +4,17 @@
 
 wrwebsites is a professional web development service application built as a full-stack solution for showcasing web development services and handling client inquiries. The application serves as a marketing website for a web development agency that specializes in static website development, hosting, and ongoing support services. The website features affordable launch pricing with two package tiers: Basic Static Website (£75 setup + £10/month) and Premium Static Website (£150 setup + £10/month). Contact information includes phone numbers 07397985279 and 07535778637, and email zachhreillyy@gmail.com.
 
-## Recent Changes (August 20, 2025)
+## Recent Changes (October 17, 2025)
+
+- **Implemented visual template selection system** in onboarding flow with 4 template style previews (Modern, Classic, Minimalist, Bold)
+- **Added 10 color scheme options** with gradient previews for customer website customization
+- **GoCardless payment integration now LIVE** - Real direct debit payments enabled for £75/£150 setup fees and £10/month recurring subscriptions
+- **Fixed ES module compatibility** for GoCardless CommonJS library using createRequire pattern
+- **Added project status workflow** to payment requests table (pending_payment → paid_pending_build → built_awaiting_approval → approved → published)
+- **Enhanced admin dashboard** with template/color scheme display and project status management buttons
+- Updated onboarding to 6-step process: Package & Contact → Template Selection → Domain/Hosting → Website Content → Design Preferences → Additional Features
+
+## Previous Changes (August 20, 2025)
 
 - Updated branding from "WebCraft Pro" to "wrwebsites" throughout the application
 - Implemented content from user's business description including pricing structure, service descriptions, and contact information
@@ -75,6 +85,14 @@ The backend follows an **Express.js** server architecture with TypeScript:
 
 ### External Service Integrations
 **Database**: Configured for **Neon Database** (serverless PostgreSQL) with connection pooling via `@neondatabase/serverless`.
+
+**Payment Processing**: Integrated with **GoCardless** for direct debit payments in LIVE mode. Handles:
+- Customer creation and bank account verification
+- Direct debit mandate setup (BACS scheme for UK)
+- One-time setup fee payments (£75 Basic / £150 Premium)
+- Recurring monthly subscriptions (£10/month)
+- Webhook processing for payment status updates
+- Uses createRequire pattern for CommonJS compatibility with ES modules
 
 **Email Services**: Contact form submissions are logged but email notification integration is planned for production use.
 
