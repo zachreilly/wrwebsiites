@@ -570,14 +570,9 @@ export default function OnboardingPage() {
                                         <div className={`w-10 h-1.5 ${isLight ? "bg-blue-900 font-bold" : "bg-blue-400 font-bold"} rounded`}></div>
                                       </div>
                                     </div>
-                                    {/* Overlapping gradient blobs - signature creative style */}
-                                    <div className="relative h-20 mb-2 rounded-lg overflow-hidden">
-                                      <div className="absolute -top-4 -left-4 w-20 h-20 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full opacity-60 blur-2xl"></div>
-                                      <div className="absolute top-2 right-0 w-24 h-24 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full opacity-60 blur-2xl"></div>
-                                      <div className="absolute -bottom-2 left-1/3 w-16 h-16 bg-gradient-to-br from-orange-400 to-yellow-500 rounded-full opacity-60 blur-2xl"></div>
-                                      <div className="relative h-full flex items-center justify-center backdrop-blur-sm">
-                                        <div className={`w-24 h-3 ${textColor} rounded shadow-lg`}></div>
-                                      </div>
+                                    {/* Professional blue banner */}
+                                    <div className={`h-16 ${isLight ? "bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700" : "bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-600"} rounded mb-2 px-3 flex items-center border ${isLight ? "border-blue-800" : "border-blue-500"}`}>
+                                      <div className="w-20 h-3 bg-white rounded font-semibold shadow"></div>
                                     </div>
                                     {/* Three structured information cards */}
                                     <div className="grid grid-cols-3 gap-1.5">
