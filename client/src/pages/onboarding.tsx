@@ -564,10 +564,10 @@ export default function OnboardingPage() {
                                         <div className={`w-6 h-6 ${isLight ? "bg-blue-900" : "bg-blue-400"} rounded-sm border-2 ${isLight ? "border-blue-700" : "border-blue-300"}`}></div>
                                         <div className={`w-16 h-2 ${textColor} rounded font-semibold`}></div>
                                       </div>
-                                      <div className="flex gap-2">
-                                        <div className={`w-10 h-1.5 ${isLight ? "bg-slate-600" : "bg-slate-400"} rounded`}></div>
-                                        <div className={`w-10 h-1.5 ${isLight ? "bg-slate-600" : "bg-slate-400"} rounded`}></div>
-                                        <div className={`w-10 h-1.5 ${isLight ? "bg-blue-900 font-bold" : "bg-blue-400 font-bold"} rounded`}></div>
+                                      <div className="flex gap-1">
+                                        <div className={`w-6 h-1.5 ${isLight ? "bg-slate-600" : "bg-slate-400"} rounded`}></div>
+                                        <div className={`w-6 h-1.5 ${isLight ? "bg-slate-600" : "bg-slate-400"} rounded`}></div>
+                                        <div className={`w-6 h-1.5 ${isLight ? "bg-blue-900 font-bold" : "bg-blue-400 font-bold"} rounded`}></div>
                                       </div>
                                     </div>
                                     {/* Professional blue banner */}
