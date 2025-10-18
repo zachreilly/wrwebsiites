@@ -4,9 +4,14 @@
 
 wrwebsites is a professional web development service application built as a full-stack solution for showcasing web development services and handling client inquiries. The application serves as a marketing website for a web development agency that specializes in static website development, hosting, and ongoing support services. The website features affordable launch pricing with two package tiers: Basic Static Website (£75 setup + £10/month) and Premium Static Website (£150 setup + £10/month). Contact information includes phone numbers 07397985279 and 07535778637, and email zachhreillyy@gmail.com.
 
-## Recent Changes (October 17, 2025)
+## Recent Changes (October 18, 2025)
 
-- **Implemented visual template selection system** in onboarding flow with 4 template style previews (Modern, Classic, Minimalist, Bold)
+- **Implemented live color preview** - All 9 template previews now update in real-time when customers select different color schemes, allowing instant visualization of how each template looks in their chosen colors
+- **Comprehensive color mapping system** - Created dynamic color classes for all 10 color schemes (Emerald Green, Ocean Blue, Royal Purple, Sunset Orange, Rose Pink, Navy Blue, Forest Green, Crimson Red, Slate Gray, Amber Gold) that adapt to both light and dark theme variations
+
+## Previous Changes (October 17, 2025)
+
+- **Implemented visual template selection system** in onboarding flow with 9 template style previews (Modern, Classic, Minimalist, Bold, Creative, Corporate, Elegant, Tech, Magazine)
 - **Added 10 color scheme options** with gradient previews for customer website customization
 - **GoCardless payment integration now LIVE** - Real direct debit payments enabled for £75/£150 setup fees and £10/month recurring subscriptions
 - **Fixed ES module compatibility** for GoCardless CommonJS library using createRequire pattern
