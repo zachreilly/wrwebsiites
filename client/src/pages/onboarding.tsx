@@ -395,7 +395,97 @@ export default function OnboardingPage() {
                               }
                             ].map((template) => {
                               const templateVariation = form.watch("templateVariation");
+                              const selectedColorScheme = form.watch("colorScheme");
                               const isLight = templateVariation === "light";
+                              
+                              // Color mapping based on selected scheme  
+                              const getColors = (scheme: string) => {
+                                const colorMaps: Record<string, any> = {
+                                  "emerald-green": {
+                                    primary: isLight ? "bg-emerald-600" : "bg-emerald-400",
+                                    secondary: isLight ? "bg-emerald-500" : "bg-emerald-500",
+                                    accent: isLight ? "bg-green-600" : "bg-green-400",
+                                    gradient: "from-emerald-500 via-emerald-400 to-green-500",
+                                    logo: isLight ? "bg-emerald-900" : "bg-emerald-300",
+                                    border: isLight ? "border-emerald-700" : "border-emerald-500"
+                                  },
+                                  "ocean-blue": {
+                                    primary: isLight ? "bg-blue-600" : "bg-blue-400",
+                                    secondary: isLight ? "bg-blue-500" : "bg-blue-500",
+                                    accent: isLight ? "bg-cyan-600" : "bg-cyan-400",
+                                    gradient: "from-blue-500 via-blue-400 to-cyan-500",
+                                    logo: isLight ? "bg-blue-900" : "bg-blue-300",
+                                    border: isLight ? "border-blue-700" : "border-blue-500"
+                                  },
+                                  "royal-purple": {
+                                    primary: isLight ? "bg-purple-600" : "bg-purple-400",
+                                    secondary: isLight ? "bg-purple-500" : "bg-purple-500",
+                                    accent: isLight ? "bg-violet-600" : "bg-violet-400",
+                                    gradient: "from-purple-500 via-purple-400 to-violet-500",
+                                    logo: isLight ? "bg-purple-900" : "bg-purple-300",
+                                    border: isLight ? "border-purple-700" : "border-purple-500"
+                                  },
+                                  "sunset-orange": {
+                                    primary: isLight ? "bg-orange-600" : "bg-orange-400",
+                                    secondary: isLight ? "bg-orange-500" : "bg-orange-500",
+                                    accent: isLight ? "bg-red-600" : "bg-red-400",
+                                    gradient: "from-orange-500 via-orange-400 to-red-500",
+                                    logo: isLight ? "bg-orange-900" : "bg-orange-300",
+                                    border: isLight ? "border-orange-700" : "border-orange-500"
+                                  },
+                                  "rose-pink": {
+                                    primary: isLight ? "bg-pink-600" : "bg-pink-400",
+                                    secondary: isLight ? "bg-pink-500" : "bg-pink-500",
+                                    accent: isLight ? "bg-rose-600" : "bg-rose-400",
+                                    gradient: "from-pink-500 via-pink-400 to-rose-500",
+                                    logo: isLight ? "bg-pink-900" : "bg-pink-300",
+                                    border: isLight ? "border-pink-700" : "border-pink-500"
+                                  },
+                                  "navy-blue": {
+                                    primary: isLight ? "bg-blue-900" : "bg-blue-300",
+                                    secondary: isLight ? "bg-blue-800" : "bg-blue-400",
+                                    accent: isLight ? "bg-blue-950" : "bg-blue-200",
+                                    gradient: "from-blue-900 via-blue-800 to-blue-700",
+                                    logo: isLight ? "bg-blue-950" : "bg-blue-200",
+                                    border: isLight ? "border-blue-800" : "border-blue-400"
+                                  },
+                                  "forest-green": {
+                                    primary: isLight ? "bg-green-700" : "bg-green-400",
+                                    secondary: isLight ? "bg-green-600" : "bg-green-500",
+                                    accent: isLight ? "bg-green-800" : "bg-green-300",
+                                    gradient: "from-green-700 via-green-600 to-green-500",
+                                    logo: isLight ? "bg-green-900" : "bg-green-300",
+                                    border: isLight ? "border-green-800" : "border-green-500"
+                                  },
+                                  "crimson-red": {
+                                    primary: isLight ? "bg-red-600" : "bg-red-400",
+                                    secondary: isLight ? "bg-red-500" : "bg-red-500",
+                                    accent: isLight ? "bg-red-700" : "bg-red-300",
+                                    gradient: "from-red-600 via-red-500 to-red-400",
+                                    logo: isLight ? "bg-red-900" : "bg-red-300",
+                                    border: isLight ? "border-red-700" : "border-red-500"
+                                  },
+                                  "slate-gray": {
+                                    primary: isLight ? "bg-slate-700" : "bg-slate-400",
+                                    secondary: isLight ? "bg-slate-600" : "bg-slate-500",
+                                    accent: isLight ? "bg-slate-800" : "bg-slate-300",
+                                    gradient: "from-slate-700 via-slate-600 to-slate-500",
+                                    logo: isLight ? "bg-slate-900" : "bg-slate-300",
+                                    border: isLight ? "border-slate-800" : "border-slate-500"
+                                  },
+                                  "amber-gold": {
+                                    primary: isLight ? "bg-amber-600" : "bg-amber-400",
+                                    secondary: isLight ? "bg-amber-500" : "bg-amber-500",
+                                    accent: isLight ? "bg-yellow-600" : "bg-yellow-400",
+                                    gradient: "from-amber-500 via-amber-400 to-yellow-500",
+                                    logo: isLight ? "bg-amber-900" : "bg-amber-300",
+                                    border: isLight ? "border-amber-700" : "border-amber-500"
+                                  }
+                                };
+                                return colorMaps[scheme] || colorMaps["emerald-green"];
+                              };
+                              
+                              const colors = getColors(selectedColorScheme || "emerald-green");
                               
                               // Generate preview based on template type and variation
                               let previewContent;
@@ -408,8 +498,8 @@ export default function OnboardingPage() {
                                   <div className={`${bgColor} rounded-lg p-3 border ${borderColor} shadow-sm`}>
                                     {/* Distinctive top navbar with logo + menu */}
                                     <div className={`h-8 ${isLight ? "bg-slate-900" : "bg-white"} rounded mb-2 flex items-center px-3 gap-2`}>
-                                      <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                                      <div className="w-12 h-1.5 bg-emerald-500 rounded"></div>
+                                      <div className={`w-2 h-2 ${colors.secondary} rounded-full`}></div>
+                                      <div className={`w-12 h-1.5 ${colors.secondary} rounded`}></div>
                                       <div className="ml-auto flex gap-1.5">
                                         <div className={`w-8 h-1 ${isLight ? "bg-white" : "bg-slate-900"} rounded`}></div>
                                         <div className={`w-8 h-1 ${isLight ? "bg-white" : "bg-slate-900"} rounded`}></div>
@@ -417,7 +507,7 @@ export default function OnboardingPage() {
                                       </div>
                                     </div>
                                     {/* Large hero with gradient */}
-                                    <div className="h-20 bg-gradient-to-r from-emerald-500 via-emerald-400 to-blue-500 rounded mb-2 flex flex-col items-center justify-center gap-1.5 p-2">
+                                    <div className={`h-20 bg-gradient-to-r ${colors.gradient} rounded mb-2 flex flex-col items-center justify-center gap-1.5 p-2`}>
                                       <div className="w-24 h-3 bg-white rounded"></div>
                                       <div className="w-16 h-1.5 bg-white/80 rounded"></div>
                                       <div className="w-12 h-2.5 bg-white rounded-full mt-1"></div>
@@ -425,15 +515,15 @@ export default function OnboardingPage() {
                                     {/* Three equal cards */}
                                     <div className="grid grid-cols-3 gap-1.5">
                                       <div className={`h-14 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded p-1.5`}>
-                                        <div className={`w-full h-2 ${isLight ? "bg-emerald-500" : "bg-emerald-400"} rounded mb-1`}></div>
+                                        <div className={`w-full h-2 ${colors.secondary} rounded mb-1`}></div>
                                         <div className={`w-3/4 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
                                       </div>
                                       <div className={`h-14 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded p-1.5`}>
-                                        <div className={`w-full h-2 ${isLight ? "bg-blue-500" : "bg-blue-400"} rounded mb-1`}></div>
+                                        <div className={`w-full h-2 ${colors.primary} rounded mb-1`}></div>
                                         <div className={`w-3/4 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
                                       </div>
                                       <div className={`h-14 ${isLight ? "bg-slate-100" : "bg-slate-800"} rounded p-1.5`}>
-                                        <div className={`w-full h-2 ${isLight ? "bg-purple-500" : "bg-purple-400"} rounded mb-1`}></div>
+                                        <div className={`w-full h-2 ${colors.accent} rounded mb-1`}></div>
                                         <div className={`w-3/4 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
                                       </div>
                                     </div>
@@ -444,7 +534,7 @@ export default function OnboardingPage() {
                                   <div className={`${bgColor} rounded-lg p-3 border ${borderColor} shadow-sm`}>
                                     {/* Centered header with serif-style logo */}
                                     <div className="text-center mb-2">
-                                      <div className={`w-6 h-6 ${isLight ? "bg-blue-900" : "bg-blue-300"} rounded mx-auto mb-1.5 border-2 ${isLight ? "border-blue-700" : "border-blue-500"}`}></div>
+                                      <div className={`w-6 h-6 ${colors.logo} rounded mx-auto mb-1.5 border-2 ${colors.border}`}></div>
                                       <div className={`w-20 h-2.5 ${isLight ? "bg-slate-700" : "bg-slate-300"} rounded mx-auto mb-2`}></div>
                                       {/* Traditional horizontal nav */}
                                       <div className="flex gap-1.5 justify-center mb-2 pb-2 border-b border-slate-300">
@@ -489,7 +579,7 @@ export default function OnboardingPage() {
                                     <div className={`h-px ${isLight ? "bg-slate-200" : "bg-slate-700"} w-20 mx-auto mb-4`}></div>
                                     {/* Minimal text lines with lots of whitespace */}
                                     <div className="space-y-2 px-4">
-                                      <div className={`h-0.5 ${isLight ? "bg-slate-200" : "bg-slate-700"} rounded w-2/3 mx-auto`}></div>
+                                      <div className={`h-0.5 ${colors.secondary} rounded w-2/3 mx-auto opacity-30`}></div>
                                       <div className={`h-0.5 ${isLight ? "bg-slate-200" : "bg-slate-700"} rounded w-full mx-auto`}></div>
                                       <div className={`h-0.5 ${isLight ? "bg-slate-200" : "bg-slate-700"} rounded w-1/2 mx-auto`}></div>
                                     </div>
@@ -497,29 +587,29 @@ export default function OnboardingPage() {
                                 );
                               } else if (template.value === "bold") {
                                 previewContent = (
-                                  <div className={`${isLight ? "bg-gradient-to-br from-slate-900 via-slate-800 to-black" : "bg-gradient-to-br from-white via-slate-50 to-slate-100"} rounded-lg p-3 shadow-lg border-2 ${isLight ? "border-yellow-400/30" : "border-purple-500/30"}`}>
+                                  <div className={`${isLight ? "bg-gradient-to-br from-slate-900 via-slate-800 to-black" : "bg-gradient-to-br from-white via-slate-50 to-slate-100"} rounded-lg p-3 shadow-lg border-2 ${isLight ? colors.border : colors.border}`}>
                                     {/* Bold header with strong accent */}
                                     <div className="flex justify-between items-center mb-2">
                                       <div className="flex items-center gap-1">
-                                        <div className={`w-3 h-3 ${isLight ? "bg-yellow-400" : "bg-purple-600"} rounded-sm rotate-45`}></div>
-                                        <div className={`w-14 h-2.5 ${isLight ? "bg-yellow-400" : "bg-purple-600"} rounded font-black`}></div>
+                                        <div className={`w-3 h-3 ${colors.secondary} rounded-sm rotate-45`}></div>
+                                        <div className={`w-14 h-2.5 ${colors.secondary} rounded font-black`}></div>
                                       </div>
                                       <div className="flex gap-1.5">
-                                        <div className={`w-6 h-6 ${isLight ? "bg-white/20 border border-yellow-400" : "bg-slate-900/20 border border-purple-500"} rounded`}></div>
-                                        <div className={`w-6 h-6 ${isLight ? "bg-white/20 border border-yellow-400" : "bg-slate-900/20 border border-purple-500"} rounded`}></div>
+                                        <div className={`w-6 h-6 ${isLight ? "bg-white/20" : "bg-slate-900/20"} border ${colors.border} rounded`}></div>
+                                        <div className={`w-6 h-6 ${isLight ? "bg-white/20" : "bg-slate-900/20"} border ${colors.border} rounded`}></div>
                                       </div>
                                     </div>
                                     {/* Huge bold hero with strong gradient */}
-                                    <div className={`h-20 ${isLight ? "bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500" : "bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600"} rounded-lg mb-2 flex items-center justify-center shadow-xl`}>
+                                    <div className={`h-20 bg-gradient-to-r ${colors.gradient} rounded-lg mb-2 flex items-center justify-center shadow-xl`}>
                                       <div className="w-24 h-4 bg-white rounded font-black shadow-lg"></div>
                                     </div>
                                     {/* Two strong CTA boxes */}
                                     <div className="grid grid-cols-2 gap-2">
-                                      <div className={`h-14 ${isLight ? "bg-white/10 border-3 border-yellow-400" : "bg-slate-900/10 border-3 border-purple-500"} rounded-lg flex items-center justify-center`}>
-                                        <div className={`w-12 h-2 ${isLight ? "bg-yellow-400" : "bg-purple-500"} rounded`}></div>
+                                      <div className={`h-14 ${isLight ? "bg-white/10" : "bg-slate-900/10"} border-3 ${colors.border} rounded-lg flex items-center justify-center`}>
+                                        <div className={`w-12 h-2 ${colors.secondary} rounded`}></div>
                                       </div>
-                                      <div className={`h-14 ${isLight ? "bg-white/10 border-3 border-yellow-400" : "bg-slate-900/10 border-3 border-purple-500"} rounded-lg flex items-center justify-center`}>
-                                        <div className={`w-12 h-2 ${isLight ? "bg-yellow-400" : "bg-purple-500"} rounded`}></div>
+                                      <div className={`h-14 ${isLight ? "bg-white/10" : "bg-slate-900/10"} border-3 ${colors.border} rounded-lg flex items-center justify-center`}>
+                                        <div className={`w-12 h-2 ${colors.secondary} rounded`}></div>
                                       </div>
                                     </div>
                                   </div>
@@ -529,12 +619,12 @@ export default function OnboardingPage() {
                                   <div className={`${bgColor} rounded-lg p-3 border ${borderColor} shadow-sm overflow-hidden relative`}>
                                     {/* Artistic header with gradient circle logo */}
                                     <div className="flex items-center gap-2 mb-2 relative z-10">
-                                      <div className="w-7 h-7 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-600 rounded-full shadow-lg"></div>
+                                      <div className={`w-7 h-7 bg-gradient-to-br ${colors.gradient} rounded-full shadow-lg`}></div>
                                       <div className={`w-14 h-2 ${textColor} rounded`}></div>
                                       <div className="ml-auto flex gap-1">
-                                        <div className="w-1 h-1 bg-pink-500 rounded-full"></div>
-                                        <div className="w-1 h-1 bg-purple-500 rounded-full"></div>
-                                        <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
+                                        <div className={`w-1 h-1 ${colors.secondary} rounded-full`}></div>
+                                        <div className={`w-1 h-1 ${colors.primary} rounded-full`}></div>
+                                        <div className={`w-1 h-1 ${colors.accent} rounded-full`}></div>
                                       </div>
                                     </div>
                                     {/* Overlapping gradient blobs - signature creative style */}
@@ -548,10 +638,10 @@ export default function OnboardingPage() {
                                     </div>
                                     {/* Colorful feature cards */}
                                     <div className="grid grid-cols-4 gap-1.5">
-                                      <div className="h-12 bg-gradient-to-br from-pink-500 to-red-600 rounded-lg shadow-md"></div>
-                                      <div className="h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-md"></div>
-                                      <div className="h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg shadow-md"></div>
-                                      <div className="h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg shadow-md"></div>
+                                      <div className={`h-12 ${colors.secondary} rounded-lg shadow-md`}></div>
+                                      <div className={`h-12 ${colors.primary} rounded-lg shadow-md`}></div>
+                                      <div className={`h-12 ${colors.accent} rounded-lg shadow-md`}></div>
+                                      <div className={`h-12 bg-gradient-to-br ${colors.gradient} rounded-lg shadow-md`}></div>
                                     </div>
                                   </div>
                                 );
@@ -561,12 +651,12 @@ export default function OnboardingPage() {
                                     {/* Professional header with square logo */}
                                     <div className="flex items-center mb-2 pb-2 border-b border-slate-300">
                                       <div className="flex items-center gap-1.5">
-                                        <div className={`w-6 h-6 ${isLight ? "bg-blue-900" : "bg-blue-400"} rounded-sm border-2 ${isLight ? "border-blue-700" : "border-blue-300"}`}></div>
+                                        <div className={`w-6 h-6 ${colors.logo} rounded-sm border-2 ${colors.border}`}></div>
                                         <div className={`w-16 h-2 ${textColor} rounded font-semibold`}></div>
                                       </div>
                                     </div>
-                                    {/* Professional blue banner with navigation */}
-                                    <div className={`h-16 ${isLight ? "bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700" : "bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-600"} rounded mb-2 px-3 flex items-center justify-between border ${isLight ? "border-blue-800" : "border-blue-500"}`}>
+                                    {/* Professional banner with navigation */}
+                                    <div className={`h-16 bg-gradient-to-r ${colors.gradient} rounded mb-2 px-3 flex items-center justify-between border ${colors.border}`}>
                                       <div className="w-20 h-3 bg-white rounded font-semibold shadow"></div>
                                       <div className="flex gap-1">
                                         <div className="w-4 h-1 bg-white/80 rounded"></div>
@@ -577,17 +667,17 @@ export default function OnboardingPage() {
                                     {/* Three structured information cards */}
                                     <div className="grid grid-cols-3 gap-1.5">
                                       <div className={`h-14 ${isLight ? "bg-slate-100 border-2 border-slate-300" : "bg-slate-800 border-2 border-slate-600"} rounded p-1.5`}>
-                                        <div className={`w-4 h-4 ${isLight ? "bg-blue-600" : "bg-blue-400"} rounded mb-1`}></div>
+                                        <div className={`w-4 h-4 ${colors.primary} rounded mb-1`}></div>
                                         <div className={`w-full h-1.5 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded mb-0.5`}></div>
                                         <div className={`w-2/3 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
                                       </div>
                                       <div className={`h-14 ${isLight ? "bg-slate-100 border-2 border-slate-300" : "bg-slate-800 border-2 border-slate-600"} rounded p-1.5`}>
-                                        <div className={`w-4 h-4 ${isLight ? "bg-blue-600" : "bg-blue-400"} rounded mb-1`}></div>
+                                        <div className={`w-4 h-4 ${colors.primary} rounded mb-1`}></div>
                                         <div className={`w-full h-1.5 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded mb-0.5`}></div>
                                         <div className={`w-2/3 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
                                       </div>
                                       <div className={`h-14 ${isLight ? "bg-slate-100 border-2 border-slate-300" : "bg-slate-800 border-2 border-slate-600"} rounded p-1.5`}>
-                                        <div className={`w-4 h-4 ${isLight ? "bg-blue-600" : "bg-blue-400"} rounded mb-1`}></div>
+                                        <div className={`w-4 h-4 ${colors.primary} rounded mb-1`}></div>
                                         <div className={`w-full h-1.5 ${isLight ? "bg-slate-400" : "bg-slate-500"} rounded mb-0.5`}></div>
                                         <div className={`w-2/3 h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
                                       </div>
@@ -599,29 +689,29 @@ export default function OnboardingPage() {
                                   <div className={`${bgColor} rounded-lg p-4 border ${borderColor} shadow-sm`}>
                                     {/* Elegant centered header with decorative circle logo */}
                                     <div className="text-center mb-3">
-                                      <div className="w-10 h-10 mx-auto mb-2 border-2 border-amber-600 rounded-full flex items-center justify-center shadow-lg">
-                                        <div className="w-5 h-5 bg-gradient-to-br from-amber-400 to-amber-700 rounded-full"></div>
+                                      <div className={`w-10 h-10 mx-auto mb-2 border-2 ${colors.border} rounded-full flex items-center justify-center shadow-lg`}>
+                                        <div className={`w-5 h-5 bg-gradient-to-br ${colors.gradient} rounded-full`}></div>
                                       </div>
                                       <div className={`w-24 h-2.5 ${textColor} rounded mx-auto mb-2 font-serif`}></div>
                                       {/* Decorative divider */}
                                       <div className="flex items-center justify-center gap-1 mb-2">
-                                        <div className="h-px w-8 bg-gradient-to-r from-transparent to-amber-500"></div>
-                                        <div className="w-1.5 h-1.5 bg-amber-600 rounded-full"></div>
-                                        <div className="h-px w-8 bg-gradient-to-l from-transparent to-amber-500"></div>
+                                        <div className={`h-px w-8 bg-gradient-to-r from-transparent ${colors.secondary} opacity-50`}></div>
+                                        <div className={`w-1.5 h-1.5 ${colors.primary} rounded-full`}></div>
+                                        <div className={`h-px w-8 bg-gradient-to-l from-transparent ${colors.secondary} opacity-50`}></div>
                                       </div>
                                     </div>
-                                    {/* Luxurious content area with gold accent */}
-                                    <div className={`h-14 ${isLight ? "bg-gradient-to-br from-amber-50 via-orange-50 to-amber-50" : "bg-gradient-to-br from-amber-900/20 via-orange-900/20 to-amber-900/20"} rounded mb-2 border-2 ${isLight ? "border-amber-200" : "border-amber-800"} p-2 flex items-center justify-center`}>
-                                      <div className={`w-16 h-2 ${isLight ? "bg-amber-700" : "bg-amber-400"} rounded`}></div>
+                                    {/* Luxurious content area with accent */}
+                                    <div className={`h-14 ${isLight ? `${colors.secondary} opacity-10` : `${colors.secondary} opacity-20`} rounded mb-2 border-2 ${colors.border} p-2 flex items-center justify-center`}>
+                                      <div className={`w-16 h-2 ${colors.primary} rounded`}></div>
                                     </div>
                                     {/* Two refined feature boxes */}
                                     <div className="grid grid-cols-2 gap-2">
                                       <div className={`h-12 ${isLight ? "bg-slate-50 border-2 border-slate-200" : "bg-slate-800 border-2 border-slate-700"} rounded p-2 flex flex-col justify-center`}>
-                                        <div className="w-1 h-1 bg-amber-600 rounded-full mb-1 mx-auto"></div>
+                                        <div className={`w-1 h-1 ${colors.primary} rounded-full mb-1 mx-auto`}></div>
                                         <div className={`w-full h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
                                       </div>
                                       <div className={`h-12 ${isLight ? "bg-slate-50 border-2 border-slate-200" : "bg-slate-800 border-2 border-slate-700"} rounded p-2 flex flex-col justify-center`}>
-                                        <div className="w-1 h-1 bg-amber-600 rounded-full mb-1 mx-auto"></div>
+                                        <div className={`w-1 h-1 ${colors.primary} rounded-full mb-1 mx-auto`}></div>
                                         <div className={`w-full h-1 ${isLight ? "bg-slate-300" : "bg-slate-600"} rounded`}></div>
                                       </div>
                                     </div>
@@ -629,7 +719,7 @@ export default function OnboardingPage() {
                                 );
                               } else if (template.value === "tech") {
                                 previewContent = (
-                                  <div className={`${isLight ? "bg-gradient-to-br from-slate-900 via-blue-950 to-purple-950" : "bg-gradient-to-br from-cyan-950 via-blue-950 to-slate-950"} rounded-lg p-3 shadow-xl relative overflow-hidden border ${isLight ? "border-cyan-500/30" : "border-cyan-400/20"}`}>
+                                  <div className={`${isLight ? "bg-gradient-to-br from-slate-900 via-slate-900 to-black" : "bg-gradient-to-br from-slate-950 via-slate-950 to-black"} rounded-lg p-3 shadow-xl relative overflow-hidden border ${colors.border} opacity-80`}>
                                     {/* Futuristic grid pattern background */}
                                     <div className="absolute inset-0 opacity-30">
                                       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-[size:20px_20px]"></div>
@@ -638,32 +728,32 @@ export default function OnboardingPage() {
                                       {/* Neon header */}
                                       <div className="flex justify-between items-center mb-2">
                                         <div className="flex items-center gap-1">
-                                          <div className="w-2 h-2 bg-cyan-400 rounded-sm shadow-lg shadow-cyan-500/80"></div>
-                                          <div className="w-14 h-2 bg-gradient-to-r from-cyan-400 to-blue-400 rounded shadow-lg shadow-cyan-500/50"></div>
+                                          <div className={`w-2 h-2 ${colors.secondary} rounded-sm shadow-lg`}></div>
+                                          <div className={`w-14 h-2 bg-gradient-to-r ${colors.gradient} rounded shadow-lg`}></div>
                                         </div>
                                         <div className="flex gap-1.5">
-                                          <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400/80"></div>
-                                          <div className="w-1.5 h-1.5 bg-blue-400 rounded-full shadow-lg shadow-blue-400/80"></div>
-                                          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full shadow-lg shadow-purple-400/80"></div>
+                                          <div className={`w-1.5 h-1.5 ${colors.secondary} rounded-full shadow-lg`}></div>
+                                          <div className={`w-1.5 h-1.5 ${colors.primary} rounded-full shadow-lg`}></div>
+                                          <div className={`w-1.5 h-1.5 ${colors.accent} rounded-full shadow-lg`}></div>
                                         </div>
                                       </div>
                                       {/* Cyber hero section */}
-                                      <div className="h-20 bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-purple-500/20 rounded-lg border-2 border-cyan-400/40 mb-2 flex items-center justify-center backdrop-blur-sm shadow-inner">
-                                        <div className="w-24 h-3.5 bg-white rounded shadow-2xl shadow-cyan-400/50"></div>
+                                      <div className={`h-20 bg-gradient-to-r ${colors.gradient} opacity-20 rounded-lg border-2 ${colors.border} mb-2 flex items-center justify-center backdrop-blur-sm shadow-inner`}>
+                                        <div className="w-24 h-3.5 bg-white rounded shadow-2xl"></div>
                                       </div>
                                       {/* Three glowing feature cards */}
                                       <div className="grid grid-cols-3 gap-1.5">
-                                        <div className="h-12 bg-cyan-500/10 rounded-lg border border-cyan-400/50 shadow-lg shadow-cyan-500/20 p-1.5">
-                                          <div className="w-full h-1.5 bg-cyan-400/50 rounded mb-1"></div>
-                                          <div className="w-2/3 h-1 bg-cyan-400/30 rounded"></div>
+                                        <div className={`h-12 ${colors.secondary} opacity-10 rounded-lg border ${colors.border} shadow-lg p-1.5`}>
+                                          <div className={`w-full h-1.5 ${colors.secondary} opacity-50 rounded mb-1`}></div>
+                                          <div className={`w-2/3 h-1 ${colors.secondary} opacity-30 rounded`}></div>
                                         </div>
-                                        <div className="h-12 bg-blue-500/10 rounded-lg border border-blue-400/50 shadow-lg shadow-blue-500/20 p-1.5">
-                                          <div className="w-full h-1.5 bg-blue-400/50 rounded mb-1"></div>
-                                          <div className="w-2/3 h-1 bg-blue-400/30 rounded"></div>
+                                        <div className={`h-12 ${colors.primary} opacity-10 rounded-lg border ${colors.border} shadow-lg p-1.5`}>
+                                          <div className={`w-full h-1.5 ${colors.primary} opacity-50 rounded mb-1`}></div>
+                                          <div className={`w-2/3 h-1 ${colors.primary} opacity-30 rounded`}></div>
                                         </div>
-                                        <div className="h-12 bg-purple-500/10 rounded-lg border border-purple-400/50 shadow-lg shadow-purple-500/20 p-1.5">
-                                          <div className="w-full h-1.5 bg-purple-400/50 rounded mb-1"></div>
-                                          <div className="w-2/3 h-1 bg-purple-400/30 rounded"></div>
+                                        <div className={`h-12 ${colors.accent} opacity-10 rounded-lg border ${colors.border} shadow-lg p-1.5`}>
+                                          <div className={`w-full h-1.5 ${colors.accent} opacity-50 rounded mb-1`}></div>
+                                          <div className={`w-2/3 h-1 ${colors.accent} opacity-30 rounded`}></div>
                                         </div>
                                       </div>
                                     </div>
