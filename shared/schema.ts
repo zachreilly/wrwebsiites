@@ -132,10 +132,10 @@ export const clientOnboarding = pgTable("client_onboarding", {
   businessDescription: text("business_description").notNull(),
   pagesNeeded: text("pages_needed").notNull(),
   textContent: text("text_content"),
-  hasImages: text("has_images").default("false"), // stored as string for consistency
+  hasImages: boolean("has_images").default(false),
   
   // Design Preferences
-  hasLogo: text("has_logo").default("false"), // stored as string for consistency
+  hasLogo: boolean("has_logo").default(false),
   templateStyle: varchar("template_style"), // 'modern', 'classic', 'minimalist', 'bold', 'creative', 'corporate', 'elegant', 'tech', 'magazine'
   templateVariation: varchar("template_variation").default("light"), // 'light' or 'dark'
   colorScheme: varchar("color_scheme").notNull(),
@@ -143,8 +143,8 @@ export const clientOnboarding = pgTable("client_onboarding", {
   exampleWebsites: text("example_websites"),
   
   // Extras
-  wantsContactForm: text("wants_contact_form").default("false"), // stored as string for consistency
-  googleBusinessSetup: text("google_business_setup").default("false"), // stored as string for consistency
+  wantsContactForm: boolean("wants_contact_form").default(false),
+  googleBusinessSetup: boolean("google_business_setup").default(false),
   socialMediaLinks: text("social_media_links"),
   specialRequests: text("special_requests"),
   
