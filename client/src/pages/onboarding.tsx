@@ -120,9 +120,30 @@ export default function OnboardingPage() {
     submitMutation.mutate(data);
   };
 
-  const nextStep = () => {
-    if (currentStep < totalSteps) {
+  const nextStep = async () => {
+    // Define which fields need to be validated for each step
+    const stepFields: Record<number, (keyof ClientInfoForm)[]> = {
+      1: ['fullName', 'businessName', 'email', 'phone', 'selectedPackage'],
+      2: ['templateStyle', 'templateVariation', 'layoutPreference'],
+      3: selectedPackage === 'premium' ? ['hasDomain', 'existingDomain', 'desiredDomains'] : [],
+      4: ['businessDescription', 'pagesNeeded'],
+      5: ['colorScheme'],
+      6: [] // Final step - no validation needed, it's optional fields
+    };
+
+    const fieldsToValidate = stepFields[currentStep] || [];
+    
+    // Trigger validation for current step fields
+    const isValid = await form.trigger(fieldsToValidate);
+    
+    if (isValid && currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
+    } else if (!isValid) {
+      toast({
+        title: "Please Complete Required Fields",
+        description: "Fill in all required fields before proceeding to the next step.",
+        variant: "destructive"
+      });
     }
   };
 
