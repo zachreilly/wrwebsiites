@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent, MessageSquare, Calculator, Check, Clock, ExternalLink, Bell, AlertCircle, Download, Plus } from "lucide-react";
+import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent, MessageSquare, Calculator, Check, Clock, ExternalLink, Bell, AlertCircle, Download, Plus, Home } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
 interface AnalyticsData {
@@ -404,6 +404,14 @@ export default function AdminPage() {
                   {newPaymentCount}
                 </span>
               )}
+            </Button>
+            <Button 
+              onClick={() => window.location.href = '/'} 
+              variant="outline"
+              data-testid="button-home"
+            >
+              <Home className="w-4 h-4 mr-2" />
+              Home
             </Button>
             <Button onClick={handleLogout} variant="outline">
               Logout
