@@ -39,7 +39,7 @@ export default function WebsiteUpdateRequest() {
   });
 
   const submitMutation = useMutation({
-    mutationFn: (data: WebsiteUpdateRequestData) => {
+    mutationFn: async (data: WebsiteUpdateRequestData) => {
       // Map frontend field names to backend schema field names
       const backendData = {
         fullName: data.name,
@@ -64,7 +64,8 @@ export default function WebsiteUpdateRequest() {
         agreedToTerms: false,
         agreedToDirectDebit: false,
       };
-      return apiRequest("POST", "/api/website-update", backendData);
+      const response = await apiRequest("POST", "/api/website-update", backendData);
+      return await response.json();
     },
     onSuccess: () => {
       toast({

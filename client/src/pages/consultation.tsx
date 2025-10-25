@@ -130,10 +130,11 @@ export default function ConsultationPage() {
 
   const submitMutation = useMutation({
     mutationFn: async (data: ConsultationForm) => {
-      return apiRequest("POST", "/api/consultation", { 
+      const response = await apiRequest("POST", "/api/consultation", { 
         ...data, 
         estimatedPrice: calculatedPrice 
       });
+      return await response.json();
     },
     onSuccess: () => {
       setIsSubmitted(true);
