@@ -6,6 +6,9 @@ wrwebsites is a professional web development service application built as a full
 
 ## Recent Changes (October 25, 2025)
 
+- **Added image upload functionality to project updates** - Admins can now attach screenshots/images when posting updates to customers, images stored in object storage and displayed in customer dashboard updates feed
+- **Implemented secure image upload flow** - Uses presigned URLs for direct-to-storage uploads (10MB max), client-side MIME type validation, automatic URL normalization to `/objects/...` paths, images served through backend proxy
+- **Enhanced customer updates display** - Images show in timeline feed with click-to-expand functionality, proper responsive styling, and error handling for upload failures
 - **Implemented secure customer authentication system** - Added bcrypt password hashing (10 rounds) for client portal access, generating 12-character cryptographically secure passwords using crypto.randomBytes
 - **Fixed onboarding completion flow** - Clients now receive auto-generated password and client code (WR-XXX format) on onboarding-complete page, with flexible payment timing allowing payment before or after website completion
 - **Integrated payment system with client_onboarding** - Added `setupFeesPaid` field and `clientOnboardingId` linkage to customers/transactions tables, enabling GoCardless webhook to update onboarding records when payments complete
