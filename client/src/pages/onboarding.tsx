@@ -38,7 +38,7 @@ const clientInfoSchema = z.object({
   
   // Design Preferences
   hasLogo: z.boolean().default(false),
-  colorScheme: z.string().min(1, "Color scheme preference is required"),
+  colorScheme: z.string().optional(),
   exampleWebsites: z.string().optional(),
   
   // Extras
@@ -132,7 +132,7 @@ export default function OnboardingPage() {
       2: ['templateStyle', 'templateVariation', 'layoutPreference'],
       3: selectedPackage === 'premium' ? ['hasDomain', 'existingDomain', 'desiredDomains'] : [],
       4: ['businessDescription', 'pagesNeeded'],
-      5: ['colorScheme'],
+      5: [], // Design preferences are optional
       6: [] // Final step - no validation needed, it's optional fields
     };
 
