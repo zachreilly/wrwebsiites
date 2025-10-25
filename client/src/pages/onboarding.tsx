@@ -122,10 +122,22 @@ export default function OnboardingPage() {
   });
 
   const onSubmit = (data: ClientInfoForm) => {
-    submitMutation.mutate(data);
+    // Only submit if we're on the final step
+    if (currentStep === totalSteps) {
+      submitMutation.mutate(data);
+    } else {
+      // Prevent submission if not on final step
+      console.warn('Form submission prevented - not on final step');
+    }
   };
 
-  const nextStep = async () => {
+  const nextStep = async (e?: React.MouseEvent) => {
+    // Prevent any default behavior
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
     // Define which fields need to be validated for each step
     const stepFields: Record<number, (keyof ClientInfoForm)[]> = {
       1: ['fullName', 'businessName', 'email', 'phone', 'selectedPackage'],
@@ -137,6 +149,12 @@ export default function OnboardingPage() {
     };
 
     const fieldsToValidate = stepFields[currentStep] || [];
+    
+    // For steps with no required fields, just move to next step
+    if (fieldsToValidate.length === 0) {
+      setCurrentStep(currentStep + 1);
+      return;
+    }
     
     // Trigger validation for current step fields
     const isValid = await form.trigger(fieldsToValidate);
