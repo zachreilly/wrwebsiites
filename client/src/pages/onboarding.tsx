@@ -92,10 +92,7 @@ export default function OnboardingPage() {
   const submitMutation = useMutation({
     mutationFn: (data: ClientInfoForm) => apiRequest("POST", "/api/client-onboarding", data),
     onSuccess: (response: any) => {
-      toast({
-        title: "Information Submitted Successfully!",
-        description: "Redirecting...",
-      });
+      console.log('Submission successful, response:', response);
       
       // Store sensitive data in sessionStorage (not in URL for security)
       const onboardingData = {
@@ -107,10 +104,23 @@ export default function OnboardingPage() {
         package: form.getValues('selectedPackage'),
         clientId: response?.data?.id || ''
       };
+      
+      console.log('Setting sessionStorage data:', onboardingData);
       sessionStorage.setItem('onboardingComplete', JSON.stringify(onboardingData));
       
-      // Redirect without exposing sensitive data in URL
-      window.location.href = `/onboarding-complete`;
+      // Verify data was stored
+      const stored = sessionStorage.getItem('onboardingComplete');
+      console.log('Verified sessionStorage:', stored);
+      
+      toast({
+        title: "Information Submitted Successfully!",
+        description: "Redirecting...",
+      });
+      
+      // Small delay to ensure sessionStorage is written before redirect
+      setTimeout(() => {
+        window.location.href = `/onboarding-complete`;
+      }, 100);
     },
     onError: (error) => {
       toast({

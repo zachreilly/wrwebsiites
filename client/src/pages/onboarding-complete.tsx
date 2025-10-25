@@ -7,10 +7,13 @@ import { useToast } from "@/hooks/use-toast";
 export default function OnboardingCompletePage() {
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedPassword, setCopiedPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   
   // Read from sessionStorage (secure - not in URL history)
   const dataStr = sessionStorage.getItem('onboardingComplete');
+  console.log('OnboardingCompletePage - sessionStorage data:', dataStr);
+  
   const data = dataStr ? JSON.parse(dataStr) : {};
   
   const clientCode = data.clientCode || '';
@@ -23,16 +26,35 @@ export default function OnboardingCompletePage() {
 
   // Clear sensitive data from sessionStorage after component mounts
   useEffect(() => {
+    // Give a moment for the page to render
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 200);
+
     // Keep data for this page load, but clear after navigation
     return () => {
+      clearTimeout(timer);
       sessionStorage.removeItem('onboardingComplete');
     };
   }, []);
 
   // Redirect to home if no data (direct access without going through onboarding)
-  if (!clientCode || !password) {
+  if (!isLoading && (!clientCode || !password)) {
+    console.warn('No onboarding data found, redirecting to onboarding page');
     window.location.href = '/onboarding';
     return null;
+  }
+  
+  // Show loading state while checking data
+  if (isLoading || !clientCode || !password) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
+          <p className="mt-4 text-slate-600">Loading your details...</p>
+        </div>
+      </div>
+    );
   }
 
   const copyToClipboard = async (text: string, type: 'code' | 'password') => {
