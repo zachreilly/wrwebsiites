@@ -7,9 +7,7 @@ export default function About() {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
             <h2 className="text-4xl font-bold text-slate-900 mb-6">Why Choose wrwebsites?</h2>
-            <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-              We help local businesses get online with professional, affordable websites. Our special launch pricing means you get professional quality for a fraction of the usual cost.
-            </p>
+            <p className="text-xl text-slate-600 mb-8 leading-relaxed">We help businesses get online with professional, affordable websites. Our special launch pricing means you get professional quality for a fraction of the usual cost.</p>
             
             <div className="space-y-6">
 
