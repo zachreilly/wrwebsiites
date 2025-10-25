@@ -175,7 +175,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/client-onboarding", async (req, res) => {
     try {
       const validatedData = insertClientOnboardingSchema.parse(req.body);
-      const clientOnboarding = await storage.createClientOnboarding(validatedData);
+      
+      // Handle referral code validation and discount
+      let referralDiscount = 0;
+      if (validatedData.referredByCode) {
+        const referralCode = validatedData.referredByCode.trim().toUpperCase();
+        
+        // Check if referral code exists in customers or client onboarding
+        const referrer = await storage.validateReferralCode(referralCode);
+        
+        if (referrer) {
+          // Valid referral code! Apply £10 discount
+          referralDiscount = 1000; // £10 in pence
+          
+          // Update referrer's total referral count
+          await storage.incrementReferralCount(referralCode);
+        } else {
+          // Invalid code - still create account but no discount
+          console.log(`Invalid referral code attempted: ${referralCode}`);
+        }
+      }
+      
+      // Create client onboarding with referral discount
+      const clientOnboarding = await storage.createClientOnboarding({
+        ...validatedData,
+        referralDiscount
+      });
+      
       res.json({ success: true, data: clientOnboarding });
     } catch (error) {
       console.error("Client onboarding error:", error);

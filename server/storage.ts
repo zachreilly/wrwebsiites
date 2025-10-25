@@ -88,6 +88,10 @@ export interface IStorage {
   updateClientOnboardingStatus(id: string, status: string): Promise<ClientOnboarding | undefined>;
   updateClientOnboardingPaymentStatus(id: string, setupFeesPaid: boolean): Promise<ClientOnboarding | undefined>;
   
+  // Referral operations
+  validateReferralCode(referralCode: string): Promise<Customer | ClientOnboarding | null>;
+  incrementReferralCount(referralCode: string): Promise<void>;
+  
   // Consultation request operations
   createConsultationRequest(request: InsertConsultationRequest): Promise<ConsultationRequest>;
   getConsultationRequests(): Promise<ConsultationRequest[]>;
@@ -436,6 +440,46 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     return updated;
+  }
+
+  // Referral operations
+  async validateReferralCode(referralCode: string): Promise<Customer | ClientOnboarding | null> {
+    // First check if it's a customer's referral code
+    const [customer] = await db
+      .select()
+      .from(customers)
+      .where(eq(customers.referralCode, referralCode))
+      .limit(1);
+    
+    if (customer) return customer;
+    
+    // Check if it's a client code from onboarding
+    const [client] = await db
+      .select()
+      .from(clientOnboarding)
+      .where(eq(clientOnboarding.clientCode, referralCode))
+      .limit(1);
+    
+    return client || null;
+  }
+
+  async incrementReferralCount(referralCode: string): Promise<void> {
+    // Try to increment in customers table
+    const [customer] = await db
+      .select()
+      .from(customers)
+      .where(eq(customers.referralCode, referralCode))
+      .limit(1);
+    
+    if (customer) {
+      await db
+        .update(customers)
+        .set({ 
+          totalReferrals: (customer.totalReferrals || 0) + 1,
+          updatedAt: new Date()
+        })
+        .where(eq(customers.id, customer.id));
+    }
   }
 
   async updateConsultationStatus(id: string, status: string): Promise<ConsultationRequest | undefined> {

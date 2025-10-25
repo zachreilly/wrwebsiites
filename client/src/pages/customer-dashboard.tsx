@@ -250,7 +250,7 @@ export default function CustomerDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs defaultValue="projects" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="projects" data-testid="tab-projects">
               <FileText className="w-4 h-4 mr-2" />
               Projects
@@ -262,6 +262,10 @@ export default function CustomerDashboard() {
             <TabsTrigger value="billing" data-testid="tab-billing">
               <CreditCard className="w-4 h-4 mr-2" />
               Billing
+            </TabsTrigger>
+            <TabsTrigger value="referrals" data-testid="tab-referrals">
+              <User className="w-4 h-4 mr-2" />
+              Referrals
             </TabsTrigger>
             <TabsTrigger value="support" data-testid="tab-support">
               <MessageSquare className="w-4 h-4 mr-2" />
@@ -511,6 +515,120 @@ export default function CustomerDashboard() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="referrals" className="space-y-6">
+            <Card className="bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200">
+              <CardHeader>
+                <CardTitle className="flex items-center text-emerald-900">
+                  <User className="w-5 h-5 mr-2" />
+                  Referral Program
+                </CardTitle>
+                <CardDescription className="text-emerald-700">
+                  Earn £10 for you and your friends when they sign up!
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="bg-white rounded-lg p-6 border-2 border-emerald-300 shadow-sm">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h3 className="font-semibold text-lg text-gray-900">Your Referral Code</h3>
+                      <p className="text-sm text-gray-600">Share this code with friends</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="bg-emerald-100 px-6 py-3 rounded-lg">
+                        <span className="text-2xl font-bold text-emerald-700" data-testid="text-referral-code">
+                          {customerData.customer.referralCode || customerData.customer.clientCode || 'N/A'}
+                        </span>
+                      </div>
+                      <Button
+                        onClick={() => {
+                          const code = customerData.customer.referralCode || customerData.customer.clientCode || '';
+                          navigator.clipboard.writeText(code);
+                          toast({
+                            title: "Copied!",
+                            description: "Referral code copied to clipboard",
+                          });
+                        }}
+                        variant="outline"
+                        size="sm"
+                        data-testid="button-copy-referral"
+                      >
+                        Copy Code
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-around pt-4 border-t border-emerald-200">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-emerald-600" data-testid="text-total-referrals">
+                        {customerData.customer.totalReferrals || 0}
+                      </div>
+                      <div className="text-sm text-gray-600">Successful Referrals</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-emerald-600">
+                        £{((customerData.customer.totalReferrals || 0) * 10).toFixed(0)}
+                      </div>
+                      <div className="text-sm text-gray-600">Earned for Friends</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <h4 className="font-semibold mb-2 text-gray-900">How It Works</h4>
+                    <ol className="text-sm text-gray-600 space-y-2">
+                      <li>1. Share your referral code with friends</li>
+                      <li>2. They enter it during onboarding</li>
+                      <li>3. They get £10 off their setup fee</li>
+                      <li>4. Your referral count increases!</li>
+                    </ol>
+                  </div>
+
+                  <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <h4 className="font-semibold mb-2 text-gray-900">Benefits</h4>
+                    <ul className="text-sm text-gray-600 space-y-2">
+                      <li>• Friends save £10 on setup</li>
+                      <li>• Unlimited referrals allowed</li>
+                      <li>• Instant discount at checkout</li>
+                      <li>• Help friends build their business</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="bg-emerald-100 rounded-lg p-4 border border-emerald-300">
+                  <h4 className="font-semibold mb-2 text-emerald-900">Share Your Code</h4>
+                  <p className="text-sm text-emerald-700 mb-3">
+                    Use this message to tell your friends about wrwebsites:
+                  </p>
+                  <div className="bg-white rounded p-3 text-sm text-gray-700 border border-emerald-200">
+                    <p className="italic">
+                      "Hey! I just built my website with wrwebsites and they're amazing! 
+                      Fast turnaround (about 3 days), affordable pricing, and great support. 
+                      Use my referral code <strong>{customerData.customer.referralCode || customerData.customer.clientCode}</strong> 
+                      to get £10 off your setup fee. Check them out at wrwebsites.com!"
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => {
+                      const message = `Hey! I just built my website with wrwebsites and they're amazing! Fast turnaround (about 3 days), affordable pricing, and great support. Use my referral code ${customerData.customer.referralCode || customerData.customer.clientCode} to get £10 off your setup fee. Check them out!`;
+                      navigator.clipboard.writeText(message);
+                      toast({
+                        title: "Copied!",
+                        description: "Message copied to clipboard",
+                      });
+                    }}
+                    variant="outline"
+                    size="sm"
+                    className="mt-3"
+                    data-testid="button-copy-message"
+                  >
+                    Copy Message
+                  </Button>
                 </div>
               </CardContent>
             </Card>

@@ -19,6 +19,7 @@ const clientInfoSchema = z.object({
   businessName: z.string().min(1, "Business/Brand name is required"),
   email: z.string().email("Valid email is required"),
   phone: z.string().optional(),
+  referredByCode: z.string().optional(), // Referral code from existing client
   
   // Template Selection
   templateStyle: z.string().min(1, "Please select a template style"),
@@ -69,6 +70,7 @@ export default function OnboardingPage() {
       businessName: "",
       email: "",
       phone: "",
+      referredByCode: "",
       templateStyle: "",
       templateVariation: "light",
       layoutPreference: "",
@@ -328,6 +330,27 @@ export default function OnboardingPage() {
                           </FormControl>
                           <FormDescription>
                             In case we need to contact you directly
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="referredByCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Referral Code (Optional)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="e.g., WR-001" 
+                              {...field} 
+                              data-testid="input-referral-code"
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Have a referral code? Enter it here for £10 off your setup fee! 🎉
                           </FormDescription>
                           <FormMessage />
                         </FormItem>

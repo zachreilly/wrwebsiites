@@ -156,6 +156,10 @@ export const clientOnboarding = pgTable("client_onboarding", {
   // Payment tracking
   setupFeesPaid: boolean("setup_fees_paid").default(false), // Track if setup fee payment is complete
   
+  // Referral tracking
+  referredByCode: varchar("referred_by_code"), // Client code of who referred them (e.g., "WR-001")
+  referralDiscount: integer("referral_discount").default(0), // Discount amount in pence (£10 = 1000)
+  
   status: varchar("status").notNull().default("new"), // 'new', 'in_progress', 'completed', 'cancelled'
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -292,6 +296,12 @@ export const customers = pgTable("customers", {
   setupFeesPaid: boolean("setup_fees_paid").default(false),
   monthlyFee: integer("monthly_fee").default(1000), // in pence, so £10.00 = 1000
   googleBusinessSetup: boolean("google_business_setup").default(false),
+  
+  // Referral tracking
+  referralCode: varchar("referral_code").unique(), // Customer's unique referral code (e.g., "WR-001")
+  referredByCode: varchar("referred_by_code"), // Client code of who referred them
+  referralDiscount: integer("referral_discount").default(0), // Discount they received in pence
+  totalReferrals: integer("total_referrals").default(0), // How many people they've referred
   
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
