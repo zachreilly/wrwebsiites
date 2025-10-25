@@ -4,7 +4,7 @@ export default function SocialProof() {
   const stats = [
     {
       icon: Users,
-      number: "50+",
+      number: "10+",
       label: "Websites Launched",
       description: "Happy clients across the UK"
     },
