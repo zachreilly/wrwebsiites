@@ -19,9 +19,7 @@ export default function Hero() {
             <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight text-balance">
               Professional Web Development for Your Business
             </h1>
-            <p className="text-xl text-green-100 mb-8 leading-relaxed">
-              We help local businesses get online with simple, affordable websites that look great and work on all devices. Special launch pricing available now.
-            </p>
+            <p className="text-xl text-green-100 mb-8 leading-relaxed">We help businesses get online with simple, affordable websites that look great and work on all devices. Special launch pricing available now.</p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 
                 onClick={() => window.location.href = '/onboarding'} 
