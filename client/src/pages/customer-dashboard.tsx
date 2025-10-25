@@ -712,9 +712,20 @@ export default function CustomerDashboard() {
                               <Badge className="bg-blue-600">New</Badge>
                             )}
                           </div>
-                          <p className="text-gray-700 whitespace-pre-wrap" data-testid={`update-message-${index}`}>
+                          <p className="text-gray-700 whitespace-pre-wrap mb-3" data-testid={`update-message-${index}`}>
                             {update.message}
                           </p>
+                          {update.imageUrl && (
+                            <div className="mt-3">
+                              <img 
+                                src={update.imageUrl} 
+                                alt="Project update" 
+                                className="rounded-lg border border-gray-300 max-w-full h-auto cursor-pointer hover:opacity-90 transition-opacity"
+                                onClick={() => window.open(update.imageUrl!, '_blank')}
+                                data-testid={`update-image-${index}`}
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}

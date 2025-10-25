@@ -32,6 +32,34 @@ function PostUpdateDialog({ clientCode, clientName, clientEmail, sessionPassword
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [isPosting, setIsPosting] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 10485760) { // 10MB limit
+        toast({
+          title: "File Too Large",
+          description: "Please select an image under 10MB",
+          variant: "destructive",
+        });
+        return;
+      }
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+  };
 
   const handlePostUpdate = async () => {
     if (!message.trim()) {
@@ -46,6 +74,47 @@ function PostUpdateDialog({ clientCode, clientName, clientEmail, sessionPassword
     setIsPosting(true);
     
     try {
+      let uploadedImageUrl = null;
+
+      // Upload image if selected
+      if (selectedImage) {
+        setIsUploading(true);
+        try {
+          // Get presigned upload URL
+          const uploadUrlResponse = await fetch(`/api/admin/project-update-image-upload?password=${encodeURIComponent(sessionPassword)}`, {
+            method: 'POST',
+          });
+          const uploadUrlData = await uploadUrlResponse.json();
+
+          if (!uploadUrlData.success) {
+            throw new Error("Failed to get upload URL");
+          }
+
+          // Upload image to object storage
+          const uploadResponse = await fetch(uploadUrlData.uploadURL, {
+            method: 'PUT',
+            body: selectedImage,
+            headers: {
+              'Content-Type': selectedImage.type,
+            },
+          });
+
+          if (!uploadResponse.ok) {
+            throw new Error("Failed to upload image");
+          }
+
+          uploadedImageUrl = uploadUrlData.uploadURL.split('?')[0];
+        } catch (error) {
+          console.error("Image upload error:", error);
+          toast({
+            title: "Image Upload Failed",
+            description: "Posting update without image",
+          });
+        } finally {
+          setIsUploading(false);
+        }
+      }
+
       // Get all customers to find the one linked to this client onboarding
       const customersResponse = await fetch(`/api/admin/customers?password=${encodeURIComponent(sessionPassword)}`);
       const customersData = await customersResponse.json();
@@ -72,6 +141,7 @@ function PostUpdateDialog({ clientCode, clientName, clientEmail, sessionPassword
         body: JSON.stringify({
           customerId: customer.id,
           message: message.trim(),
+          imageUrl: uploadedImageUrl,
         }),
       });
 
@@ -83,6 +153,8 @@ function PostUpdateDialog({ clientCode, clientName, clientEmail, sessionPassword
           description: `Update sent to ${clientName} (${clientCode})`,
         });
         setMessage("");
+        setSelectedImage(null);
+        setImagePreview(null);
         setOpen(false);
       } else {
         throw new Error(result.message || 'Failed to post update');
@@ -111,7 +183,7 @@ function PostUpdateDialog({ clientCode, clientName, clientEmail, sessionPassword
           Post Update
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Post Update to {clientName}</DialogTitle>
           <DialogDescription>
@@ -129,6 +201,49 @@ function PostUpdateDialog({ clientCode, clientName, clientEmail, sessionPassword
               data-testid="textarea-update-message"
             />
           </div>
+          <div>
+            <label className="text-sm font-medium mb-2 block">
+              Screenshot / Image (Optional)
+            </label>
+            <div className="space-y-3">
+              {imagePreview ? (
+                <div className="relative">
+                  <img 
+                    src={imagePreview} 
+                    alt="Preview" 
+                    className="w-full rounded-lg border border-gray-200 max-h-64 object-contain"
+                  />
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="destructive"
+                    onClick={removeImage}
+                    className="absolute top-2 right-2"
+                    data-testid="button-remove-image"
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ) : (
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageSelect}
+                    className="hidden"
+                    id="image-upload"
+                    data-testid="input-image-upload"
+                  />
+                  <label htmlFor="image-upload" className="cursor-pointer">
+                    <div className="text-gray-500">
+                      <p className="font-medium">Click to upload image</p>
+                      <p className="text-sm mt-1">PNG, JPG, GIF up to 10MB</p>
+                    </div>
+                  </label>
+                </div>
+              )}
+            </div>
+          </div>
           <div className="flex justify-end gap-2">
             <Button
               variant="outline"
@@ -140,11 +255,11 @@ function PostUpdateDialog({ clientCode, clientName, clientEmail, sessionPassword
             </Button>
             <Button
               onClick={handlePostUpdate}
-              disabled={isPosting}
+              disabled={isPosting || isUploading}
               className="bg-blue-600 hover:bg-blue-700"
               data-testid="button-send-update"
             >
-              {isPosting ? "Posting..." : "Post Update"}
+              {isUploading ? "Uploading..." : isPosting ? "Posting..." : "Post Update"}
             </Button>
           </div>
         </div>
