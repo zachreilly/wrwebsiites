@@ -15,6 +15,7 @@ import {
   transactions,
   invoices,
   portfolioItems,
+  projectUpdates,
   type User, 
   type InsertUser, 
   type ContactRequest, 
@@ -46,7 +47,9 @@ import {
   type Invoice,
   type InsertInvoice,
   type PortfolioItem,
-  type InsertPortfolioItem
+  type InsertPortfolioItem,
+  type ProjectUpdate,
+  type InsertProjectUpdate
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, count, sql, gt } from "drizzle-orm";
@@ -141,6 +144,11 @@ export interface IStorage {
   getPortfolioItem(id: string): Promise<PortfolioItem | undefined>;
   updatePortfolioItem(id: string, updates: Partial<PortfolioItem>): Promise<PortfolioItem | undefined>;
   deletePortfolioItem(id: string): Promise<void>;
+  
+  // Project update operations
+  createProjectUpdate(update: InsertProjectUpdate): Promise<ProjectUpdate>;
+  getProjectUpdatesByCustomer(customerId: string): Promise<ProjectUpdate[]>;
+  markProjectUpdatesAsRead(customerId: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -771,6 +779,30 @@ export class DatabaseStorage implements IStorage {
     await db
       .delete(portfolioItems)
       .where(eq(portfolioItems.id, id));
+  }
+  
+  // Project update operations
+  async createProjectUpdate(insertUpdate: InsertProjectUpdate): Promise<ProjectUpdate> {
+    const [update] = await db
+      .insert(projectUpdates)
+      .values(insertUpdate)
+      .returning();
+    return update;
+  }
+  
+  async getProjectUpdatesByCustomer(customerId: string): Promise<ProjectUpdate[]> {
+    return await db
+      .select()
+      .from(projectUpdates)
+      .where(eq(projectUpdates.customerId, customerId))
+      .orderBy(desc(projectUpdates.createdAt));
+  }
+  
+  async markProjectUpdatesAsRead(customerId: string): Promise<void> {
+    await db
+      .update(projectUpdates)
+      .set({ isRead: true })
+      .where(eq(projectUpdates.customerId, customerId));
   }
 }
 
