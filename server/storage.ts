@@ -402,10 +402,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getClientOnboardingByEmail(email: string): Promise<ClientOnboarding | undefined> {
+    // Get the MOST RECENT client account for this email (in case of multiple submissions)
     const [client] = await db
       .select()
       .from(clientOnboarding)
       .where(eq(clientOnboarding.email, email))
+      .orderBy(desc(clientOnboarding.createdAt)) // Most recent first
       .limit(1);
     return client;
   }
