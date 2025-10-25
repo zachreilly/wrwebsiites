@@ -80,6 +80,11 @@ function PostUpdateDialog({ clientCode, clientName, clientEmail, sessionPassword
       if (selectedImage) {
         setIsUploading(true);
         try {
+          // Validate file type
+          if (!selectedImage.type.startsWith('image/')) {
+            throw new Error("Please select a valid image file");
+          }
+
           // Get presigned upload URL
           const uploadUrlResponse = await fetch(`/api/admin/project-update-image-upload?password=${encodeURIComponent(sessionPassword)}`, {
             method: 'POST',
@@ -100,16 +105,21 @@ function PostUpdateDialog({ clientCode, clientName, clientEmail, sessionPassword
           });
 
           if (!uploadResponse.ok) {
-            throw new Error("Failed to upload image");
+            throw new Error("Failed to upload image to storage");
           }
 
+          // Extract the full GCS URL without query parameters
           uploadedImageUrl = uploadUrlData.uploadURL.split('?')[0];
-        } catch (error) {
+        } catch (error: any) {
           console.error("Image upload error:", error);
           toast({
             title: "Image Upload Failed",
-            description: "Posting update without image",
+            description: error.message || "Posting update without image",
+            variant: "destructive",
           });
+          // Reset image state on failure
+          setSelectedImage(null);
+          setImagePreview(null);
         } finally {
           setIsUploading(false);
         }
