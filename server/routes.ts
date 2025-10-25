@@ -949,6 +949,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Customer: Get project updates/notifications
+  app.get("/api/customer/:customerId/updates", async (req, res) => {
+    try {
+      const { customerId } = req.params;
+      const updates = await storage.getProjectUpdatesByCustomer(customerId);
+      res.json({ success: true, data: updates });
+    } catch (error) {
+      console.error("Project updates error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch updates" });
+    }
+  });
+
+  // Customer: Mark all updates as read
+  app.patch("/api/customer/:customerId/updates/mark-read", async (req, res) => {
+    try {
+      const { customerId } = req.params;
+      await storage.markProjectUpdatesAsRead(customerId);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Mark updates as read error:", error);
+      res.status(500).json({ success: false, message: "Failed to mark updates as read" });
+    }
+  });
+
+  // Admin: Post project update/notification to customer
+  app.post("/api/admin/project-update", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      const { customerId, message } = req.body;
+
+      if (!customerId || !message) {
+        return res.status(400).json({ success: false, message: "Customer ID and message are required" });
+      }
+      
+      const update = await storage.createProjectUpdate({
+        customerId,
+        message,
+        createdBy: "Admin",
+        isRead: false
+      });
+
+      res.json({ success: true, data: update });
+    } catch (error) {
+      console.error("Create project update error:", error);
+      res.status(500).json({ success: false, message: "Failed to create update" });
+    }
+  });
+
   // Admin: Create design approval for review
   app.post("/api/admin/project/:projectId/design", async (req, res) => {
     try {
