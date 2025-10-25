@@ -90,19 +90,22 @@ export default function OnboardingPage() {
   });
 
   const submitMutation = useMutation({
-    mutationFn: (data: ClientInfoForm) => apiRequest("POST", "/api/client-onboarding", data),
-    onSuccess: (response: any) => {
-      console.log('Submission successful, response:', response);
+    mutationFn: async (data: ClientInfoForm) => {
+      const response = await apiRequest("POST", "/api/client-onboarding", data);
+      return await response.json();
+    },
+    onSuccess: (responseData: any) => {
+      console.log('Submission successful, response:', responseData);
       
       // Store sensitive data in sessionStorage (not in URL for security)
       const onboardingData = {
-        clientCode: response?.data?.clientCode || '',
-        password: response?.data?.plaintextPassword || '', // Plaintext password (one-time delivery)
+        clientCode: responseData?.data?.clientCode || '',
+        password: responseData?.data?.plaintextPassword || '', // Plaintext password (one-time delivery)
         email: form.getValues('email'),
         name: form.getValues('fullName'),
         businessName: form.getValues('businessName'),
         package: form.getValues('selectedPackage'),
-        clientId: response?.data?.id || ''
+        clientId: responseData?.data?.id || ''
       };
       
       console.log('Setting sessionStorage data:', onboardingData);
