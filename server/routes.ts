@@ -973,6 +973,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin: Get upload URL for project update image
+  app.post("/api/admin/project-update-image-upload", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      const objectStorageService = new ObjectStorageService();
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ success: true, uploadURL });
+    } catch (error) {
+      console.error("Get upload URL error:", error);
+      res.status(500).json({ success: false, message: "Failed to get upload URL" });
+    }
+  });
+
+  // Serve uploaded images from object storage
+  app.get("/objects/:objectPath(*)", async (req, res) => {
+    const objectStorageService = new ObjectStorageService();
+    try {
+      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+      objectStorageService.downloadObject(objectFile, res);
+    } catch (error) {
+      console.error("Error serving object:", error);
+      if (error instanceof ObjectNotFoundError) {
+        return res.sendStatus(404);
+      }
+      return res.sendStatus(500);
+    }
+  });
+
   // Admin: Post project update/notification to customer
   app.post("/api/admin/project-update", async (req, res) => {
     try {
@@ -982,15 +1015,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ success: false, message: "Authentication required" });
       }
 
-      const { customerId, message } = req.body;
+      const { customerId, message, imageUrl } = req.body;
 
       if (!customerId || !message) {
         return res.status(400).json({ success: false, message: "Customer ID and message are required" });
+      }
+
+      // Normalize image URL if provided
+      let normalizedImageUrl = imageUrl;
+      if (imageUrl) {
+        const objectStorageService = new ObjectStorageService();
+        normalizedImageUrl = objectStorageService.normalizeObjectEntityPath(imageUrl);
       }
       
       const update = await storage.createProjectUpdate({
         customerId,
         message,
+        imageUrl: normalizedImageUrl,
         createdBy: "Admin",
         isRead: false
       });
