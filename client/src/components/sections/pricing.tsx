@@ -270,7 +270,7 @@ export default function Pricing() {
             <h4 className="font-semibold mb-2">Why Choose Us?</h4>
             <ul className="text-sm space-y-1 text-green-100">
               <li>• Affordable launch pricing — pay less now for the same professional quality</li>
-              <li>• Perfect for local businesses who want a simple, stress-free way to get online</li>
+              <li>• Perfect for businesses who want a simple, stress-free way to get online</li>
               <li>• Fast turnaround — your site can be live in days, not weeks</li>
               <li>• Friendly, local support whenever you need it</li>
             </ul>
