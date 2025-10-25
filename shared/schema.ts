@@ -518,3 +518,23 @@ export const insertPortfolioItemSchema = createInsertSchema(portfolioItems).omit
 
 export type PortfolioItem = typeof portfolioItems.$inferSelect;
 export type InsertPortfolioItem = z.infer<typeof insertPortfolioItemSchema>;
+
+// Project updates/notifications for customer communication
+export const projectUpdates = pgTable("project_updates", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  customerId: varchar("customer_id").notNull().references(() => customers.id),
+  
+  message: text("message").notNull(),
+  createdBy: varchar("created_by").default("Admin"), // Who posted the update
+  isRead: boolean("is_read").default(false), // Track if customer has viewed it
+  
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertProjectUpdateSchema = createInsertSchema(projectUpdates).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type ProjectUpdate = typeof projectUpdates.$inferSelect;
+export type InsertProjectUpdate = z.infer<typeof insertProjectUpdateSchema>;
