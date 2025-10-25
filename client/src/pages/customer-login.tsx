@@ -20,9 +20,20 @@ export default function CustomerLogin() {
 
     try {
       const response = await apiRequest("POST", "/api/customer/login", { email, password });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        toast({
+          title: "Login Failed",
+          description: errorData.message || "Invalid credentials",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       const data = await response.json();
       
-      if (data.success) {
+      if (data.success && data.customer) {
         // Store customer data in localStorage for simple auth
         localStorage.setItem("customerData", JSON.stringify(data.customer));
         
@@ -32,18 +43,21 @@ export default function CustomerLogin() {
         });
 
         // Redirect to customer dashboard
-        window.location.href = "/customer/dashboard";
+        setTimeout(() => {
+          window.location.href = "/customer/dashboard";
+        }, 500);
       } else {
         toast({
           title: "Login Failed",
-          description: data.message,
+          description: data.message || "Invalid response from server",
           variant: "destructive",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Login error:", error);
       toast({
         title: "Login Error",
-        description: "Failed to log in. Please try again.",
+        description: error.message || "Failed to log in. Please try again.",
         variant: "destructive",
       });
     } finally {
