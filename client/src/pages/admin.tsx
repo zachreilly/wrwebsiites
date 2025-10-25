@@ -46,35 +46,21 @@ function PostUpdateDialog({ clientCode, clientName, clientEmail, sessionPassword
     setIsPosting(true);
     
     try {
-      // First, get the customer record by email to find customerId
-      const customerResponse = await fetch(`/api/customer/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: clientEmail, password: '' }), // Will fail auth but we just need to check if customer exists
-      });
+      // Get all customers to find the one linked to this client onboarding
+      const customersResponse = await fetch(`/api/admin/customers?password=${encodeURIComponent(sessionPassword)}`);
+      const customersData = await customersResponse.json();
       
-      // Try getting customer data from dashboard endpoint
-      // We need to find the customer ID first - let's use the client onboarding data
-      const onboardingResponse = await fetch(`/api/admin/client-onboarding?password=${encodeURIComponent(sessionPassword)}`);
-      const onboardingData = await onboardingResponse.json();
-      
-      // Find this client's record
-      const clientRecord = onboardingData.data?.find((c: any) => c.clientCode === clientCode);
-      
-      if (!clientRecord) {
-        throw new Error("Customer record not found");
+      if (!customersData.success) {
+        throw new Error("Failed to fetch customers");
       }
       
-      // Get customer by email
-      const dashboardResponse = await fetch(`/api/customer/${clientRecord.id}/dashboard`);
-      const dashboardData = await dashboardResponse.json();
+      // Find customer by email or client code
+      const customer = customersData.data?.find((c: any) => 
+        c.email?.toLowerCase() === clientEmail?.toLowerCase() || c.clientCode === clientCode
+      );
       
-      const customerId = dashboardData.data?.customer?.id;
-      
-      if (!customerId) {
-        throw new Error("Customer ID not found. Make sure the customer account has been created.");
+      if (!customer) {
+        throw new Error("Customer account not found. Make sure the customer account has been created using the 'Create Project' button first.");
       }
 
       // Post the update
@@ -84,7 +70,7 @@ function PostUpdateDialog({ clientCode, clientName, clientEmail, sessionPassword
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          customerId,
+          customerId: customer.id,
           message: message.trim(),
         }),
       });

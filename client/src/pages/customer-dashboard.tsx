@@ -17,7 +17,8 @@ import {
   AlertCircle,
   LogOut,
   Plus,
-  Eye
+  Eye,
+  Bell
 } from "lucide-react";
 import type { Customer, Project, Transaction, Invoice, DesignApproval, ChangeRequest } from "@shared/schema";
 
@@ -37,6 +38,7 @@ export default function CustomerDashboard() {
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [designs, setDesigns] = useState<DesignApproval[]>([]);
   const [changeRequests, setChangeRequests] = useState<ChangeRequest[]>([]);
+  const [projectUpdates, setProjectUpdates] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
@@ -60,6 +62,7 @@ export default function CustomerDashboard() {
     }
 
     loadCustomerData(customerId);
+    loadProjectUpdates(customerId);
   }, []);
 
   useEffect(() => {
@@ -111,6 +114,34 @@ export default function CustomerDashboard() {
       if (requestsData.success) setChangeRequests(requestsData.data);
     } catch (error) {
       console.error("Failed to load project data:", error);
+    }
+  };
+
+  const loadProjectUpdates = async (customerId: string) => {
+    try {
+      const response = await apiRequest("GET", `/api/customer/${customerId}/updates`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setProjectUpdates(data.data);
+        
+        // Mark as read and update local state
+        try {
+          await apiRequest("PATCH", `/api/customer/${customerId}/updates/mark-read`);
+          // Update local state to mark all as read
+          setProjectUpdates(prev => prev.map(update => ({ ...update, isRead: true })));
+        } catch (error) {
+          console.error("Failed to mark updates as read:", error);
+          // Don't show error to user since updates still loaded successfully
+        }
+      }
+    } catch (error) {
+      console.error("Failed to load project updates:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load project updates",
+        variant: "destructive",
+      });
     }
   };
 
@@ -266,6 +297,10 @@ export default function CustomerDashboard() {
             <TabsTrigger value="referrals" data-testid="tab-referrals">
               <User className="w-4 h-4 mr-2" />
               Referrals
+            </TabsTrigger>
+            <TabsTrigger value="updates" data-testid="tab-updates">
+              <Bell className="w-4 h-4 mr-2" />
+              Updates
             </TabsTrigger>
             <TabsTrigger value="support" data-testid="tab-support">
               <MessageSquare className="w-4 h-4 mr-2" />
@@ -630,6 +665,69 @@ export default function CustomerDashboard() {
                     Copy Message
                   </Button>
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="updates" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Bell className="w-5 h-5 mr-2" />
+                  Project Updates
+                </CardTitle>
+                <CardDescription>
+                  Stay informed about your project progress
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {projectUpdates.length > 0 ? (
+                  <div className="space-y-4">
+                    {projectUpdates.map((update, index) => (
+                      <div 
+                        key={update.id} 
+                        className="flex gap-4 p-4 bg-blue-50 border border-blue-200 rounded-lg"
+                        data-testid={`update-${index}`}
+                      >
+                        <div className="flex-shrink-0">
+                          <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                            <Bell className="w-5 h-5 text-white" />
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between mb-2">
+                            <div>
+                              <p className="font-semibold text-gray-900">Admin Update</p>
+                              <p className="text-sm text-gray-500">
+                                {new Date(update.createdAt).toLocaleDateString('en-GB', {
+                                  year: 'numeric',
+                                  month: 'long',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </p>
+                            </div>
+                            {!update.isRead && (
+                              <Badge className="bg-blue-600">New</Badge>
+                            )}
+                          </div>
+                          <p className="text-gray-700 whitespace-pre-wrap" data-testid={`update-message-${index}`}>
+                            {update.message}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Bell className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-600 font-medium mb-2">No updates yet</p>
+                    <p className="text-sm text-gray-500">
+                      We'll post updates here as we work on your project
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
