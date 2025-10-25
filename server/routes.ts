@@ -587,6 +587,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const bcrypt = await import('bcryptjs');
       const { email, password } = req.body;
       
+      console.log('Customer login attempt:', { email, passwordLength: password?.length });
+      
       if (!email || !password) {
         return res.status(400).json({ success: false, message: "Email and password required" });
       }
@@ -595,14 +597,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const client = await storage.getClientOnboardingByEmail(email);
       
       if (!client) {
+        console.log('No client found for email:', email);
         return res.status(404).json({ 
           success: false, 
           message: "No account found. Please complete the onboarding form to create your portal account." 
         });
       }
       
+      console.log('Client found:', { 
+        clientCode: client.clientCode, 
+        hasPassword: !!client.portalPassword,
+        passwordHashLength: client.portalPassword?.length
+      });
+      
       // Verify password using bcrypt (constant-time, secure hash comparison)
       const isPasswordValid = await bcrypt.compare(password, client.portalPassword);
+      
+      console.log('Password validation result:', isPasswordValid);
       
       if (!isPasswordValid) {
         return res.status(401).json({ 
