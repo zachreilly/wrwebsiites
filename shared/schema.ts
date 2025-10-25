@@ -525,6 +525,7 @@ export const projectUpdates = pgTable("project_updates", {
   customerId: varchar("customer_id").notNull().references(() => customers.id),
   
   message: text("message").notNull(),
+  imageUrl: varchar("image_url"), // Optional image/screenshot URL
   createdBy: varchar("created_by").default("Admin"), // Who posted the update
   isRead: boolean("is_read").default(false), // Track if customer has viewed it
   
