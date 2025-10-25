@@ -86,7 +86,9 @@ export default function OnboardingCompletePage() {
       name,
       businessName,
       package: packageType,
-      clientId
+      clientId,
+      clientCode,
+      password
     });
     window.location.href = `/payment-setup?${params.toString()}`;
   };

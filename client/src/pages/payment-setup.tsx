@@ -41,6 +41,8 @@ export default function PaymentSetupPage() {
   const businessName = urlParams.get('businessName') || clientName;
   const packageType = urlParams.get('package') || '';
   const clientId = urlParams.get('clientId') || '';
+  const urlClientCode = urlParams.get('clientCode') || '';
+  const urlPassword = urlParams.get('password') || '';
 
   const form = useForm<PaymentForm>({
     resolver: zodResolver(paymentSchema),
@@ -190,12 +192,25 @@ export default function PaymentSetupPage() {
         <div className="flex items-center mb-8">
           <Button 
             variant="ghost" 
-            onClick={() => window.location.href = '/'}
+            onClick={() => {
+              // Restore onboarding completion data to sessionStorage
+              const dataToStore = {
+                clientCode: urlClientCode,
+                password: urlPassword,
+                email: clientEmail,
+                name: clientName,
+                businessName,
+                package: packageType,
+                clientId
+              };
+              sessionStorage.setItem('onboardingComplete', JSON.stringify(dataToStore));
+              window.location.href = '/onboarding-complete';
+            }}
             className="mr-4"
             data-testid="button-back"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
+            Back to Thank You Page
           </Button>
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Payment Setup</h1>
