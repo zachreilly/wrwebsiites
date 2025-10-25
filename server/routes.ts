@@ -192,11 +192,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { password } = req.query;
       
-      if (!password || password !== 'BADMAN123') {
+      if (!password || typeof password !== 'string') {
         return res.status(401).json({ 
           success: false, 
           message: "Authentication required" 
         });
+      }
+
+      // Direct password check for BADMAN123
+      if (password === 'BADMAN123') {
+        // Valid admin password, proceed
+      } else {
+        // Try session verification as backup
+        const session = await storage.verifyAdminSession(password);
+        if (!session) {
+          return res.status(401).json({ 
+            success: false, 
+            message: "Invalid password or expired session" 
+          });
+        }
       }
 
       const clients = await storage.getClientOnboardings();
@@ -214,11 +228,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { id } = req.params;
       const { status } = req.body;
       
-      if (!password || password !== 'BADMAN123') {
+      if (!password || typeof password !== 'string') {
         return res.status(401).json({ 
           success: false, 
           message: "Authentication required" 
         });
+      }
+
+      // Direct password check for BADMAN123
+      if (password === 'BADMAN123') {
+        // Valid admin password, proceed
+      } else {
+        // Try session verification as backup
+        const session = await storage.verifyAdminSession(password);
+        if (!session) {
+          return res.status(401).json({ 
+            success: false, 
+            message: "Invalid password or expired session" 
+          });
+        }
       }
 
       if (!status || !['accepted', 'delayed', 'new', 'in_progress', 'completed', 'cancelled'].includes(status)) {
@@ -421,11 +449,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { password } = req.query;
       
-      if (!password || password !== 'BADMAN123') {
+      if (!password || typeof password !== 'string') {
         return res.status(401).json({ 
           success: false, 
           message: "Authentication required" 
         });
+      }
+
+      // Direct password check for BADMAN123
+      if (password === 'BADMAN123') {
+        // Valid admin password, proceed
+      } else {
+        // Try session verification as backup
+        const session = await storage.verifyAdminSession(password);
+        if (!session) {
+          return res.status(401).json({ 
+            success: false, 
+            message: "Invalid password or expired session" 
+          });
+        }
       }
 
       const consultations = await storage.getConsultationRequests();
@@ -468,11 +510,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { password } = req.query;
       
-      if (!password || password !== 'BADMAN123') {
+      if (!password || typeof password !== 'string') {
         return res.status(401).json({ 
           success: false, 
           message: "Authentication required" 
         });
+      }
+
+      // Direct password check for BADMAN123
+      if (password === 'BADMAN123') {
+        // Valid admin password, proceed
+      } else {
+        // Try session verification as backup
+        const session = await storage.verifyAdminSession(password);
+        if (!session) {
+          return res.status(401).json({ 
+            success: false, 
+            message: "Invalid password or expired session" 
+          });
+        }
       }
 
       const updates = await storage.getWebsiteUpdateRequests();
