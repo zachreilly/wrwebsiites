@@ -842,6 +842,27 @@ export default function AdminPage() {
                               <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center space-x-3">
                                   <h3 className="text-lg font-semibold text-slate-900">{client.fullName}</h3>
+                                  {client.clientCode && (
+                                    <div className="px-2 py-1 rounded text-xs font-medium bg-indigo-100 text-indigo-800">
+                                      {client.clientCode}
+                                    </div>
+                                  )}
+                                  {client.selectedPackage && (
+                                    <div className={`px-2 py-1 rounded text-xs font-medium ${
+                                      client.selectedPackage === 'premium' 
+                                        ? 'bg-purple-100 text-purple-800' 
+                                        : 'bg-blue-100 text-blue-800'
+                                    }`}>
+                                      {client.selectedPackage.toUpperCase()}
+                                    </div>
+                                  )}
+                                  <div className={`px-2 py-1 rounded text-xs font-medium ${
+                                    client.setupFeesPaid 
+                                      ? 'bg-green-100 text-green-800' 
+                                      : 'bg-orange-100 text-orange-800'
+                                  }`}>
+                                    {client.setupFeesPaid ? '✓ Paid' : '⏳ Payment Pending'}
+                                  </div>
                                   <div className={`px-3 py-1 rounded-full text-sm font-medium ${
                                     isPriority 
                                       ? 'bg-red-100 text-red-800' 
