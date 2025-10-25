@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent, MessageSquare, Calculator, Check, Clock, ExternalLink, Bell, AlertCircle, Download, Plus, Home } from "lucide-react";
+import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent, MessageSquare, Calculator, Check, Clock, ExternalLink, Bell, AlertCircle, Download, Plus, Home, Send } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
 interface AnalyticsData {
@@ -16,6 +18,153 @@ interface AnalyticsData {
   totalClickEvents: number;
   uniqueVisitors: number;
   period: string;
+}
+
+// Post Update Dialog Component
+function PostUpdateDialog({ clientCode, clientName, clientEmail, sessionPassword, toast, queryClient }: {
+  clientCode: string;
+  clientName: string;
+  clientEmail: string;
+  sessionPassword: string;
+  toast: any;
+  queryClient: any;
+}) {
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isPosting, setIsPosting] = useState(false);
+
+  const handlePostUpdate = async () => {
+    if (!message.trim()) {
+      toast({
+        title: "Message Required",
+        description: "Please enter a message to send to the customer",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsPosting(true);
+    
+    try {
+      // First, get the customer record by email to find customerId
+      const customerResponse = await fetch(`/api/customer/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: clientEmail, password: '' }), // Will fail auth but we just need to check if customer exists
+      });
+      
+      // Try getting customer data from dashboard endpoint
+      // We need to find the customer ID first - let's use the client onboarding data
+      const onboardingResponse = await fetch(`/api/admin/client-onboarding?password=${encodeURIComponent(sessionPassword)}`);
+      const onboardingData = await onboardingResponse.json();
+      
+      // Find this client's record
+      const clientRecord = onboardingData.data?.find((c: any) => c.clientCode === clientCode);
+      
+      if (!clientRecord) {
+        throw new Error("Customer record not found");
+      }
+      
+      // Get customer by email
+      const dashboardResponse = await fetch(`/api/customer/${clientRecord.id}/dashboard`);
+      const dashboardData = await dashboardResponse.json();
+      
+      const customerId = dashboardData.data?.customer?.id;
+      
+      if (!customerId) {
+        throw new Error("Customer ID not found. Make sure the customer account has been created.");
+      }
+
+      // Post the update
+      const response = await fetch(`/api/admin/project-update?password=${encodeURIComponent(sessionPassword)}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customerId,
+          message: message.trim(),
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast({
+          title: "Update Posted",
+          description: `Update sent to ${clientName} (${clientCode})`,
+        });
+        setMessage("");
+        setOpen(false);
+      } else {
+        throw new Error(result.message || 'Failed to post update');
+      }
+    } catch (error: any) {
+      toast({
+        title: "Post Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsPosting(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button
+          size="sm"
+          variant="outline"
+          className="bg-blue-50 border-blue-300 text-blue-700 hover:bg-blue-100"
+          data-testid={`button-post-update-${clientCode}`}
+        >
+          <Send className="w-4 h-4 mr-1" />
+          Post Update
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Post Update to {clientName}</DialogTitle>
+          <DialogDescription>
+            Send a project update notification to {clientCode}. They'll see this in their customer dashboard.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div>
+            <label className="text-sm font-medium mb-2 block">Message</label>
+            <Textarea
+              placeholder="e.g., Your website design is in progress, We've completed your homepage mockup, Your site is ready for review..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              rows={4}
+              data-testid="textarea-update-message"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setOpen(false)}
+              disabled={isPosting}
+              data-testid="button-cancel-update"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handlePostUpdate}
+              disabled={isPosting}
+              className="bg-blue-600 hover:bg-blue-700"
+              data-testid="button-send-update"
+            >
+              {isPosting ? "Posting..." : "Post Update"}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
 }
 
 export default function AdminPage() {
@@ -924,6 +1073,15 @@ export default function AdminPage() {
                                 <Download className="w-4 h-4 mr-1" />
                                 Export JSON
                               </Button>
+                              
+                              <PostUpdateDialog 
+                                clientCode={client.clientCode}
+                                clientName={client.fullName}
+                                clientEmail={client.email}
+                                sessionPassword={sessionPassword}
+                                toast={toast}
+                                queryClient={queryClient}
+                              />
                               
                               {!client.setupFeesPaid && (
                                 <Button
