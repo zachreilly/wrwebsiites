@@ -15,9 +15,7 @@ export default function Footer() {
           {/* Company Info */}
           <div className="lg:col-span-2">
             <div className="text-2xl font-bold text-white mb-4">wrwebsites</div>
-            <p className="text-slate-300 mb-6 max-w-md">
-              We help local businesses get online with simple, affordable websites that look great and work on all devices. Special launch pricing available now.
-            </p>
+            <p className="text-slate-300 mb-6 max-w-md">We help businesses get online with simple, affordable websites that look great and work on all devices. Special launch pricing available now.</p>
             <div className="space-y-2">
               <div className="flex items-center text-slate-300">
                 <Phone className="w-5 h-5 mr-3" />

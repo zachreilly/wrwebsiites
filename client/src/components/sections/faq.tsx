@@ -78,29 +78,6 @@ export default function FAQ() {
             ))}
           </Accordion>
         </div>
-
-        <div className="text-center mt-12">
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            Still have questions?
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <a 
-              href="mailto:zachhreillyy@gmail.com" 
-              className="text-emerald-600 dark:text-emerald-400 font-semibold hover:underline"
-              data-testid="link-email-contact"
-            >
-              zachhreillyy@gmail.com
-            </a>
-            <span className="hidden sm:inline text-gray-400">|</span>
-            <a 
-              href="tel:07397985279" 
-              className="text-emerald-600 dark:text-emerald-400 font-semibold hover:underline"
-              data-testid="link-phone-contact"
-            >
-              07397 985279
-            </a>
-          </div>
-        </div>
       </div>
     </section>
   );
