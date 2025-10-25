@@ -94,18 +94,23 @@ export default function OnboardingPage() {
     onSuccess: (response: any) => {
       toast({
         title: "Information Submitted Successfully!",
-        description: "Redirecting to payment setup...",
+        description: "Redirecting...",
       });
       
-      // Redirect to payment setup with client info
-      const params = new URLSearchParams({
+      // Store sensitive data in sessionStorage (not in URL for security)
+      const onboardingData = {
+        clientCode: response?.data?.clientCode || '',
+        password: response?.data?.plaintextPassword || '', // Plaintext password (one-time delivery)
         email: form.getValues('email'),
         name: form.getValues('fullName'),
         businessName: form.getValues('businessName'),
         package: form.getValues('selectedPackage'),
-        clientId: response?.id || ''
-      });
-      window.location.href = `/payment-setup?${params.toString()}`;
+        clientId: response?.data?.id || ''
+      };
+      sessionStorage.setItem('onboardingComplete', JSON.stringify(onboardingData));
+      
+      // Redirect without exposing sensitive data in URL
+      window.location.href = `/onboarding-complete`;
     },
     onError: (error) => {
       toast({

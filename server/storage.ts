@@ -83,6 +83,7 @@ export interface IStorage {
   // Client onboarding operations
   createClientOnboarding(client: InsertClientOnboarding): Promise<ClientOnboarding>;
   getClientOnboardings(): Promise<ClientOnboarding[]>;
+  getClientOnboardingByEmail(email: string): Promise<ClientOnboarding | undefined>;
   updateClientOnboardingStatus(id: string, status: string): Promise<ClientOnboarding | undefined>;
   
   // Consultation request operations
@@ -343,20 +344,43 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Client onboarding operations
-  async createClientOnboarding(insertClient: InsertClientOnboarding): Promise<ClientOnboarding> {
-    // Convert boolean values to strings for database storage
+  async createClientOnboarding(insertClient: InsertClientOnboarding): Promise<ClientOnboarding & { plaintextPassword?: string }> {
+    const crypto = await import('crypto');
+    const bcrypt = await import('bcryptjs');
+    
+    // Generate unique client code
+    const existingClients = await db.select().from(clientOnboarding);
+    const clientNumber = (existingClients.length + 1).toString().padStart(3, '0');
+    const clientCode = `WR-${clientNumber}`;
+    
+    // Generate cryptographically secure random password (12 characters: letters + numbers)
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789abcdefghjkmnpqrstuvwxyz'; // No confusing characters (0, O, I, l)
+    const passwordLength = 12;
+    const randomBytes = crypto.randomBytes(passwordLength);
+    let plaintextPassword = '';
+    for (let i = 0; i < passwordLength; i++) {
+      plaintextPassword += chars.charAt(randomBytes[i] % chars.length);
+    }
+    
+    // Hash the password before storing (never store plaintext)
+    const hashedPassword = await bcrypt.hash(plaintextPassword, 10);
+    
     const clientData = {
       ...insertClient,
-      hasImages: insertClient.hasImages?.toString() || "false",
-      hasLogo: insertClient.hasLogo?.toString() || "false", 
-      wantsContactForm: insertClient.wantsContactForm?.toString() || "false"
+      clientCode,
+      portalPassword: hashedPassword // Store ONLY the hash
     };
     
     const [client] = await db
       .insert(clientOnboarding)
       .values(clientData)
       .returning();
-    return client;
+    
+    // Return client with plaintext password (for one-time display to user)
+    return {
+      ...client,
+      plaintextPassword // Add plaintext password to response ONLY (not stored in DB)
+    };
   }
 
   async getClientOnboardings(): Promise<ClientOnboarding[]> {
@@ -364,6 +388,15 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(clientOnboarding)
       .orderBy(clientOnboarding.createdAt); // Oldest first for priority
+  }
+
+  async getClientOnboardingByEmail(email: string): Promise<ClientOnboarding | undefined> {
+    const [client] = await db
+      .select()
+      .from(clientOnboarding)
+      .where(eq(clientOnboarding.email, email))
+      .limit(1);
+    return client;
   }
 
   async updateClientOnboardingStatus(id: string, status: string): Promise<ClientOnboarding | undefined> {

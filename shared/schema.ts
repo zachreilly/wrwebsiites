@@ -118,10 +118,12 @@ export type AdminSession = typeof adminSessions.$inferSelect;
 // Client onboarding information table
 export const clientOnboarding = pgTable("client_onboarding", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientCode: varchar("client_code").notNull().unique(), // e.g., "WR-001", "WR-002"
   fullName: varchar("full_name").notNull(),
   businessName: varchar("business_name").notNull(),
   email: varchar("email").notNull(),
   phone: varchar("phone"),
+  portalPassword: varchar("portal_password").notNull(), // Auto-generated password for customer portal
   
   // Domain & Hosting
   hasDomain: varchar("has_domain"), // 'yes', 'no', or null
@@ -158,6 +160,8 @@ export const clientOnboarding = pgTable("client_onboarding", {
 
 export const insertClientOnboardingSchema = createInsertSchema(clientOnboarding).omit({
   id: true,
+  clientCode: true,
+  portalPassword: true,
   createdAt: true,
   updatedAt: true,
   status: true,

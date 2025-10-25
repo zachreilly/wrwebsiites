@@ -5,10 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Mail, ArrowLeft } from "lucide-react";
+import { Mail, ArrowLeft, Lock } from "lucide-react";
 
 export default function CustomerLogin() {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -17,7 +18,7 @@ export default function CustomerLogin() {
     setIsLoading(true);
 
     try {
-      const response = await apiRequest("POST", "/api/customer/login", { email });
+      const response = await apiRequest("POST", "/api/customer/login", { email, password });
       const data = await response.json();
       
       if (data.success) {
@@ -91,6 +92,26 @@ export default function CustomerLogin() {
                   />
                 </div>
               </div>
+
+              <div>
+                <Label htmlFor="password">Portal Password</Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your portal password"
+                    className="pl-10"
+                    required
+                    data-testid="input-password"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  This was provided when you completed the onboarding form
+                </p>
+              </div>
               
               <Button 
                 type="submit" 
@@ -105,15 +126,15 @@ export default function CustomerLogin() {
             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
               <h4 className="font-semibold text-blue-900 mb-2">New Customer?</h4>
               <p className="text-sm text-blue-800 mb-3">
-                Your customer account is automatically created when you complete a payment for our services.
+                Complete the onboarding form to receive your portal password and start your website project.
               </p>
               <Button
                 variant="outline"
-                onClick={() => window.location.href = "/payment"}
+                onClick={() => window.location.href = "/onboarding"}
                 className="w-full"
                 data-testid="button-get-started"
               >
-                Get Started - Order Website
+                Get Started - Create Your Website
               </Button>
             </div>
           </CardContent>

@@ -581,34 +581,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Customer portal authentication - simple email-based lookup
+  // Customer portal authentication - email and password verification
   app.post("/api/customer/login", async (req, res) => {
     try {
-      const { email } = req.body;
+      const bcrypt = await import('bcryptjs');
+      const { email, password } = req.body;
       
-      if (!email) {
-        return res.status(400).json({ success: false, message: "Email required" });
+      if (!email || !password) {
+        return res.status(400).json({ success: false, message: "Email and password required" });
       }
 
-      const customer = await storage.getCustomerByEmail(email);
+      // Check client onboarding table for authenticated clients
+      const client = await storage.getClientOnboardingByEmail(email);
       
-      if (!customer) {
+      if (!client) {
         return res.status(404).json({ 
           success: false, 
-          message: "No customer account found with this email address" 
+          message: "No account found. Please complete the onboarding form to create your portal account." 
+        });
+      }
+      
+      // Verify password using bcrypt (constant-time, secure hash comparison)
+      const isPasswordValid = await bcrypt.compare(password, client.portalPassword);
+      
+      if (!isPasswordValid) {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Incorrect password" 
         });
       }
 
+      // Return client information
       res.json({ 
         success: true, 
         customer: {
-          id: customer.id,
-          firstName: customer.firstName,
-          lastName: customer.lastName,
-          email: customer.email,
-          businessName: customer.businessName,
-          subscriptionStatus: customer.subscriptionStatus,
-          package: customer.package
+          id: client.id,
+          clientCode: client.clientCode,
+          firstName: client.fullName.split(' ')[0] || client.fullName,
+          lastName: client.fullName.split(' ').slice(1).join(' ') || '',
+          fullName: client.fullName,
+          email: client.email,
+          businessName: client.businessName,
+          package: client.selectedPackage,
+          status: client.status
         }
       });
     } catch (error) {
