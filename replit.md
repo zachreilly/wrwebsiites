@@ -4,7 +4,16 @@
 
 wrwebsites is a professional web development service application built as a full-stack solution for showcasing web development services and handling client inquiries. The application serves as a marketing website for a web development agency that specializes in static website development, hosting, and ongoing support services. The website features affordable launch pricing with two package tiers: Basic Static Website (£75 setup + £10/month) and Premium Static Website (£150 setup + £10/month). Contact information includes phone numbers 07397985279 and 07535778637, and email zachhreillyy@gmail.com.
 
-## Recent Changes (October 18, 2025)
+## Recent Changes (October 25, 2025)
+
+- **Implemented secure customer authentication system** - Added bcrypt password hashing (10 rounds) for client portal access, generating 12-character cryptographically secure passwords using crypto.randomBytes
+- **Fixed onboarding completion flow** - Clients now receive auto-generated password and client code (WR-XXX format) on onboarding-complete page, with flexible payment timing allowing payment before or after website completion
+- **Integrated payment system with client_onboarding** - Added `setupFeesPaid` field and `clientOnboardingId` linkage to customers/transactions tables, enabling GoCardless webhook to update onboarding records when payments complete
+- **Customer portal enhancements** - Login now requires email + password authentication, dashboard displays green "Set Up Payment Now" button for unpaid clients (disappears after payment), shows client code in header
+- **Payment data propagation** - Dashboard payment button passes all required fields (clientId, email, name, businessName, package) to payment-setup page ensuring complete GoCardless integration
+- **Security improvements** - Passwords never stored in plaintext (hashed before DB storage), one-time plaintext delivery via sessionStorage (not URL), constant-time bcrypt.compare() for login verification
+
+## Previous Changes (October 18, 2025)
 
 - **Implemented live color preview** - All 9 template previews now update in real-time when customers select different color schemes, allowing instant visualization of how each template looks in their chosen colors
 - **Comprehensive color mapping system** - Created dynamic color classes for all 10 color schemes (Emerald Green, Ocean Blue, Royal Purple, Sunset Orange, Rose Pink, Navy Blue, Forest Green, Crimson Red, Slate Gray, Amber Gold) that adapt to both light and dark theme variations
