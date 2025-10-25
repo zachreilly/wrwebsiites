@@ -83,8 +83,10 @@ export interface IStorage {
   // Client onboarding operations
   createClientOnboarding(client: InsertClientOnboarding): Promise<ClientOnboarding>;
   getClientOnboardings(): Promise<ClientOnboarding[]>;
+  getClientOnboarding(id: string): Promise<ClientOnboarding | undefined>;
   getClientOnboardingByEmail(email: string): Promise<ClientOnboarding | undefined>;
   updateClientOnboardingStatus(id: string, status: string): Promise<ClientOnboarding | undefined>;
+  updateClientOnboardingPaymentStatus(id: string, setupFeesPaid: boolean): Promise<ClientOnboarding | undefined>;
   
   // Consultation request operations
   createConsultationRequest(request: InsertConsultationRequest): Promise<ConsultationRequest>;
@@ -390,6 +392,15 @@ export class DatabaseStorage implements IStorage {
       .orderBy(clientOnboarding.createdAt); // Oldest first for priority
   }
 
+  async getClientOnboarding(id: string): Promise<ClientOnboarding | undefined> {
+    const [client] = await db
+      .select()
+      .from(clientOnboarding)
+      .where(eq(clientOnboarding.id, id))
+      .limit(1);
+    return client;
+  }
+
   async getClientOnboardingByEmail(email: string): Promise<ClientOnboarding | undefined> {
     const [client] = await db
       .select()
@@ -404,6 +415,19 @@ export class DatabaseStorage implements IStorage {
       .update(clientOnboarding)
       .set({ 
         status,
+        updatedAt: new Date()
+      })
+      .where(eq(clientOnboarding.id, id))
+      .returning();
+    
+    return updated;
+  }
+
+  async updateClientOnboardingPaymentStatus(id: string, setupFeesPaid: boolean): Promise<ClientOnboarding | undefined> {
+    const [updated] = await db
+      .update(clientOnboarding)
+      .set({ 
+        setupFeesPaid,
         updatedAt: new Date()
       })
       .where(eq(clientOnboarding.id, id))

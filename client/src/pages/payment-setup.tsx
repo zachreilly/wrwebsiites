@@ -77,6 +77,7 @@ export default function PaymentSetupPage() {
         city: data.city,
         postcode: data.postcode,
         googleBusinessSetup: false,
+        clientOnboardingId: clientId || undefined, // Link to onboarding record if present
       });
     },
     onSuccess: (response: any) => {

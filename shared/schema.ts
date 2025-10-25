@@ -153,6 +153,9 @@ export const clientOnboarding = pgTable("client_onboarding", {
   // Package selection
   selectedPackage: varchar("selected_package").notNull(), // 'basic' or 'premium'
   
+  // Payment tracking
+  setupFeesPaid: boolean("setup_fees_paid").default(false), // Track if setup fee payment is complete
+  
   status: varchar("status").notNull().default("new"), // 'new', 'in_progress', 'completed', 'cancelled'
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -272,6 +275,9 @@ export const customers = pgTable("customers", {
   phone: varchar("phone"),
   businessName: varchar("business_name"),
   
+  // Link to client onboarding (if customer came through new onboarding flow)
+  clientOnboardingId: varchar("client_onboarding_id").references(() => clientOnboarding.id),
+  
   // GoCardless customer information
   gocardlessCustomerId: varchar("gocardless_customer_id").unique(),
   gocardlessMandateId: varchar("gocardless_mandate_id"),
@@ -357,6 +363,9 @@ export const changeRequests = pgTable("change_requests", {
 export const transactions = pgTable("transactions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   customerId: varchar("customer_id").notNull().references(() => customers.id),
+  
+  // Link to client onboarding (if transaction came from new onboarding flow)
+  clientOnboardingId: varchar("client_onboarding_id").references(() => clientOnboarding.id),
   
   // GoCardless payment information
   gocardlessPaymentId: varchar("gocardless_payment_id").unique(),

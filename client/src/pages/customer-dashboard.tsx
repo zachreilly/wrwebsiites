@@ -22,7 +22,10 @@ import {
 import type { Customer, Project, Transaction, Invoice, DesignApproval, ChangeRequest } from "@shared/schema";
 
 interface CustomerData {
-  customer: Customer;
+  customer: Customer & {
+    setupFeesPaid?: boolean;
+    clientCode?: string;
+  };
   projects: Project[];
   transactions: Transaction[];
   invoices: Invoice[];
@@ -207,8 +210,32 @@ export default function CustomerDashboard() {
               <p className="text-gray-600">
                 {customerData.customer.businessName} • {customerData.customer.package} Package
               </p>
+              {customerData.customer.clientCode && (
+                <p className="text-sm text-gray-500 mt-1">Client Code: {customerData.customer.clientCode}</p>
+              )}
             </div>
             <div className="flex items-center space-x-4">
+              {/* Show "Set Up Payment" button if not paid */}
+              {customerData.customer.setupFeesPaid === false && (
+                <Button 
+                  onClick={() => {
+                    const fullName = `${customerData.customer.firstName} ${customerData.customer.lastName}`.trim();
+                    const params = new URLSearchParams({
+                      clientId: customerData.customer.id || '',
+                      email: customerData.customer.email || '',
+                      name: fullName,
+                      businessName: customerData.customer.businessName || '',
+                      package: customerData.customer.package || ''
+                    });
+                    window.location.href = `/payment-setup?${params.toString()}`;
+                  }}
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                  data-testid="button-setup-payment"
+                >
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Set Up Payment Now
+                </Button>
+              )}
               <Badge className={getStatusColor(customerData.customer.subscriptionStatus)}>
                 {customerData.customer.subscriptionStatus || 'inactive'}
               </Badge>

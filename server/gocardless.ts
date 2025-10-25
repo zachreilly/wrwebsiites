@@ -221,7 +221,8 @@ export async function setupDirectDebit(req: Request, res: Response) {
       sortCode,
       accountNumber,
       package: packageType,
-      googleBusinessSetup
+      googleBusinessSetup,
+      clientOnboardingId // NEW: Link to onboarding record if present
     } = req.body;
 
     // Create customer in GoCardless
@@ -258,6 +259,7 @@ export async function setupDirectDebit(req: Request, res: Response) {
       googleBusinessSetup: googleBusinessSetup || false,
       subscriptionStatus: 'inactive',
       monthlyFee: 1000, // £10 in pence
+      clientOnboardingId: clientOnboardingId || undefined, // Link to onboarding record
     });
 
     // Calculate setup fee
@@ -278,6 +280,7 @@ export async function setupDirectDebit(req: Request, res: Response) {
     // Record setup fee transaction
     await storage.createTransaction({
       customerId: customer.id,
+      clientOnboardingId: clientOnboardingId || undefined, // Link to onboarding record
       gocardlessPaymentId: setupPayment.id,
       type: 'setup_fee',
       description: `Setup fee for ${packageType} website package${googleBusinessSetup ? ' + Google Business setup' : ''}`,
@@ -376,9 +379,16 @@ async function handlePaymentEvent(event: any) {
   if (paymentDetails.status === 'confirmed') {
     const transaction = await storage.getTransactionByGoCardlessId(payment);
     if (transaction && transaction.type === 'setup_fee') {
+      // Update customer table
       await storage.updateCustomer(transaction.customerId, {
         setupFeesPaid: true,
       });
+      
+      // ALSO update client_onboarding if this payment came from onboarding flow
+      if (transaction.clientOnboardingId) {
+        await storage.updateClientOnboardingPaymentStatus(transaction.clientOnboardingId, true);
+        console.log(`Updated client_onboarding ${transaction.clientOnboardingId} setupFeesPaid to true`);
+      }
     }
   }
 }

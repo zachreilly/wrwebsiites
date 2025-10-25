@@ -632,11 +632,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Customer dashboard data
+  // Customer dashboard data - works with both old customers table and new client_onboarding table
   app.get("/api/customer/:customerId/dashboard", async (req, res) => {
     try {
       const { customerId } = req.params;
       
+      // First try to get from client_onboarding (new system)
+      const clientOnboarding = await storage.getClientOnboarding(customerId);
+      
+      if (clientOnboarding) {
+        // Return client onboarding data formatted as customer data
+        const customer = {
+          id: clientOnboarding.id,
+          clientCode: clientOnboarding.clientCode,
+          firstName: clientOnboarding.fullName.split(' ')[0] || clientOnboarding.fullName,
+          lastName: clientOnboarding.fullName.split(' ').slice(1).join(' ') || '',
+          fullName: clientOnboarding.fullName,
+          email: clientOnboarding.email,
+          phone: clientOnboarding.phone,
+          businessName: clientOnboarding.businessName,
+          package: clientOnboarding.selectedPackage,
+          setupFeesPaid: clientOnboarding.setupFeesPaid,
+          subscriptionStatus: clientOnboarding.setupFeesPaid ? 'active' : 'inactive',
+          monthlyFee: clientOnboarding.selectedPackage === 'premium' ? 1000 : 1000, // £10/month
+        };
+        
+        return res.json({
+          success: true,
+          data: {
+            customer,
+            projects: [], // Projects will be created after payment
+            transactions: [],
+            invoices: []
+          }
+        });
+      }
+      
+      // Fallback to old customers table for legacy users
       const [customer, projects, transactions, invoices] = await Promise.all([
         storage.getCustomer(customerId),
         storage.getProjectsByCustomer(customerId),
