@@ -39,8 +39,33 @@ export default function WebsiteUpdateRequest() {
   });
 
   const submitMutation = useMutation({
-    mutationFn: (data: WebsiteUpdateRequestData) => 
-      apiRequest("POST", "/api/website-update", data),
+    mutationFn: (data: WebsiteUpdateRequestData) => {
+      // Map frontend field names to backend schema field names
+      const backendData = {
+        fullName: data.name,
+        email: data.email,
+        phone: data.phone || '', // Default to empty string if not provided
+        businessName: data.businessName || '', // Default to empty string if not provided
+        websiteDomain: data.currentWebsite,
+        updateType: data.updateCategory,
+        updateDescription: data.description,
+        // Optional fields - can be undefined
+        currentHostingProvider: undefined,
+        hasWPAccess: undefined,
+        wpLoginDetails: undefined,
+        specificChanges: `Timeline: ${data.timeline || 'Not specified'}, Budget: ${data.budget || 'Not specified'}`,
+        estimatedCost: data.budget,
+        accountHolderName: undefined,
+        sortCode: undefined,
+        accountNumber: undefined,
+        address: undefined,
+        city: undefined,
+        postcode: undefined,
+        agreedToTerms: false,
+        agreedToDirectDebit: false,
+      };
+      return apiRequest("POST", "/api/website-update", backendData);
+    },
     onSuccess: () => {
       toast({
         title: "Request Submitted Successfully!",
@@ -65,10 +90,10 @@ export default function WebsiteUpdateRequest() {
     e.preventDefault();
     
     // Basic validation
-    if (!formData.name || !formData.email || !formData.currentWebsite || !formData.updateCategory || !formData.description) {
+    if (!formData.name || !formData.email || !formData.phone || !formData.businessName || !formData.currentWebsite || !formData.updateCategory || !formData.description) {
       toast({
         title: "Missing Information",
-        description: "Please fill in all required fields",
+        description: "Please fill in all required fields (name, email, phone, business name, website URL, update category, and description)",
         variant: "destructive",
       });
       return;
@@ -148,23 +173,25 @@ export default function WebsiteUpdateRequest() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="phone">Phone Number</Label>
+                    <Label htmlFor="phone">Phone Number *</Label>
                     <Input
                       id="phone"
                       value={formData.phone}
                       onChange={(e) => handleInputChange('phone', e.target.value)}
                       placeholder="07123456789"
+                      required
                       data-testid="input-phone"
                     />
                   </div>
                   
                   <div>
-                    <Label htmlFor="businessName">Business Name</Label>
+                    <Label htmlFor="businessName">Business Name *</Label>
                     <Input
                       id="businessName"
                       value={formData.businessName}
                       onChange={(e) => handleInputChange('businessName', e.target.value)}
                       placeholder="Your business name"
+                      required
                       data-testid="input-business-name"
                     />
                   </div>
