@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent, MessageSquare, Calculator, Check, Clock, ExternalLink, Bell, AlertCircle } from "lucide-react";
+import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent, MessageSquare, Calculator, Check, Clock, ExternalLink, Bell, AlertCircle, Download, Plus } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
 interface AnalyticsData {
@@ -834,7 +834,7 @@ export default function AdminPage() {
                         <h4 className="font-semibold text-slate-900">All Clients</h4>
                         {clientData.map((client: any) => (
                           <div key={client.id} className="border rounded-lg p-4 bg-slate-50">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between mb-3">
                               <div>
                                 <div className="flex items-center gap-2">
                                   <h5 className="font-semibold text-slate-900">{client.fullName}</h5>
@@ -861,6 +861,104 @@ export default function AdminPage() {
                                   {client.selectedPackage === 'basic' ? 'Basic (£75)' : 'Premium (£150)'}
                                 </p>
                               </div>
+                            </div>
+                            <div className="flex items-center gap-2 pt-3 border-t">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  const jsonData = {
+                                    clientCode: client.clientCode,
+                                    businessName: client.businessName,
+                                    fullName: client.fullName,
+                                    email: client.email,
+                                    phone: client.phone,
+                                    package: client.selectedPackage,
+                                    templateStyle: client.templateStyle,
+                                    templateVariation: client.templateVariation,
+                                    colorScheme: client.colorScheme,
+                                    businessDescription: client.businessDescription,
+                                    pagesNeeded: client.pagesNeeded,
+                                    textContent: client.textContent,
+                                    hasImages: client.hasImages,
+                                    hasLogo: client.hasLogo,
+                                    layoutPreference: client.layoutPreference,
+                                    exampleWebsites: client.exampleWebsites,
+                                    wantsContactForm: client.wantsContactForm,
+                                    googleBusinessSetup: client.googleBusinessSetup,
+                                    socialMediaLinks: client.socialMediaLinks,
+                                    specialRequests: client.specialRequests,
+                                    hasDomain: client.hasDomain,
+                                    existingDomain: client.existingDomain,
+                                    desiredDomains: client.desiredDomains,
+                                    setupFeesPaid: client.setupFeesPaid,
+                                    status: client.status,
+                                    createdAt: client.createdAt
+                                  };
+                                  
+                                  const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
+                                  const url = URL.createObjectURL(blob);
+                                  const a = document.createElement('a');
+                                  a.href = url;
+                                  a.download = `${client.clientCode}-project-details.json`;
+                                  document.body.appendChild(a);
+                                  a.click();
+                                  document.body.removeChild(a);
+                                  URL.revokeObjectURL(url);
+                                  
+                                  toast({
+                                    title: "JSON Exported",
+                                    description: `Downloaded ${client.clientCode}-project-details.json`,
+                                  });
+                                }}
+                                data-testid={`button-export-json-${client.id}`}
+                              >
+                                <Download className="w-4 h-4 mr-1" />
+                                Export JSON
+                              </Button>
+                              
+                              {!client.setupFeesPaid && (
+                                <Button
+                                  size="sm"
+                                  variant="default"
+                                  onClick={async () => {
+                                    try {
+                                      const response = await fetch(`/api/admin/create-customer-project?password=${encodeURIComponent(sessionPassword)}`, {
+                                        method: 'POST',
+                                        headers: {
+                                          'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify({
+                                          clientOnboardingId: client.id
+                                        }),
+                                      });
+                                      
+                                      const result = await response.json();
+                                      
+                                      if (result.success) {
+                                        queryClient.invalidateQueries({ queryKey: ['/api/admin/client-onboarding'] });
+                                        toast({
+                                          title: "Project Created",
+                                          description: `Customer and project records created for ${client.clientCode}`,
+                                        });
+                                      } else {
+                                        throw new Error(result.message || 'Failed to create project');
+                                      }
+                                    } catch (error: any) {
+                                      toast({
+                                        title: "Creation Failed",
+                                        description: error.message,
+                                        variant: "destructive",
+                                      });
+                                    }
+                                  }}
+                                  className="bg-emerald-600 hover:bg-emerald-700"
+                                  data-testid={`button-create-project-${client.id}`}
+                                >
+                                  <Plus className="w-4 h-4 mr-1" />
+                                  Create Project
+                                </Button>
+                              )}
                             </div>
                           </div>
                         ))}

@@ -272,6 +272,105 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Create customer and project from onboarding data (admin endpoint)
+  app.post("/api/admin/create-customer-project", async (req, res) => {
+    try {
+      const { password } = req.query;
+      const { clientOnboardingId } = req.body;
+      
+      if (!password || typeof password !== 'string') {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Authentication required" 
+        });
+      }
+
+      // Direct password check for BADMAN123
+      if (password === 'BADMAN123') {
+        // Valid admin password, proceed
+      } else {
+        // Try session verification as backup
+        const session = await storage.verifyAdminSession(password);
+        if (!session) {
+          return res.status(401).json({ 
+            success: false, 
+            message: "Invalid password or expired session" 
+          });
+        }
+      }
+
+      if (!clientOnboardingId) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Client onboarding ID is required" 
+        });
+      }
+
+      // Get onboarding data
+      const onboarding = await storage.getClientOnboarding(clientOnboardingId);
+      if (!onboarding) {
+        return res.status(404).json({ 
+          success: false, 
+          message: "Client onboarding record not found" 
+        });
+      }
+
+      // Check if customer already exists for this onboarding
+      const existingCustomer = await storage.getCustomerByEmail(onboarding.email);
+      if (existingCustomer && existingCustomer.clientOnboardingId === clientOnboardingId) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Customer and project already exist for this onboarding" 
+        });
+      }
+
+      // Split name into first and last
+      const nameParts = onboarding.fullName.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || nameParts[0] || '';
+
+      // Create customer record
+      const customer = await storage.createCustomer({
+        firstName,
+        lastName,
+        email: onboarding.email,
+        phone: onboarding.phone || '',
+        businessName: onboarding.businessName,
+        clientOnboardingId: onboarding.id,
+        package: onboarding.selectedPackage,
+        setupFeesPaid: false,
+        googleBusinessSetup: onboarding.googleBusinessSetup,
+        subscriptionStatus: 'inactive'
+      });
+
+      // Create initial project
+      const project = await storage.createProject({
+        customerId: customer.id,
+        projectName: `${onboarding.businessName} Website`,
+        projectDescription: onboarding.businessDescription,
+        status: 'planning',
+        priority: 'medium',
+        domainName: onboarding.existingDomain || null,
+        estimatedCompletionDate: null
+      });
+
+      res.json({ 
+        success: true, 
+        data: { 
+          customer, 
+          project,
+          message: 'Customer and project created successfully' 
+        } 
+      });
+    } catch (error) {
+      console.error("Error creating customer and project:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to create customer and project" 
+      });
+    }
+  });
+
   // Direct debit payment endpoint
   app.post("/api/payment/direct-debit", async (req, res) => {
     try {
