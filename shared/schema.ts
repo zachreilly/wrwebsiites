@@ -153,6 +153,9 @@ export const clientOnboarding = pgTable("client_onboarding", {
   // Package selection
   selectedPackage: varchar("selected_package").notNull(), // 'basic' or 'premium'
   
+  // Project timeline preference
+  desiredCompletionDate: timestamp("desired_completion_date"),
+  
   // Payment tracking
   setupFeesPaid: boolean("setup_fees_paid").default(false), // Track if setup fee payment is complete
   
@@ -172,6 +175,8 @@ export const insertClientOnboardingSchema = createInsertSchema(clientOnboarding)
   createdAt: true,
   updatedAt: true,
   status: true,
+}).extend({
+  desiredCompletionDate: z.coerce.date().optional().nullable(),
 });
 
 export type ClientOnboarding = typeof clientOnboarding.$inferSelect;
@@ -278,6 +283,9 @@ export const customers = pgTable("customers", {
   email: varchar("email").notNull().unique(),
   phone: varchar("phone"),
   businessName: varchar("business_name"),
+  
+  // Project completion preference
+  desiredCompletionDate: timestamp("desired_completion_date"),
   
   // Link to client onboarding (if customer came through new onboarding flow)
   clientOnboardingId: varchar("client_onboarding_id").references(() => clientOnboarding.id),
@@ -444,6 +452,8 @@ export const insertCustomerSchema = createInsertSchema(customers).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  desiredCompletionDate: z.coerce.date().optional().nullable(),
 });
 
 export const insertProjectSchema = createInsertSchema(projects).omit({

@@ -12,7 +12,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { CheckCircle, ArrowLeft, ArrowRight, User, Globe, FileText, Palette, Settings, Layout, Sun, Moon, Sparkles } from "lucide-react";
+import { CheckCircle, ArrowLeft, ArrowRight, User, Globe, FileText, Palette, Settings, Layout, Sun, Moon, Sparkles, CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 const clientInfoSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -46,6 +50,7 @@ const clientInfoSchema = z.object({
   wantsContactForm: z.boolean().default(false),
   socialMediaLinks: z.string().optional(),
   specialRequests: z.string().optional(),
+  desiredCompletionDate: z.date().optional(),
   
   // Package selection
   selectedPackage: z.enum(["basic", "premium"])
@@ -87,6 +92,7 @@ export default function OnboardingPage() {
       wantsContactForm: false,
       socialMediaLinks: "",
       specialRequests: "",
+      desiredCompletionDate: undefined,
       selectedPackage: packageFromUrl || "basic"
     },
   });
@@ -1296,6 +1302,52 @@ export default function OnboardingPage() {
                               {...field}
                             />
                           </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="desiredCompletionDate"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel>Preferred Completion Date (Optional)</FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant="outline"
+                                  data-testid="button-completion-date"
+                                  className={cn(
+                                    "w-full pl-3 text-left font-normal",
+                                    !field.value && "text-muted-foreground"
+                                  )}
+                                >
+                                  {field.value ? (
+                                    format(field.value, "PPP")
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
+                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                disabled={(date) =>
+                                  date < new Date(new Date().setHours(0, 0, 0, 0))
+                                }
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <FormDescription>
+                            When would you ideally like your website completed? This helps us prioritize your project.
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}

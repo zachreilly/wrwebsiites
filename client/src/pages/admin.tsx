@@ -990,6 +990,18 @@ export default function AdminPage() {
                                     <p><span className="font-medium">Business:</span> {client.businessName}</p>
                                     <p><span className="font-medium">Email:</span> {client.email}</p>
                                     <p><span className="font-medium">Phone:</span> {client.phone}</p>
+                                    {client.desiredCompletionDate && (
+                                      <p>
+                                        <span className="font-medium">Target Completion:</span>{' '}
+                                        <span className="px-2 py-0.5 bg-amber-100 text-amber-800 rounded text-xs font-medium" data-testid={`text-completion-date-${client.id}`}>
+                                          {new Date(client.desiredCompletionDate).toLocaleDateString('en-GB', {
+                                            day: 'numeric',
+                                            month: 'short',
+                                            year: 'numeric'
+                                          })}
+                                        </span>
+                                      </p>
+                                    )}
                                   </div>
                                 </div>
 
@@ -1128,6 +1140,15 @@ export default function AdminPage() {
                                 <p className="text-sm text-slate-500 mt-1">
                                   {client.selectedPackage === 'basic' ? 'Basic (£75)' : 'Premium (£150)'}
                                 </p>
+                                {client.desiredCompletionDate && (
+                                  <p className="text-xs text-slate-500 mt-1">
+                                    Target: {new Date(client.desiredCompletionDate).toLocaleDateString('en-GB', {
+                                      day: 'numeric',
+                                      month: 'short',
+                                      year: 'numeric'
+                                    })}
+                                  </p>
+                                )}
                               </div>
                             </div>
                             <div className="flex items-center gap-2 pt-3 border-t">

@@ -244,6 +244,15 @@ export default function CustomerDashboard() {
               {customerData.customer.clientCode && (
                 <p className="text-sm text-gray-500 mt-1">Client Code: {customerData.customer.clientCode}</p>
               )}
+              {customerData.customer.desiredCompletionDate && (
+                <p className="text-sm text-amber-600 font-medium mt-1" data-testid="text-customer-completion-date">
+                  Target Completion: {new Date(customerData.customer.desiredCompletionDate).toLocaleDateString('en-GB', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                  })}
+                </p>
+              )}
             </div>
             <div className="flex items-center space-x-4">
               {/* Show "Set Up Payment" button if not paid */}
