@@ -4,7 +4,15 @@
 
 wrwebsites is a professional web development service application built as a full-stack solution for showcasing web development services and handling client inquiries. The application serves as a marketing website for a web development agency that specializes in static website development, hosting, and ongoing support services. The website features affordable launch pricing with two package tiers: Basic Static Website (£75 setup + £10/month) and Premium Static Website (£150 setup + £10/month). Contact information includes phone numbers 07397985279 and 07535778637, and email zachhreillyy@gmail.com.
 
-## Recent Changes (October 25, 2025)
+## Recent Changes (October 31, 2025)
+
+- **Added customer completion date preference** - Customers can now set an optional target completion date during onboarding (Step 6), helping prioritize projects and set clear expectations
+- **Implemented smart date picker** - Uses shadcn Calendar component with Popover, validates against past dates, displays in GB format, includes helpful description text
+- **Enhanced admin dashboard with completion dates** - Target completion dates display in both Client Inquiries and Customer Management tabs with amber badge styling for visibility
+- **Customer portal shows target dates** - Dashboard header displays preferred completion date in prominent amber text when set, formatted as "Target Completion: 5 November 2025"
+- **Date serialization handled correctly** - Backend uses z.coerce.date().optional().nullable() to convert ISO strings from frontend to Date objects, ensuring proper validation and storage
+
+## Previous Changes (October 25, 2025)
 
 - **Added image upload functionality to project updates** - Admins can now attach screenshots/images when posting updates to customers, images stored in object storage and displayed in customer dashboard updates feed
 - **Implemented secure image upload flow** - Uses presigned URLs for direct-to-storage uploads (10MB max), client-side MIME type validation, automatic URL normalization to `/objects/...` paths, images served through backend proxy
