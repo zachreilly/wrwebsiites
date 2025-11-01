@@ -1128,6 +1128,45 @@ export default function AdminPage() {
                                 {client.businessName && (
                                   <p className="text-sm text-slate-500">{client.businessName}</p>
                                 )}
+                                
+                                {/* Premium Features Display */}
+                                {client.selectedPackage === 'premium' && (
+                                  client.wantsUserAuth || client.wantsDatabase || client.wantsPaymentProcessing || 
+                                  client.wantsCrudOperations || client.wantsAdminPanel || client.wantsProductionFeatures
+                                ) && (
+                                  <div className="mt-2 flex flex-wrap gap-1">
+                                    {client.wantsUserAuth && (
+                                      <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs rounded-full">
+                                        🔐 User Auth
+                                      </span>
+                                    )}
+                                    {client.wantsDatabase && (
+                                      <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs rounded-full">
+                                        💾 Database
+                                      </span>
+                                    )}
+                                    {client.wantsPaymentProcessing && (
+                                      <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs rounded-full">
+                                        💳 Payments
+                                      </span>
+                                    )}
+                                    {client.wantsCrudOperations && (
+                                      <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs rounded-full">
+                                        ⚙️ CRUD
+                                      </span>
+                                    )}
+                                    {client.wantsAdminPanel && (
+                                      <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs rounded-full">
+                                        📊 Admin Panel
+                                      </span>
+                                    )}
+                                    {client.wantsProductionFeatures && (
+                                      <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs rounded-full">
+                                        🚀 Production
+                                      </span>
+                                    )}
+                                  </div>
+                                )}
                               </div>
                               <div className="text-right">
                                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -1180,6 +1219,14 @@ export default function AdminPage() {
                                     hasDomain: client.hasDomain,
                                     existingDomain: client.existingDomain,
                                     desiredDomains: client.desiredDomains,
+                                    premiumFeatures: {
+                                      wantsUserAuth: client.wantsUserAuth || false,
+                                      wantsDatabase: client.wantsDatabase || false,
+                                      wantsPaymentProcessing: client.wantsPaymentProcessing || false,
+                                      wantsCrudOperations: client.wantsCrudOperations || false,
+                                      wantsAdminPanel: client.wantsAdminPanel || false,
+                                      wantsProductionFeatures: client.wantsProductionFeatures || false
+                                    },
                                     setupFeesPaid: client.setupFeesPaid,
                                     status: client.status,
                                     createdAt: client.createdAt

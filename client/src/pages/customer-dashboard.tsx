@@ -253,6 +253,44 @@ export default function CustomerDashboard() {
                   })}
                 </p>
               )}
+              {customerData.customer.package === 'premium' && (
+                customerData.customer.wantsUserAuth || customerData.customer.wantsDatabase || 
+                customerData.customer.wantsPaymentProcessing || customerData.customer.wantsCrudOperations || 
+                customerData.customer.wantsAdminPanel || customerData.customer.wantsProductionFeatures
+              ) && (
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {customerData.customer.wantsUserAuth && (
+                    <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs rounded-full">
+                      🔐 User Auth
+                    </span>
+                  )}
+                  {customerData.customer.wantsDatabase && (
+                    <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs rounded-full">
+                      💾 Database
+                    </span>
+                  )}
+                  {customerData.customer.wantsPaymentProcessing && (
+                    <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs rounded-full">
+                      💳 Payments
+                    </span>
+                  )}
+                  {customerData.customer.wantsCrudOperations && (
+                    <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs rounded-full">
+                      ⚙️ CRUD
+                    </span>
+                  )}
+                  {customerData.customer.wantsAdminPanel && (
+                    <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs rounded-full">
+                      📊 Admin Panel
+                    </span>
+                  )}
+                  {customerData.customer.wantsProductionFeatures && (
+                    <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs rounded-full">
+                      🚀 Production
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
             <div className="flex items-center space-x-4">
               {/* Show "Set Up Payment" button if not paid */}
