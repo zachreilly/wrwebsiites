@@ -313,6 +313,14 @@ export const customers = pgTable("customers", {
   monthlyFee: integer("monthly_fee").default(1000), // in pence, so £10.00 = 1000
   googleBusinessSetup: boolean("google_business_setup").default(false),
   
+  // Premium Advanced Features (Premium Package Only)
+  wantsUserAuth: boolean("wants_user_auth").default(false), // User authentication & accounts
+  wantsDatabase: boolean("wants_database").default(false), // Database storage
+  wantsPaymentProcessing: boolean("wants_payment_processing").default(false), // Payment integration
+  wantsCrudOperations: boolean("wants_crud_operations").default(false), // CRUD functionality
+  wantsAdminPanel: boolean("wants_admin_panel").default(false), // Admin dashboard
+  wantsProductionFeatures: boolean("wants_production_features").default(false), // Production-ready architecture
+  
   // Referral tracking
   referralCode: varchar("referral_code").unique(), // Customer's unique referral code (e.g., "WR-001")
   referredByCode: varchar("referred_by_code"), // Client code of who referred them
