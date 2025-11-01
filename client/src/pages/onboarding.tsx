@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { CheckCircle, ArrowLeft, ArrowRight, User, Globe, FileText, Palette, Settings, Layout, Sun, Moon, Sparkles, CalendarIcon } from "lucide-react";
+import { CheckCircle, ArrowLeft, ArrowRight, User, Globe, FileText, Palette, Settings, Layout, Sun, Moon, Sparkles, CalendarIcon, Lock, Database, CreditCard, Cog, LayoutDashboard, Rocket } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -51,6 +51,14 @@ const clientInfoSchema = z.object({
   socialMediaLinks: z.string().optional(),
   specialRequests: z.string().optional(),
   desiredCompletionDate: z.date().optional(),
+  
+  // Premium Advanced Features (Premium Package Only)
+  wantsUserAuth: z.boolean().default(false),
+  wantsDatabase: z.boolean().default(false),
+  wantsPaymentProcessing: z.boolean().default(false),
+  wantsCrudOperations: z.boolean().default(false),
+  wantsAdminPanel: z.boolean().default(false),
+  wantsProductionFeatures: z.boolean().default(false),
   
   // Package selection
   selectedPackage: z.enum(["basic", "premium"])
@@ -93,6 +101,12 @@ export default function OnboardingPage() {
       socialMediaLinks: "",
       specialRequests: "",
       desiredCompletionDate: undefined,
+      wantsUserAuth: false,
+      wantsDatabase: false,
+      wantsPaymentProcessing: false,
+      wantsCrudOperations: false,
+      wantsAdminPanel: false,
+      wantsProductionFeatures: false,
       selectedPackage: packageFromUrl || "basic"
     },
   });
@@ -1352,6 +1366,185 @@ export default function OnboardingPage() {
                         </FormItem>
                       )}
                     />
+
+                    {/* Premium Advanced Features Section - Only for Premium Package */}
+                    {selectedPackage === 'premium' && (
+                      <div className="mt-8 p-6 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30 rounded-lg border-2 border-amber-300 dark:border-amber-700">
+                        <div className="flex items-center gap-2 mb-4">
+                          <Sparkles className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                          <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                            Premium Advanced Features
+                          </h3>
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                          Select which advanced features you'd like included in your website (all included in your premium package):
+                        </p>
+
+                        <div className="space-y-4">
+                          <FormField
+                            control={form.control}
+                            name="wantsUserAuth"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0 bg-white dark:bg-gray-900 p-3 rounded-lg">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    data-testid="checkbox-user-auth"
+                                  />
+                                </FormControl>
+                                <div className="space-y-1 leading-none flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <Lock className="w-4 h-4 text-amber-600" />
+                                    <FormLabel className="font-semibold">
+                                      User Authentication & Accounts
+                                    </FormLabel>
+                                  </div>
+                                  <FormDescription className="text-xs">
+                                    Secure login system with user registration, password management, and protected user areas
+                                  </FormDescription>
+                                </div>
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name="wantsDatabase"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0 bg-white dark:bg-gray-900 p-3 rounded-lg">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    data-testid="checkbox-database"
+                                  />
+                                </FormControl>
+                                <div className="space-y-1 leading-none flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <Database className="w-4 h-4 text-amber-600" />
+                                    <FormLabel className="font-semibold">
+                                      Database Storage
+                                    </FormLabel>
+                                  </div>
+                                  <FormDescription className="text-xs">
+                                    Persistent data storage for your application to save user information, content, and settings
+                                  </FormDescription>
+                                </div>
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name="wantsPaymentProcessing"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0 bg-white dark:bg-gray-900 p-3 rounded-lg">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    data-testid="checkbox-payment-processing"
+                                  />
+                                </FormControl>
+                                <div className="space-y-1 leading-none flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <CreditCard className="w-4 h-4 text-amber-600" />
+                                    <FormLabel className="font-semibold">
+                                      Payment Processing Integration
+                                    </FormLabel>
+                                  </div>
+                                  <FormDescription className="text-xs">
+                                    Accept payments from customers with Stripe or PayPal integration, including checkout and subscription handling
+                                  </FormDescription>
+                                </div>
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name="wantsCrudOperations"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0 bg-white dark:bg-gray-900 p-3 rounded-lg">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    data-testid="checkbox-crud-operations"
+                                  />
+                                </FormControl>
+                                <div className="space-y-1 leading-none flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <Cog className="w-4 h-4 text-amber-600" />
+                                    <FormLabel className="font-semibold">
+                                      CRUD Operations
+                                    </FormLabel>
+                                  </div>
+                                  <FormDescription className="text-xs">
+                                    Full Create, Read, Update, and Delete functionality for managing your content and data
+                                  </FormDescription>
+                                </div>
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name="wantsAdminPanel"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0 bg-white dark:bg-gray-900 p-3 rounded-lg">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    data-testid="checkbox-admin-panel"
+                                  />
+                                </FormControl>
+                                <div className="space-y-1 leading-none flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <LayoutDashboard className="w-4 h-4 text-amber-600" />
+                                    <FormLabel className="font-semibold">
+                                      Admin Dashboard
+                                    </FormLabel>
+                                  </div>
+                                  <FormDescription className="text-xs">
+                                    Comprehensive admin panel to manage your website data, users, and analytics in one place
+                                  </FormDescription>
+                                </div>
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name="wantsProductionFeatures"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0 bg-white dark:bg-gray-900 p-3 rounded-lg">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    data-testid="checkbox-production-features"
+                                  />
+                                </FormControl>
+                                <div className="space-y-1 leading-none flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <Rocket className="w-4 h-4 text-amber-600" />
+                                    <FormLabel className="font-semibold">
+                                      Production-Ready Architecture
+                                    </FormLabel>
+                                  </div>
+                                  <FormDescription className="text-xs">
+                                    Scalable, secure, and professional codebase with best practices, error handling, and performance optimization
+                                  </FormDescription>
+                                </div>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 

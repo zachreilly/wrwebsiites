@@ -150,6 +150,14 @@ export const clientOnboarding = pgTable("client_onboarding", {
   socialMediaLinks: text("social_media_links"),
   specialRequests: text("special_requests"),
   
+  // Premium Advanced Features (Premium Package Only)
+  wantsUserAuth: boolean("wants_user_auth").default(false), // User authentication & accounts
+  wantsDatabase: boolean("wants_database").default(false), // Database storage
+  wantsPaymentProcessing: boolean("wants_payment_processing").default(false), // Payment integration
+  wantsCrudOperations: boolean("wants_crud_operations").default(false), // CRUD functionality
+  wantsAdminPanel: boolean("wants_admin_panel").default(false), // Admin dashboard
+  wantsProductionFeatures: boolean("wants_production_features").default(false), // Production-ready architecture
+  
   // Package selection
   selectedPackage: varchar("selected_package").notNull(), // 'basic' or 'premium'
   
