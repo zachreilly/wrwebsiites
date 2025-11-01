@@ -152,6 +152,8 @@ export default function OnboardingPage() {
     }
   };
 
+  const selectedPackage = form.watch("selectedPackage");
+
   const nextStep = async (e?: React.MouseEvent) => {
     // Prevent any default behavior
     if (e) {
@@ -196,8 +198,6 @@ export default function OnboardingPage() {
       setCurrentStep(currentStep - 1);
     }
   };
-
-  const selectedPackage = form.watch("selectedPackage");
 
   if (isSubmitted) {
     return (
