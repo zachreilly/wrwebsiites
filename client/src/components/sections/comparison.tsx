@@ -81,7 +81,7 @@ export default function Comparison() {
             {/* Basic Package Column */}
             <div className="space-y-3">
               {/* Package Header */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 text-center h-32 flex flex-col justify-center">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-6 text-center h-32 flex flex-col justify-center">
                 <h3 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Basic</h3>
                 <div className="text-3xl font-bold text-emerald-600 mb-1">£75</div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">+ £10/month</div>
@@ -91,7 +91,7 @@ export default function Comparison() {
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className={`flex items-center justify-center p-4 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 transition-all duration-200 ${
+                  className={`flex items-center justify-center p-4 rounded-lg bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 transition-all duration-200 ${
                     feature.category === 'advanced' 
                       ? 'opacity-50' 
                       : 'hover:shadow-md'
