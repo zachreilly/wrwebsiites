@@ -4,7 +4,17 @@
 
 wrwebsites is a professional web development service application built as a full-stack solution for showcasing web development services and handling client inquiries. The application serves as a marketing website for a web development agency that specializes in static website development, hosting, and ongoing support services. The website features affordable launch pricing with two package tiers: Basic Static Website (£75 setup + £10/month) and Premium Static Website (£150 setup + £10/month). Contact information includes phone numbers 07397985279 and 07535778637, and email zachhreillyy@gmail.com.
 
-## Recent Changes (October 31, 2025)
+## Recent Changes (November 3, 2025)
+
+- **Implemented comprehensive project management system** - Added Projects tab to admin dashboard with project list, status tracking, stats (total, in development, completed, on hold), and priority badges
+- **Auto-project creation via GoCardless webhook** - When setup fee payment is confirmed, system automatically creates project record linked to customer, pulling data from onboarding (business name, description, domain, estimated completion date)
+- **Added clientCode and password fields to customers table** - Customers now have unique client codes (e.g., "WR-001") and hashed passwords copied from onboarding records, enabling portal access
+- **Updated customer creation flow** - setupDirectDebit function now fetches clientCode and portalPassword from onboarding record and stores them in customer record during payment setup
+- **Fixed database schema synchronization** - Manually added missing columns (client_code, password, wants_user_auth, wants_database, wants_payment_processing, wants_crud_operations, wants_admin_panel, wants_production_features) via ALTER TABLE when db:push failed
+- **Project management UI enhancements** - Projects display customer info, package type, status badges (planning, design, development, review, completed, on_hold), priority levels (low, medium, high), days active, domain name, and estimated completion dates
+- **Admin project controls** - Admins can update project status via dropdown and post customer-visible updates with images through PostUpdateDialog component
+
+## Previous Changes (October 31, 2025)
 
 - **Added customer completion date preference** - Customers can now set an optional target completion date during onboarding (Step 6), helping prioritize projects and set clear expectations
 - **Implemented smart date picker** - Uses shadcn Calendar component with Popover, validates against past dates, displays in GB format, includes helpful description text

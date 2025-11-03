@@ -292,6 +292,10 @@ export const customers = pgTable("customers", {
   phone: varchar("phone"),
   businessName: varchar("business_name"),
   
+  // Client portal access
+  clientCode: varchar("client_code").unique(), // e.g., "WR-001", "WR-002"
+  password: varchar("password"), // Hashed password for customer portal login
+  
   // Project completion preference
   desiredCompletionDate: timestamp("desired_completion_date"),
   

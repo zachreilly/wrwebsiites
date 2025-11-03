@@ -246,6 +246,17 @@ export async function setupDirectDebit(req: Request, res: Response) {
       }
     );
 
+    // Fetch onboarding data if available to get clientCode and password
+    let clientCode = null;
+    let portalPassword = null;
+    if (clientOnboardingId) {
+      const onboarding = await storage.getClientOnboarding(clientOnboardingId);
+      if (onboarding) {
+        clientCode = onboarding.clientCode;
+        portalPassword = onboarding.portalPassword;
+      }
+    }
+
     // Create customer in our database
     const customer = await storage.createCustomer({
       firstName,
@@ -253,6 +264,8 @@ export async function setupDirectDebit(req: Request, res: Response) {
       email,
       phone,
       businessName,
+      clientCode: clientCode || undefined,
+      password: portalPassword || undefined,
       gocardlessCustomerId: gocardlessCustomer.id,
       gocardlessMandateId: mandate.id,
       package: packageType,
