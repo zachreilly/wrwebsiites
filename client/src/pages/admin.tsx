@@ -338,8 +338,8 @@ export default function AdminPage() {
     if (storedSession) {
       setSessionPassword(storedSession);
       setIsAuthenticated(true);
-      // Invalidate all queries to refetch with the restored session
-      queryClient.invalidateQueries();
+      // Clear all cached queries to refetch with the restored session
+      queryClient.clear();
     }
   }, [queryClient]);
 
@@ -359,8 +359,8 @@ export default function AdminPage() {
         setIsAuthenticated(true);
         setSessionPassword(password);
         localStorage.setItem('admin_session', password);
-        // Invalidate all queries to refetch with the new session
-        queryClient.invalidateQueries();
+        // Remove all cached queries and refetch with the new session
+        queryClient.clear();
         toast({
           title: "Login successful",
           description: "Welcome to the admin dashboard",
