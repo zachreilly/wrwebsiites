@@ -338,8 +338,10 @@ export default function AdminPage() {
     if (storedSession) {
       setSessionPassword(storedSession);
       setIsAuthenticated(true);
+      // Invalidate all queries to refetch with the restored session
+      queryClient.invalidateQueries();
     }
-  }, []);
+  }, [queryClient]);
 
   const handleLogin = async () => {
     try {
@@ -357,6 +359,8 @@ export default function AdminPage() {
         setIsAuthenticated(true);
         setSessionPassword(password);
         localStorage.setItem('admin_session', password);
+        // Invalidate all queries to refetch with the new session
+        queryClient.invalidateQueries();
         toast({
           title: "Login successful",
           description: "Welcome to the admin dashboard",
