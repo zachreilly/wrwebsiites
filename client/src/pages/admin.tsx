@@ -477,10 +477,13 @@ export default function AdminPage() {
   });
 
   // Projects data query
-  const { data: projectsData } = useQuery({
+  const { data: projectsData, refetch: refetchProjects } = useQuery({
     queryKey: ['/api/admin/projects', sessionPassword],
-    enabled: isAuthenticated && !!sessionPassword,
+    enabled: isAuthenticated && !!sessionPassword && sessionPassword === 'BADMAN123',
     queryFn: async () => {
+      if (!sessionPassword) {
+        throw new Error('No session password available');
+      }
       const response = await fetch(`/api/admin/projects?password=${encodeURIComponent(sessionPassword)}`);
       const result = await response.json();
       
@@ -491,8 +494,7 @@ export default function AdminPage() {
       return result.data;
     },
     retry: false,
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
+    staleTime: 30000,
   });
 
   // Mutation for updating client status
