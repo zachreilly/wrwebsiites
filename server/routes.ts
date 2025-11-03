@@ -1234,6 +1234,203 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ============================================
+  // PROJECT MANAGEMENT ROUTES
+  // ============================================
+
+  // Get all projects (admin)
+  app.get("/api/admin/projects", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      // Get all customers and their projects
+      const allCustomers = await db.select().from(customers).orderBy(desc(customers.createdAt));
+      const projectsWithCustomers = await Promise.all(
+        allCustomers.map(async (customer) => {
+          const customerProjects = await storage.getProjectsByCustomer(customer.id);
+          return customerProjects.map(project => ({
+            ...project,
+            customer
+          }));
+        })
+      );
+      
+      const flatProjects = projectsWithCustomers.flat();
+
+      res.json({ success: true, data: flatProjects });
+    } catch (error) {
+      console.error("Get projects error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch projects" });
+    }
+  });
+
+  // Get projects for specific customer
+  app.get("/api/admin/projects/customer/:customerId", async (req, res) => {
+    try {
+      const { password } = req.query;
+      const { customerId } = req.params;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      const customerProjects = await storage.getProjectsByCustomer(customerId);
+      res.json({ success: true, data: customerProjects });
+    } catch (error) {
+      console.error("Get customer projects error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch customer projects" });
+    }
+  });
+
+  // Update project status/details
+  app.patch("/api/admin/projects/:id", async (req, res) => {
+    try {
+      const { password } = req.query;
+      const { id } = req.params;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      const updatedProject = await storage.updateProject(id, req.body);
+      
+      if (!updatedProject) {
+        return res.status(404).json({ success: false, message: "Project not found" });
+      }
+
+      res.json({ success: true, data: updatedProject });
+    } catch (error) {
+      console.error("Update project error:", error);
+      res.status(500).json({ success: false, message: "Failed to update project" });
+    }
+  });
+
+  // Create design approval
+  app.post("/api/admin/design-approvals", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      const designApproval = await storage.createDesignApproval(req.body);
+      res.json({ success: true, data: designApproval });
+    } catch (error) {
+      console.error("Create design approval error:", error);
+      res.status(500).json({ success: false, message: "Failed to create design approval" });
+    }
+  });
+
+  // Get design approvals for a project
+  app.get("/api/admin/design-approvals/project/:projectId", async (req, res) => {
+    try {
+      const { password } = req.query;
+      const { projectId } = req.params;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      const approvals = await storage.getDesignApprovalsByProject(projectId);
+      res.json({ success: true, data: approvals });
+    } catch (error) {
+      console.error("Get design approvals error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch design approvals" });
+    }
+  });
+
+  // Update design approval status
+  app.patch("/api/admin/design-approvals/:id", async (req, res) => {
+    try {
+      const { password } = req.query;
+      const { id } = req.params;
+      const { status, customerFeedback } = req.body;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      const updatedApproval = await storage.updateDesignApprovalStatus(id, status, customerFeedback);
+      
+      if (!updatedApproval) {
+        return res.status(404).json({ success: false, message: "Design approval not found" });
+      }
+
+      res.json({ success: true, data: updatedApproval });
+    } catch (error) {
+      console.error("Update design approval error:", error);
+      res.status(500).json({ success: false, message: "Failed to update design approval" });
+    }
+  });
+
+  // Create change request
+  app.post("/api/admin/change-requests", async (req, res) => {
+    try {
+      const { password } = req.query;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      const changeRequest = await storage.createChangeRequest(req.body);
+      res.json({ success: true, data: changeRequest });
+    } catch (error) {
+      console.error("Create change request error:", error);
+      res.status(500).json({ success: false, message: "Failed to create change request" });
+    }
+  });
+
+  // Get change requests for a project
+  app.get("/api/admin/change-requests/project/:projectId", async (req, res) => {
+    try {
+      const { password } = req.query;
+      const { projectId } = req.params;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      const requests = await storage.getChangeRequestsByProject(projectId);
+      res.json({ success: true, data: requests });
+    } catch (error) {
+      console.error("Get change requests error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch change requests" });
+    }
+  });
+
+  // Update change request status
+  app.patch("/api/admin/change-requests/:id", async (req, res) => {
+    try {
+      const { password } = req.query;
+      const { id } = req.params;
+      const { status, response } = req.body;
+      
+      if (!password || password !== 'BADMAN123') {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      const updatedRequest = await storage.updateChangeRequestStatus(id, status, response);
+      
+      if (!updatedRequest) {
+        return res.status(404).json({ success: false, message: "Change request not found" });
+      }
+
+      res.json({ success: true, data: updatedRequest });
+    } catch (error) {
+      console.error("Update change request error:", error);
+      res.status(500).json({ success: false, message: "Failed to update change request" });
+    }
+  });
+
+  // ============================================
+  // OBJECT STORAGE ROUTES
+  // ============================================
+
   // Object storage upload endpoint
   app.post("/api/objects/upload", async (req, res) => {
     try {
