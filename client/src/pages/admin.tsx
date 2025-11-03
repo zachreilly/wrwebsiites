@@ -708,11 +708,12 @@ export default function AdminPage() {
           </div>
         ) : analyticsData ? (
           <Tabs defaultValue="analytics" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-6">
+            <TabsList className="grid w-full grid-cols-7">
               <TabsTrigger value="analytics">Website Analytics</TabsTrigger>
               <TabsTrigger value="conversion">Sales Conversion</TabsTrigger>
               <TabsTrigger value="clients">Client Inquiries</TabsTrigger>
               <TabsTrigger value="customers">Customer Portal</TabsTrigger>
+              <TabsTrigger value="projects">Projects</TabsTrigger>
               <TabsTrigger value="consultations">Consultations</TabsTrigger>
               <TabsTrigger value="website-updates">Website Updates</TabsTrigger>
             </TabsList>
@@ -1316,6 +1317,212 @@ export default function AdminPage() {
                       </div>
                     )}
                   </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Project Management Tab */}
+            <TabsContent value="projects" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Palette className="w-5 h-5 mr-2" />
+                    Active Projects
+                  </CardTitle>
+                  <CardDescription>
+                    Track all customer projects, timelines, and deliverables
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {/* Project stats */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-blue-900">Total Projects</h4>
+                      <p className="text-2xl font-bold text-blue-600">
+                        {clientData?.filter((c: any) => c.setupFeesPaid).length || 0}
+                      </p>
+                    </div>
+                    <div className="bg-amber-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-amber-900">In Development</h4>
+                      <p className="text-2xl font-bold text-amber-600">
+                        {clientData?.filter((c: any) => c.setupFeesPaid && c.status !== 'completed').length || 0}
+                      </p>
+                    </div>
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-green-900">Completed</h4>
+                      <p className="text-2xl font-bold text-green-600">
+                        {clientData?.filter((c: any) => c.status === 'completed').length || 0}
+                      </p>
+                    </div>
+                    <div className="bg-purple-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-purple-900">Awaiting Payment</h4>
+                      <p className="text-2xl font-bold text-purple-600">
+                        {clientData?.filter((c: any) => !c.setupFeesPaid).length || 0}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Project List */}
+                  {clientData && clientData.filter((c: any) => c.setupFeesPaid).length > 0 ? (
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-slate-900 mb-4">All Active Projects</h4>
+                      {clientData
+                        .filter((c: any) => c.setupFeesPaid)
+                        .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                        .map((project: any) => {
+                          const daysActive = Math.floor((new Date().getTime() - new Date(project.createdAt).getTime()) / (1000 * 60 * 60 * 24));
+                          const statusColors: Record<string, string> = {
+                            planning: 'bg-blue-100 text-blue-800',
+                            design: 'bg-purple-100 text-purple-800',
+                            development: 'bg-amber-100 text-amber-800',
+                            review: 'bg-orange-100 text-orange-800',
+                            completed: 'bg-green-100 text-green-800'
+                          };
+                          
+                          return (
+                            <div key={project.id} className="border rounded-lg p-6 bg-white hover:shadow-md transition-shadow">
+                              <div className="flex justify-between items-start mb-4">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-3 mb-2">
+                                    <h5 className="text-lg font-semibold text-slate-900">
+                                      {project.businessName || project.fullName}
+                                    </h5>
+                                    {project.clientCode && (
+                                      <span className="px-2 py-1 bg-indigo-100 text-indigo-800 text-xs font-medium rounded">
+                                        {project.clientCode}
+                                      </span>
+                                    )}
+                                    {project.selectedPackage && (
+                                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                        project.selectedPackage === 'premium' 
+                                          ? 'bg-purple-100 text-purple-800' 
+                                          : 'bg-blue-100 text-blue-800'
+                                      }`}>
+                                        {project.selectedPackage.toUpperCase()}
+                                      </span>
+                                    )}
+                                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                      statusColors[project.status || 'planning'] || 'bg-gray-100 text-gray-800'
+                                    }`}>
+                                      {(project.status || 'planning').toUpperCase()}
+                                    </span>
+                                  </div>
+                                  
+                                  <div className="grid grid-cols-2 gap-4 mt-3 text-sm">
+                                    <div>
+                                      <span className="text-gray-600">Contact:</span>
+                                      <span className="ml-2 text-gray-900">{project.email}</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-gray-600">Template:</span>
+                                      <span className="ml-2 text-gray-900">{project.templateStyle || 'Not selected'}</span>
+                                    </div>
+                                    <div>
+                                      <span className="text-gray-600">Days Active:</span>
+                                      <span className="ml-2 text-gray-900">{daysActive} days</span>
+                                    </div>
+                                    {project.desiredCompletionDate && (
+                                      <div>
+                                        <span className="text-gray-600">Target Date:</span>
+                                        <span className="ml-2 text-amber-700 font-medium">
+                                          {new Date(project.desiredCompletionDate).toLocaleDateString('en-GB', {
+                                            day: 'numeric',
+                                            month: 'long',
+                                            year: 'numeric'
+                                          })}
+                                        </span>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {/* Premium Features */}
+                                  {project.selectedPackage === 'premium' && (
+                                    project.wantsUserAuth || project.wantsDatabase || project.wantsPaymentProcessing || 
+                                    project.wantsCrudOperations || project.wantsAdminPanel || project.wantsProductionFeatures
+                                  ) && (
+                                    <div className="mt-3 pt-3 border-t">
+                                      <span className="text-xs font-semibold text-gray-700 mr-2">Premium Features:</span>
+                                      <div className="flex flex-wrap gap-2 mt-2">
+                                        {project.wantsUserAuth && (
+                                          <span className="px-2 py-1 bg-amber-100 text-amber-800 text-xs rounded">User Auth</span>
+                                        )}
+                                        {project.wantsDatabase && (
+                                          <span className="px-2 py-1 bg-amber-100 text-amber-800 text-xs rounded">Database</span>
+                                        )}
+                                        {project.wantsPaymentProcessing && (
+                                          <span className="px-2 py-1 bg-amber-100 text-amber-800 text-xs rounded">Payments</span>
+                                        )}
+                                        {project.wantsCrudOperations && (
+                                          <span className="px-2 py-1 bg-amber-100 text-amber-800 text-xs rounded">CRUD</span>
+                                        )}
+                                        {project.wantsAdminPanel && (
+                                          <span className="px-2 py-1 bg-amber-100 text-amber-800 text-xs rounded">Admin Panel</span>
+                                        )}
+                                        {project.wantsProductionFeatures && (
+                                          <span className="px-2 py-1 bg-amber-100 text-amber-800 text-xs rounded">Production-Ready</span>
+                                        )}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+
+                                {/* Action Buttons */}
+                                <div className="flex gap-2 ml-4">
+                                  <Select
+                                    value={project.status || 'planning'}
+                                    onValueChange={async (newStatus) => {
+                                      try {
+                                        await updateClientStatusMutation.mutateAsync({
+                                          clientId: project.id,
+                                          status: newStatus
+                                        });
+                                      } catch (error) {
+                                        console.error('Failed to update status:', error);
+                                      }
+                                    }}
+                                  >
+                                    <SelectTrigger className="w-[150px]">
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="planning">Planning</SelectItem>
+                                      <SelectItem value="design">Design</SelectItem>
+                                      <SelectItem value="development">Development</SelectItem>
+                                      <SelectItem value="review">Review</SelectItem>
+                                      <SelectItem value="completed">Completed</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+
+                                  <PostUpdateDialog
+                                    clientCode={project.clientCode}
+                                    clientName={project.fullName}
+                                    clientEmail={project.email}
+                                    sessionPassword={sessionPassword}
+                                    toast={toast}
+                                    queryClient={queryClient}
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Project Description */}
+                              {project.businessDescription && (
+                                <div className="mt-4 p-3 bg-gray-50 rounded">
+                                  <p className="text-sm text-gray-700">
+                                    <span className="font-semibold">Project Description:</span> {project.businessDescription}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12 text-gray-500">
+                      <Palette className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                      <p className="font-medium">No active projects yet</p>
+                      <p className="text-sm mt-1">Projects appear here once customers complete payment</p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
