@@ -477,15 +477,14 @@ export default function AdminPage() {
   });
 
   // Projects data query
-  const { data: projectsData, refetch: refetchProjects } = useQuery({
+  const { data: projectsData, refetch: refetchProjects, isLoading: projectsLoading } = useQuery({
     queryKey: ['/api/admin/projects', sessionPassword],
-    enabled: isAuthenticated && !!sessionPassword && sessionPassword === 'BADMAN123',
+    enabled: isAuthenticated && !!sessionPassword,
     queryFn: async () => {
-      if (!sessionPassword) {
-        throw new Error('No session password available');
-      }
+      console.log('Fetching projects with password:', sessionPassword);
       const response = await fetch(`/api/admin/projects?password=${encodeURIComponent(sessionPassword)}`);
       const result = await response.json();
+      console.log('Projects API result:', result);
       
       if (!result.success) {
         throw new Error(result.message || 'Failed to fetch projects data');
@@ -494,7 +493,6 @@ export default function AdminPage() {
       return result.data;
     },
     retry: false,
-    staleTime: 30000,
   });
 
   // Mutation for updating client status
