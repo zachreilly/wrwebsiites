@@ -487,6 +487,8 @@ export default function AdminPage() {
       return result.data;
     },
     retry: false,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
   });
 
   // Mutation for updating client status
