@@ -375,7 +375,7 @@ async function handlePaymentEvent(event: any) {
     failureReason: paymentDetails.status === 'failed' ? 'Payment failed' : null,
   });
 
-  // If setup fee payment completed, mark customer as setup fees paid
+  // If setup fee payment completed, mark customer as setup fees paid AND auto-create project
   if (paymentDetails.status === 'confirmed') {
     const transaction = await storage.getTransactionByGoCardlessId(payment);
     if (transaction && transaction.type === 'setup_fee') {
@@ -388,6 +388,36 @@ async function handlePaymentEvent(event: any) {
       if (transaction.clientOnboardingId) {
         await storage.updateClientOnboardingPaymentStatus(transaction.clientOnboardingId, true);
         console.log(`Updated client_onboarding ${transaction.clientOnboardingId} setupFeesPaid to true`);
+      }
+      
+      // AUTO-CREATE PROJECT when payment is confirmed
+      try {
+        const customer = await storage.getCustomer(transaction.customerId);
+        if (customer && customer.clientOnboardingId) {
+          const onboarding = await storage.getClientOnboarding(customer.clientOnboardingId);
+          if (onboarding) {
+            // Check if project already exists for this customer
+            const existingProjects = await storage.getProjectsByCustomer(customer.id);
+            if (existingProjects.length === 0) {
+              // Create initial project
+              const project = await storage.createProject({
+                customerId: customer.id,
+                projectName: `${onboarding.businessName || customer.businessName || 'Client'} Website`,
+                projectDescription: onboarding.businessDescription || null,
+                status: 'planning',
+                priority: 'medium',
+                domainName: onboarding.existingDomain || null,
+                estimatedCompletionDate: onboarding.desiredCompletionDate || null
+              });
+              console.log(`✅ AUTO-CREATED PROJECT: ${project.id} for customer ${customer.id} (${customer.email})`);
+            } else {
+              console.log(`Project already exists for customer ${customer.id}, skipping auto-creation`);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Failed to auto-create project:', error);
+        // Don't throw - we don't want to break the webhook if project creation fails
       }
     }
   }
