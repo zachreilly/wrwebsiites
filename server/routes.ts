@@ -6,10 +6,20 @@ import { z } from "zod";
 import { db } from "./db";
 import { eq, desc, count } from "drizzle-orm";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
+import path from "path";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Enable trust proxy to get real IP addresses
   app.set('trust proxy', true);
+
+  // Explicit favicon route for Chrome compatibility
+  app.get("/favicon.ico", (req, res) => {
+    console.log("Favicon requested!");
+    const faviconPath = path.join(process.cwd(), "client", "public", "favicon.ico");
+    res.setHeader("Content-Type", "image/x-icon");
+    res.setHeader("Cache-Control", "public, max-age=604800");
+    res.sendFile(faviconPath);
+  });
 
   // Analytics tracking endpoints
   app.post("/api/analytics/pageview", async (req, res) => {
