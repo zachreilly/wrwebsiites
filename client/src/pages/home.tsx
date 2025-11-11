@@ -7,20 +7,20 @@ import Comparison from "@/components/sections/comparison";
 import About from "@/components/sections/about";
 import FAQ from "@/components/sections/faq";
 import Contact from "@/components/sections/contact";
-import BeamLight from "@/components/sections/beam-light";
+import BeamBackground from "@/components/BeamBackground";
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
+      <BeamBackground />
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-primary focus:text-white focus:px-4 focus:py-2 focus:rounded">
         Skip to main content
       </a>
-      <header>
+      <header className="relative z-10">
         <Navigation />
       </header>
-      <main id="main-content">
+      <main id="main-content" className="relative z-10">
         <Hero />
-        <BeamLight />
         <Services />
         <Pricing />
         <Comparison />

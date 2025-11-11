@@ -4,7 +4,6 @@ import { RotatingGeometry } from "@/components/RotatingGeometry";
 import { ScrollAnimation } from "@/components/ScrollAnimation";
 import { Parallax } from "@/components/Parallax";
 import { Button3D } from "@/components/Button3D";
-import bigBangImage from '@assets/stock_images/cosmic_big_bang_expl_9cc1eaf6.jpg';
 
 export default function Hero() {
   const scrollToSection = (sectionId: string) => {
@@ -16,16 +15,6 @@ export default function Hero() {
 
   return (
     <section id="home" className="relative text-white min-h-screen flex items-center overflow-hidden">
-      {/* Big Bang Image - Centered */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none opacity-70 z-0">
-        <img 
-          src={bigBangImage} 
-          alt="Cosmic energy burst" 
-          className="w-full h-full object-contain animate-pulse"
-          style={{ animationDuration: '3s' }}
-        />
-      </div>
-
       <FloatingShapes />
       <Parallax speed={0.3}>
         <RotatingGeometry />
