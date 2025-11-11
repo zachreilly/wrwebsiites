@@ -56,7 +56,7 @@ export default function Services() {
           </div>
         </ScrollAnimation>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
           <ServiceCard
             icon={Code}
             title="Static Websites – Simple & Reliable"
