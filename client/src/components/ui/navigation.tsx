@@ -15,7 +15,7 @@ export default function Navigation() {
   };
 
   return (
-    <nav className="glass-strong sticky top-0 z-50 border-b border-white/20 backdrop-blur-xl">
+    <nav className="sticky top-0 z-50 bg-gradient-to-b from-emerald-700/95 via-emerald-600/80 to-transparent backdrop-blur-sm">
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-24">
           <div className="flex items-center">
