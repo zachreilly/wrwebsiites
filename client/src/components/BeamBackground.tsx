@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface Particle {
   x: number;
@@ -11,25 +11,8 @@ interface Particle {
 
 export default function BeamBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const particlesRef = useRef<Particle[]>([]);
   const animationFrameRef = useRef<number>();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const scrollTop = window.scrollY;
-      const maxScroll = documentHeight - windowHeight;
-      const progress = maxScroll > 0 ? scrollTop / maxScroll : 0;
-      setScrollProgress(progress);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -189,7 +172,7 @@ export default function BeamBackground() {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [scrollProgress]);
+  }, []);
 
   return (
     <canvas
