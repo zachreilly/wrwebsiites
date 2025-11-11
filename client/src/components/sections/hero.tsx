@@ -35,7 +35,7 @@ export default function Hero() {
             </ScrollAnimation>
             
             <ScrollAnimation delay={0.3}>
-              <p className="text-xl text-white/90 mb-8 leading-relaxed">We help businesses get online with simple, affordable websites that look great and work on all devices. Special launch pricing available now.</p>
+              <p className="text-xl mb-8 leading-relaxed text-[#323232]">We help businesses get online with simple, affordable websites that look great and work on all devices. Special launch pricing available now.</p>
             </ScrollAnimation>
             
             <ScrollAnimation delay={0.4}>
