@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /customer-portal
+
+Sitemap: https://wrwebsites.com/sitemap.xml
