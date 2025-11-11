@@ -41,10 +41,12 @@ export default function Pricing() {
           <div className="text-center mb-16">
             {discountActive ? (
               <>
-                <div className="inline-flex items-center gradient-box px-4 py-2 rounded-full text-sm font-medium mb-4 hover:scale-105 transition-transform duration-200 bg-[#ef4444] text-[#e6e8ed]">
-                  🔥 Limited Time Discount - Ends {getDiscountEndDateFormatted()}
+                <div className="inline-flex items-center px-8 py-4 rounded-full text-lg font-bold mb-6 bg-gradient-to-r from-red-600 via-red-500 to-orange-500 text-white shadow-2xl animate-pulse border-4 border-white hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl mr-2 animate-bounce">🔥</span>
+                  <span className="drop-shadow-lg">Limited Time Discount - Ends {getDiscountEndDateFormatted()}</span>
+                  <span className="text-2xl ml-2 animate-bounce">🔥</span>
                 </div>
-                <h2 className="text-4xl font-bold text-black mb-4">Special Launch Pricing - Save 50%!</h2>
+                <h2 className="text-5xl font-bold text-black mb-4 drop-shadow-md">Special Launch Pricing - Save 50%!</h2>
                 <p className="text-xl text-black/90 max-w-3xl mx-auto">
                   Get your professional website at half price! This limited-time offer ends in one week - don't miss out on these incredible savings.
                 </p>
@@ -210,10 +212,10 @@ export default function Pricing() {
                   { title: "Major Revamp", price: "£500+", items: ["Complete redesign", "Major functionality", "New architecture", "Full rebuild"] }
                 ].map((tier, i) => (
                   <div key={i} className="text-center">
-                    <div className="bg-black/10 p-6 rounded-lg shadow-sm border-2 border-black/20 h-full">
-                      <h4 className="text-xl font-bold text-accent mb-3">{tier.title}</h4>
-                      <div className="text-2xl font-bold text-black mb-2">{tier.price}</div>
-                      <ul className="text-sm text-black/80 space-y-1">
+                    <div className="bg-black p-6 rounded-lg shadow-xl border-2 border-white/20 h-full">
+                      <h4 className="text-xl font-bold text-white mb-3">{tier.title}</h4>
+                      <div className="text-2xl font-bold text-white mb-2">{tier.price}</div>
+                      <ul className="text-sm text-white/80 space-y-1">
                         {tier.items.map((item, j) => (
                           <li key={j}>• {item}</li>
                         ))}

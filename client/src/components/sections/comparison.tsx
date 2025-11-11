@@ -132,27 +132,23 @@ export default function Comparison() {
               <div className="text-black font-bold text-lg flex items-center">Features</div>
               
               {/* Basic Header */}
-              <Parallax speed={1}>
-                <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border-2 border-black p-4 text-center">
-                  <h3 className="text-xl font-bold mb-1 text-black">Basic</h3>
-                  <div className="text-2xl font-bold text-black">£75</div>
-                  <div className="text-xs text-black/70">+ £10/month</div>
-                </div>
-              </Parallax>
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border-2 border-black p-4 text-center">
+                <h3 className="text-xl font-bold mb-1 text-black">Basic</h3>
+                <div className="text-2xl font-bold text-black">£75</div>
+                <div className="text-xs text-black/70">+ £10/month</div>
+              </div>
 
               {/* Premium Header */}
-              <Parallax speed={2}>
-                <div className="relative gradient-box rounded-2xl shadow-2xl border-4 border-black p-4 text-center">
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-                      MOST POPULAR
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold mb-1 text-black">Premium</h3>
-                  <div className="text-2xl font-bold text-black">£150</div>
-                  <div className="text-xs text-black/70">+ £10/month</div>
+              <div className="relative gradient-box rounded-2xl shadow-2xl border-4 border-black p-4 text-center">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <span className="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                    MOST POPULAR
+                  </span>
                 </div>
-              </Parallax>
+                <h3 className="text-xl font-bold mb-1 text-black">Premium</h3>
+                <div className="text-2xl font-bold text-black">£150</div>
+                <div className="text-xs text-black/70">+ £10/month</div>
+              </div>
             </div>
           </div>
 

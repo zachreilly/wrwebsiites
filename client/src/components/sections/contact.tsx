@@ -27,7 +27,7 @@ export default function Contact() {
                 icon: Mail,
                 title: "Email Us Direct",
                 description: "Send us your project details",
-                content: <a href="mailto:zachhreillyy@gmail.com" className="block text-accent font-medium hover:text-amber-400">zachhreillyy@gmail.com</a>
+                content: <a href="https://mail.google.com/mail/?view=cm&to=zachhreillyy@gmail.com" target="_blank" rel="noopener noreferrer" className="block text-accent font-medium hover:text-amber-400">zachhreillyy@gmail.com</a>
               },
               {
                 icon: Clock,
