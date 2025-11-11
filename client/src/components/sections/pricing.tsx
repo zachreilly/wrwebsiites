@@ -11,8 +11,8 @@ export default function Pricing() {
   const [premiumPricing, setPremiumPricing] = useState(getCurrentPricing('premium'));
   const [discountActive, setDiscountActive] = useState(isDiscountActive());
   
-  const basicTilt = use3DTilt({ max: 8, scale: 1.02 });
-  const premiumTilt = use3DTilt({ max: 8, scale: 1.02 });
+  const basicTilt = use3DTilt({ max: 4, scale: 1.01, speed: 160 });
+  const premiumTilt = use3DTilt({ max: 4, scale: 1.01, speed: 160 });
 
   useEffect(() => {
     const interval = setInterval(() => {
