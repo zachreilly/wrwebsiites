@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /admin
-Disallow: /customer-portal
+Disallow: /admin/
+Disallow: /customer/
+Disallow: /website-update-request
 
 Sitemap: https://wrwebsites.com/sitemap.xml
