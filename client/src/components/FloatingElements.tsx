@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './FloatingElements.css';
 
 interface FloatingElementsProps {
@@ -6,55 +6,97 @@ interface FloatingElementsProps {
   size?: 'small' | 'medium' | 'large';
 }
 
+// Shared mouse position for all FloatingElements instances
+let sharedMouseX = typeof window !== 'undefined' ? window.innerWidth / 2 : 0;
+let sharedMouseY = typeof window !== 'undefined' ? window.innerHeight / 2 : 0;
+let mouseListenerAttached = false;
+let sharedRafId: number | null = null;
+const containers = new Set<HTMLDivElement>();
+
+function updateAllContainers() {
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+
+  containers.forEach(container => {
+    const elements = container.querySelectorAll('.floating-shape');
+    
+    elements.forEach((element, index) => {
+      const speed = 0.01 + (index * 0.005);
+      const x = (sharedMouseX - centerX) * speed;
+      const y = (sharedMouseY - centerY) * speed;
+
+      (element as HTMLElement).style.transform = `
+        translate(${x}px, ${y}px)
+        rotateX(${y * 0.1}deg)
+        rotateY(${x * 0.1}deg)
+      `;
+    });
+  });
+
+  sharedRafId = null;
+}
+
+function handleSharedMouseMove(e: MouseEvent) {
+  sharedMouseX = e.clientX;
+  sharedMouseY = e.clientY;
+
+  if (sharedRafId === null) {
+    sharedRafId = requestAnimationFrame(updateAllContainers);
+  }
+}
+
 export function FloatingElements({ count = 5, size = 'medium' }: FloatingElementsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
+  const [prefersReducedMotion] = useState(() => 
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
 
   useEffect(() => {
+    if (prefersReducedMotion) return;
+    
     const container = containerRef.current;
     if (!container) return;
 
-    let rafId: number | null = null;
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
+    // Visibility observer to pause when off-screen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0 }
+    );
 
-    const updatePositions = () => {
-      const elements = container.querySelectorAll('.floating-shape');
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
+    observer.observe(container);
 
-      elements.forEach((element, index) => {
-        const speed = 0.01 + (index * 0.005);
-        const x = (mouseX - centerX) * speed;
-        const y = (mouseY - centerY) * speed;
+    if (isVisible) {
+      containers.add(container);
+    }
 
-        (element as HTMLElement).style.transform = `
-          translate(${x}px, ${y}px)
-          rotateX(${y * 0.1}deg)
-          rotateY(${x * 0.1}deg)
-        `;
-      });
-
-      rafId = null;
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-
-      if (rafId === null) {
-        rafId = requestAnimationFrame(updatePositions);
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    // Attach shared mouse listener only once
+    if (!mouseListenerAttached) {
+      window.addEventListener('mousemove', handleSharedMouseMove, { passive: true });
+      mouseListenerAttached = true;
+    }
     
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      if (rafId !== null) {
-        cancelAnimationFrame(rafId);
+      observer.disconnect();
+      containers.delete(container);
+      
+      // Remove shared listener if no containers left
+      if (containers.size === 0 && mouseListenerAttached) {
+        window.removeEventListener('mousemove', handleSharedMouseMove);
+        mouseListenerAttached = false;
+        if (sharedRafId !== null) {
+          cancelAnimationFrame(sharedRafId);
+          sharedRafId = null;
+        }
       }
     };
-  }, []);
+  }, [isVisible, prefersReducedMotion]);
+
+  if (prefersReducedMotion) {
+    return null;
+  }
 
   const shapes = ['sphere', 'cube', 'pyramid', 'torus'];
   const getSizeClass = () => {

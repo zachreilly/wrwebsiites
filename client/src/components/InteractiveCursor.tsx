@@ -34,8 +34,14 @@ export default function InteractiveCursor() {
   const trailRef = useRef<TrailPoint[]>([]);
   const mouseRef = useRef({ x: 0, y: 0 });
   const animationFrameRef = useRef<number>();
+  const lastMouseMoveRef = useRef(Date.now());
+  const isIdleRef = useRef(false);
 
   useEffect(() => {
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
     const canvas = canvasRef.current;
     const gradientDiv = gradientRef.current;
     if (!canvas || !gradientDiv) return;
@@ -51,7 +57,9 @@ export default function InteractiveCursor() {
 
     const initParticles = () => {
       particlesRef.current = [];
-      const particleCount = 100;
+      // Reduced particle count for better performance (50 on desktop, 30 on mobile)
+      const isMobile = window.innerWidth < 768;
+      const particleCount = isMobile ? 30 : 50;
       
       for (let i = 0; i < particleCount; i++) {
         const x = Math.random() * canvas.width;
@@ -79,6 +87,14 @@ export default function InteractiveCursor() {
       if (now - lastMouseMoveTime < 16) return;
       lastMouseMoveTime = now;
 
+      lastMouseMoveRef.current = now;
+      isIdleRef.current = false;
+
+      // Restart animation if it was stopped due to idle
+      if (!animationFrameRef.current) {
+        animationFrameRef.current = requestAnimationFrame(animate);
+      }
+
       mouseRef.current = { x: e.clientX, y: e.clientY };
       
       const xPercent = (e.clientX / window.innerWidth) * 100;
@@ -93,7 +109,8 @@ export default function InteractiveCursor() {
         timestamp: now
       });
 
-      if (trailRef.current.length > 20) {
+      // Reduced trail length for performance
+      if (trailRef.current.length > 15) {
         trailRef.current.shift();
       }
     };
@@ -103,11 +120,12 @@ export default function InteractiveCursor() {
         x: e.clientX,
         y: e.clientY,
         radius: 0,
-        maxRadius: 180 + Math.random() * 100,
-        alpha: 0.8
+        maxRadius: 150 + Math.random() * 80,
+        alpha: 0.7
       });
 
-      if (ripplesRef.current.length > 5) {
+      // Limit ripples to 3 for performance
+      if (ripplesRef.current.length > 3) {
         ripplesRef.current.shift();
       }
     };
@@ -216,6 +234,17 @@ export default function InteractiveCursor() {
     };
 
     const animate = () => {
+      // Check for idle state (>2s since last mouse move)
+      const now = Date.now();
+      if (now - lastMouseMoveRef.current > 2000) {
+        if (!isIdleRef.current) {
+          isIdleRef.current = true;
+        }
+        // Stop animation when idle
+        animationFrameRef.current = undefined;
+        return;
+      }
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       updateParticles();
