@@ -13,25 +13,21 @@ export default function BeamBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animationFrameRef = useRef<number>();
+  const cachedPathRef = useRef<{ x: number; y: number }[]>([]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = document.documentElement.scrollHeight;
-    };
-
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    const getBeamPath = () => {
+      
       const centerX = canvas.width / 2;
-      const numPoints = 500;
+      const numPoints = 200;
       const points: { x: number; y: number }[] = [];
 
       for (let i = 0; i <= numPoints; i++) {
@@ -44,60 +40,49 @@ export default function BeamBackground() {
         
         points.push({ x, y });
       }
-
-      return points;
+      
+      cachedPathRef.current = points;
     };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
     const drawSmoothBeam = (points: { x: number; y: number }[]) => {
       if (points.length < 2) return;
 
-      ctx.strokeStyle = 'rgba(16, 185, 129, 0.3)';
-      ctx.lineWidth = 60;
-      ctx.filter = 'blur(30px)';
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
+
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.2)';
+      ctx.lineWidth = 50;
+      ctx.filter = 'blur(20px)';
       ctx.beginPath();
       ctx.moveTo(points[0].x, points[0].y);
-      
-      for (let i = 1; i < points.length - 1; i++) {
-        const xc = (points[i].x + points[i + 1].x) / 2;
-        const yc = (points[i].y + points[i + 1].y) / 2;
-        ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y);
       }
-      
-      ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
       ctx.stroke();
 
-      ctx.strokeStyle = 'rgba(16, 185, 129, 0.6)';
-      ctx.lineWidth = 20;
-      ctx.filter = 'blur(10px)';
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.5)';
+      ctx.lineWidth = 15;
+      ctx.filter = 'blur(5px)';
       ctx.beginPath();
       ctx.moveTo(points[0].x, points[0].y);
-      
-      for (let i = 1; i < points.length - 1; i++) {
-        const xc = (points[i].x + points[i + 1].x) / 2;
-        const yc = (points[i].y + points[i + 1].y) / 2;
-        ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y);
       }
-      
-      ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
       ctx.stroke();
 
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-      ctx.lineWidth = 3;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.lineWidth = 2;
       ctx.filter = 'none';
-      ctx.shadowColor = 'rgba(16, 185, 129, 0.8)';
-      ctx.shadowBlur = 20;
+      ctx.shadowColor = 'rgba(16, 185, 129, 0.6)';
+      ctx.shadowBlur = 15;
       ctx.beginPath();
       ctx.moveTo(points[0].x, points[0].y);
-      
-      for (let i = 1; i < points.length - 1; i++) {
-        const xc = (points[i].x + points[i + 1].x) / 2;
-        const yc = (points[i].y + points[i + 1].y) / 2;
-        ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y);
       }
-      
-      ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
       ctx.stroke();
       ctx.shadowBlur = 0;
     };
@@ -107,15 +92,15 @@ export default function BeamBackground() {
       const point = points[randomIndex];
       
       particlesRef.current.push({
-        x: point.x + (Math.random() - 0.5) * 10,
+        x: point.x + (Math.random() - 0.5) * 8,
         y: point.y,
-        size: 2 + Math.random() * 3,
-        alpha: 0.8 + Math.random() * 0.2,
-        speedY: 0.5 + Math.random() * 1,
+        size: 1.5 + Math.random() * 2,
+        alpha: 0.7 + Math.random() * 0.3,
+        speedY: 0.3 + Math.random() * 0.7,
         life: 1.0
       });
 
-      if (particlesRef.current.length > 150) {
+      if (particlesRef.current.length > 100) {
         particlesRef.current.shift();
       }
     };
@@ -123,18 +108,18 @@ export default function BeamBackground() {
     const updateParticles = () => {
       particlesRef.current = particlesRef.current.filter(p => {
         p.y += p.speedY;
-        p.life -= 0.01;
-        p.alpha = p.life * 0.9;
+        p.life -= 0.008;
+        p.alpha = p.life * 0.8;
         return p.life > 0;
       });
     };
 
     const drawParticles = () => {
+      ctx.filter = 'none';
       particlesRef.current.forEach(p => {
         ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
-        ctx.filter = 'none';
-        ctx.shadowColor = 'rgba(16, 185, 129, 0.8)';
-        ctx.shadowBlur = 10;
+        ctx.shadowColor = 'rgba(16, 185, 129, 0.6)';
+        ctx.shadowBlur = 8;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
@@ -143,17 +128,16 @@ export default function BeamBackground() {
     };
 
     let lastEmitTime = 0;
-    const emitInterval = 50;
+    const emitInterval = 80;
 
     const animate = (timestamp: number) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const points = getBeamPath();
-      drawSmoothBeam(points);
+      drawSmoothBeam(cachedPathRef.current);
 
       if (timestamp - lastEmitTime > emitInterval) {
-        for (let i = 0; i < 3; i++) {
-          emitParticle(points);
+        for (let i = 0; i < 2; i++) {
+          emitParticle(cachedPathRef.current);
         }
         lastEmitTime = timestamp;
       }
