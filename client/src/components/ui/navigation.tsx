@@ -15,26 +15,24 @@ export default function Navigation() {
   };
 
   return (
-    <nav className="bg-emerald-600 shadow-sm sticky top-0 z-50 border-b border-emerald-700">
+    <nav className="glass-strong sticky top-0 z-50 border-b border-white/20 backdrop-blur-xl">
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-24">
-          {/* Logo */}
           <div className="flex items-center">
             <img 
               src={logoImage} 
               alt="wrwebsites logo" 
-              className="h-16 w-16 sm:h-20 sm:w-20 rounded-full"
+              className="h-16 w-16 sm:h-20 sm:w-20 rounded-full shadow-lg hover:scale-110 hover:rotate-6 transition-all duration-300"
               data-testid="logo-image"
             />
             <span className="ml-2 sm:ml-4 text-2xl sm:text-4xl font-bold text-white">wrwebsites</span>
           </div>
           
-          {/* Portfolio and Customer Portal Links + Menu button */}
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               onClick={() => window.location.href = '/portfolio'}
-              className="hidden md:flex text-white hover:text-emerald-100 hover:bg-emerald-700"
+              className="hidden md:flex text-white hover:text-white hover:bg-white/20 hover:scale-105 transition-all duration-200"
               data-testid="button-portfolio-header"
             >
               Portfolio
@@ -42,7 +40,7 @@ export default function Navigation() {
             <Button
               variant="ghost"
               onClick={() => window.location.href = '/customer/login'}
-              className="hidden md:flex text-white hover:text-emerald-100 hover:bg-emerald-700"
+              className="hidden md:flex text-white hover:text-white hover:bg-white/20 hover:scale-105 transition-all duration-200"
               data-testid="button-customer-portal-header"
             >
               Customer Portal
@@ -51,7 +49,7 @@ export default function Navigation() {
               variant="ghost"
               size="sm"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white hover:text-emerald-100"
+              className="text-white hover:text-white hover:bg-white/20 hover:scale-110 transition-transform duration-200"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
@@ -59,63 +57,48 @@ export default function Navigation() {
         </div>
       </div>
       
-      {/* Mobile Navigation Menu */}
       {isMenuOpen && (
-        <div className="bg-emerald-600 border-t border-emerald-700">
+        <div className="glass-strong border-t border-white/20 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="px-4 pt-4 pb-4 space-y-2">
-            {/* Main Navigation */}
             <div className="space-y-1">
-              <button 
-                onClick={() => scrollToSection('home')} 
-                className="block px-3 py-2 text-white hover:text-emerald-100 w-full text-left rounded-lg hover:bg-emerald-700 font-medium transition-all"
-              >
-                Home
-              </button>
-              <button 
-                onClick={() => scrollToSection('services')} 
-                className="block px-3 py-2 text-white hover:text-emerald-100 w-full text-left rounded-lg hover:bg-emerald-700 transition-all"
-              >
-                Services
-              </button>
-              <button 
-                onClick={() => scrollToSection('pricing')} 
-                className="block px-3 py-2 text-white hover:text-emerald-100 w-full text-left rounded-lg hover:bg-emerald-700 transition-all"
-              >
-                Pricing
-              </button>
+              {[
+                { id: 'home', label: 'Home' },
+                { id: 'services', label: 'Services' },
+                { id: 'pricing', label: 'Pricing' },
+                { id: 'about', label: 'About' }
+              ].map((item, i) => (
+                <button
+                  key={i}
+                  onClick={() => scrollToSection(item.id)}
+                  className="block px-3 py-2 text-white hover:text-white w-full text-left rounded-lg hover:bg-white/20 transition-all font-medium hover:translate-x-1"
+                >
+                  {item.label}
+                </button>
+              ))}
               <button 
                 onClick={() => {
                   window.location.href = '/portfolio';
                   setIsMenuOpen(false);
                 }} 
-                className="block px-3 py-2 text-white hover:text-emerald-100 w-full text-left rounded-lg hover:bg-emerald-700 transition-all"
+                className="block px-3 py-2 text-white hover:text-white w-full text-left rounded-lg hover:bg-white/20 transition-all hover:translate-x-1"
                 data-testid="button-portfolio-mobile"
               >
                 Portfolio
               </button>
-              <button 
-                onClick={() => scrollToSection('about')} 
-                className="block px-3 py-2 text-white hover:text-emerald-100 w-full text-left rounded-lg hover:bg-emerald-700 transition-all"
-              >
-                About
-              </button>
             </div>
             
-            {/* Divider */}
-            <div className="h-px bg-emerald-400 my-3"></div>
+            <div className="h-px bg-white/20 my-3"></div>
             
-            {/* Secondary Links */}
             <button 
               onClick={() => {
                 window.location.href = '/customer/login';
                 setIsMenuOpen(false);
               }} 
-              className="block px-3 py-2 text-emerald-100 hover:text-white w-full text-left text-sm"
+              className="block px-3 py-2 text-white/90 hover:text-white w-full text-left text-sm hover:translate-x-1 transition-all"
             >
               Customer Portal
             </button>
             
-            {/* CTA Buttons */}
             <div className="space-y-2 pt-2">
               <Button 
                 variant="outline"
@@ -123,7 +106,7 @@ export default function Navigation() {
                   window.location.href = '/consultation';
                   setIsMenuOpen(false);
                 }} 
-                className="w-full border-2 border-yellow-300 text-yellow-300 hover:bg-yellow-300 hover:text-emerald-600 font-semibold"
+                className="w-full border-2 border-accent text-accent hover:bg-accent hover:text-slate-900 font-semibold hover:scale-105 transition-all duration-200"
               >
                 Custom Quote
               </Button>
@@ -132,7 +115,7 @@ export default function Navigation() {
                   window.location.href = '/payment';
                   setIsMenuOpen(false);
                 }} 
-                className="w-full bg-white text-emerald-600 hover:bg-emerald-50"
+                className="w-full bg-white text-primary hover:bg-white/90 hover:scale-105 transition-all duration-200"
               >
                 Get Started
               </Button>
