@@ -158,8 +158,8 @@
   }
   
   .gradient-box {
-    background: linear-gradient(to bottom, hsl(160 84% 39%), hsl(158 64% 52%));
-    border: 2px solid rgba(0, 0, 0, 0.1);
+    background: linear-gradient(to bottom, hsl(142 76% 36%), hsl(142 69% 58%));
+    border: 2px solid black;
   }
   
   /* Reduced motion support */
