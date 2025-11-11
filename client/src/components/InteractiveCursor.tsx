@@ -51,7 +51,7 @@ export default function InteractiveCursor() {
 
     const initParticles = () => {
       particlesRef.current = [];
-      const particleCount = 80;
+      const particleCount = 150;
       
       for (let i = 0; i < particleCount; i++) {
         const x = Math.random() * canvas.width;
@@ -64,8 +64,8 @@ export default function InteractiveCursor() {
           baseY: y,
           vx: 0,
           vy: 0,
-          size: 1.5 + Math.random() * 2,
-          alpha: 0.3 + Math.random() * 0.4
+          size: 2 + Math.random() * 2.5,
+          alpha: 0.5 + Math.random() * 0.4
         });
       }
     };
@@ -84,16 +84,16 @@ export default function InteractiveCursor() {
       const xPercent = (e.clientX / window.innerWidth) * 100;
       const yPercent = (e.clientY / window.innerHeight) * 100;
       
-      gradientDiv.style.background = `radial-gradient(circle at ${xPercent}% ${yPercent}%, rgba(16, 185, 129, 0.05), transparent 50%)`;
+      gradientDiv.style.background = `radial-gradient(circle at ${xPercent}% ${yPercent}%, rgba(16, 185, 129, 0.15), transparent 70%)`;
 
       trailRef.current.push({
         x: e.clientX,
         y: e.clientY,
-        alpha: 0.8,
+        alpha: 1,
         timestamp: now
       });
 
-      if (trailRef.current.length > 20) {
+      if (trailRef.current.length > 30) {
         trailRef.current.shift();
       }
     };
@@ -103,11 +103,11 @@ export default function InteractiveCursor() {
         x: e.clientX,
         y: e.clientY,
         radius: 0,
-        maxRadius: 150 + Math.random() * 100,
-        alpha: 0.6
+        maxRadius: 200 + Math.random() * 150,
+        alpha: 0.9
       });
 
-      if (ripplesRef.current.length > 5) {
+      if (ripplesRef.current.length > 8) {
         ripplesRef.current.shift();
       }
     };
@@ -117,7 +117,7 @@ export default function InteractiveCursor() {
 
     const updateParticles = () => {
       const mouse = mouseRef.current;
-      const repelRadius = 120;
+      const repelRadius = 150;
       const returnSpeed = 0.05;
 
       particlesRef.current.forEach(particle => {
@@ -127,8 +127,8 @@ export default function InteractiveCursor() {
 
         if (distance < repelRadius) {
           const force = (repelRadius - distance) / repelRadius;
-          particle.vx += (dx / distance) * force * 2;
-          particle.vy += (dy / distance) * force * 2;
+          particle.vx += (dx / distance) * force * 3;
+          particle.vy += (dy / distance) * force * 3;
         }
 
         particle.vx += (particle.baseX - particle.x) * returnSpeed;
@@ -144,8 +144,8 @@ export default function InteractiveCursor() {
 
     const updateRipples = () => {
       ripplesRef.current = ripplesRef.current.filter(ripple => {
-        ripple.radius += 4;
-        ripple.alpha -= 0.02;
+        ripple.radius += 5;
+        ripple.alpha -= 0.015;
         return ripple.alpha > 0;
       });
     };
@@ -154,16 +154,16 @@ export default function InteractiveCursor() {
       const now = Date.now();
       trailRef.current = trailRef.current.filter(point => {
         const age = now - point.timestamp;
-        point.alpha = Math.max(0, 0.8 - (age / 500));
-        return age < 500;
+        point.alpha = Math.max(0, 1 - (age / 600));
+        return age < 600;
       });
     };
 
     const drawParticles = () => {
       particlesRef.current.forEach(particle => {
         ctx.fillStyle = `rgba(16, 185, 129, ${particle.alpha})`;
-        ctx.shadowColor = 'rgba(16, 185, 129, 0.5)';
-        ctx.shadowBlur = 8;
+        ctx.shadowColor = 'rgba(16, 185, 129, 0.8)';
+        ctx.shadowBlur = 12;
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
         ctx.fill();
@@ -174,9 +174,9 @@ export default function InteractiveCursor() {
     const drawRipples = () => {
       ripplesRef.current.forEach(ripple => {
         ctx.strokeStyle = `rgba(16, 185, 129, ${ripple.alpha})`;
-        ctx.lineWidth = 2;
-        ctx.shadowColor = 'rgba(16, 185, 129, 0.6)';
-        ctx.shadowBlur = 10;
+        ctx.lineWidth = 4;
+        ctx.shadowColor = 'rgba(16, 185, 129, 0.9)';
+        ctx.shadowBlur = 20;
         ctx.beginPath();
         ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
         ctx.stroke();
@@ -195,13 +195,13 @@ export default function InteractiveCursor() {
       );
       
       gradient.addColorStop(0, 'rgba(16, 185, 129, 0)');
-      gradient.addColorStop(1, 'rgba(16, 185, 129, 0.3)');
+      gradient.addColorStop(1, 'rgba(16, 185, 129, 0.7)');
 
       ctx.strokeStyle = gradient;
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 6;
       ctx.lineCap = 'round';
-      ctx.shadowColor = 'rgba(16, 185, 129, 0.5)';
-      ctx.shadowBlur = 15;
+      ctx.shadowColor = 'rgba(16, 185, 129, 0.8)';
+      ctx.shadowBlur = 25;
 
       ctx.beginPath();
       ctx.moveTo(trailRef.current[0].x, trailRef.current[0].y);
@@ -247,7 +247,7 @@ export default function InteractiveCursor() {
         ref={gradientRef}
         className="fixed inset-0 pointer-events-none transition-all duration-700 ease-out"
         style={{
-          background: 'radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05), transparent 50%)',
+          background: 'radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.15), transparent 70%)',
           zIndex: -1
         }}
       />
