@@ -41,10 +41,10 @@ export default function Pricing() {
           <div className="text-center mb-16">
             {discountActive ? (
               <>
-                <div className="inline-flex items-center px-8 py-4 rounded-full text-lg font-bold mb-6 bg-gradient-to-r from-red-600 via-red-500 to-orange-500 text-white shadow-2xl animate-pulse border-4 border-white hover:scale-110 transition-transform duration-300">
-                  <span className="text-2xl mr-2 animate-bounce">🔥</span>
+                <div className="inline-flex items-center px-8 py-4 rounded-full text-lg font-bold mb-6 bg-gradient-to-r from-red-600 via-red-500 to-orange-500 text-white shadow-2xl border-4 border-white hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl mr-2">🔥</span>
                   <span className="drop-shadow-lg">Limited Time Discount - Ends {getDiscountEndDateFormatted()}</span>
-                  <span className="text-2xl ml-2 animate-bounce">🔥</span>
+                  <span className="text-2xl ml-2">🔥</span>
                 </div>
                 <h2 className="text-5xl font-bold text-black mb-4 drop-shadow-md">Special Launch Pricing - Save 50%!</h2>
                 <p className="text-xl text-black/90 max-w-3xl mx-auto">
