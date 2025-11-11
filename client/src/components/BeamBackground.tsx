@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import bigBangImage from '@assets/stock_images/cosmic_big_bang_expl_9cc1eaf6.jpg';
 
 export default function BeamBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -116,32 +115,10 @@ export default function BeamBackground() {
   }, [scrollProgress]);
 
   return (
-    <>
-      <canvas
-        ref={canvasRef}
-        className="fixed top-0 left-0 pointer-events-none z-0"
-        style={{ width: '100%', height: '100%' }}
-      />
-      
-      <div 
-        className="fixed bottom-0 left-1/2 transform -translate-x-1/2 pointer-events-none z-0"
-        style={{
-          width: '400px',
-          height: '400px',
-          opacity: 0.4 + (scrollProgress * 0.4),
-          transition: 'opacity 0.3s ease-out'
-        }}
-      >
-        <img 
-          src={bigBangImage} 
-          alt="Energy source" 
-          className="w-full h-full object-contain"
-          style={{
-            filter: 'brightness(1.2) contrast(1.1)',
-            transform: `scale(${0.8 + scrollProgress * 0.4})`
-          }}
-        />
-      </div>
-    </>
+    <canvas
+      ref={canvasRef}
+      className="fixed top-0 left-0 pointer-events-none z-0"
+      style={{ width: '100%', height: '100%' }}
+    />
   );
 }
