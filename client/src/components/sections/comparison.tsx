@@ -27,13 +27,13 @@ export default function Comparison() {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <section className="py-20 relative">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+          <h2 className="text-4xl font-bold mb-4 text-black">
             Compare Our Packages
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-lg text-black/80 max-w-2xl mx-auto">
             Choose the perfect package for your business needs
           </p>
         </div>
@@ -52,23 +52,23 @@ export default function Comparison() {
                 return (
                   <div
                     key={index}
-                    className={`flex items-center gap-3 p-4 rounded-lg transition-all duration-200 ${
+                    className={`flex items-center gap-3 p-4 rounded-lg transition-all duration-200 border-2 ${
                       feature.category === 'advanced' 
-                        ? 'bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30' 
-                        : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                        ? 'bg-white/90 backdrop-blur-sm border-black shadow-lg' 
+                        : 'bg-white/70 backdrop-blur-sm border-black/30 hover:border-black/50'
                     }`}
                   >
                     <Icon className={`w-5 h-5 ${
                       feature.category === 'advanced' 
-                        ? 'text-amber-600 dark:text-amber-400' 
-                        : 'text-gray-600 dark:text-gray-400'
+                        ? 'text-accent' 
+                        : 'text-black'
                     }`} />
                     <div>
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">
+                      <div className="text-sm font-medium text-black">
                         {feature.name}
                       </div>
                       {feature.description && (
-                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                        <div className="text-xs text-black/70 mt-0.5">
                           {feature.description}
                         </div>
                       )}
@@ -81,30 +81,30 @@ export default function Comparison() {
             {/* Basic Package Column */}
             <div className="space-y-3">
               {/* Package Header */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-6 text-center h-32 flex flex-col justify-center">
-                <h3 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Basic</h3>
-                <div className="text-3xl font-bold text-emerald-600 mb-1">£75</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">+ £10/month</div>
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border-2 border-black p-6 text-center h-32 flex flex-col justify-center">
+                <h3 className="text-2xl font-bold mb-2 text-black">Basic</h3>
+                <div className="text-3xl font-bold text-black mb-1">£75</div>
+                <div className="text-sm text-black/70">+ £10/month</div>
               </div>
               
               {/* Feature Values */}
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className={`flex items-center justify-center p-4 rounded-lg bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 transition-all duration-200 ${
+                  className={`flex items-center justify-center p-4 rounded-lg bg-white/80 backdrop-blur-sm border-2 border-black/40 transition-all duration-200 ${
                     feature.category === 'advanced' 
                       ? 'opacity-50' 
-                      : 'hover:shadow-md'
+                      : 'hover:shadow-md hover:border-black'
                   }`}
                 >
                   {typeof feature.basic === "boolean" ? (
                     feature.basic ? (
-                      <Check className="w-6 h-6 text-emerald-600" data-testid={`check-basic-${index}`} />
+                      <Check className="w-6 h-6 text-black" data-testid={`check-basic-${index}`} />
                     ) : (
-                      <X className="w-6 h-6 text-gray-400" data-testid={`x-basic-${index}`} />
+                      <X className="w-6 h-6 text-black/30" data-testid={`x-basic-${index}`} />
                     )
                   ) : (
-                    <span className="text-sm text-gray-700 dark:text-gray-300 font-medium" data-testid={`text-basic-${index}`}>
+                    <span className="text-sm text-black font-medium" data-testid={`text-basic-${index}`}>
                       {feature.basic}
                     </span>
                   )}
@@ -115,16 +115,16 @@ export default function Comparison() {
             {/* Premium Package Column - Highlighted */}
             <div className="space-y-3">
               {/* Package Header with Badge */}
-              <div className="relative bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-2xl border-2 border-emerald-400 p-6 text-center h-32 flex flex-col justify-center transform hover:scale-105 transition-transform duration-200">
+              <div className="relative bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border-4 border-black p-6 text-center h-32 flex flex-col justify-center transform hover:scale-105 transition-transform duration-200">
                 {/* Most Popular Badge */}
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-amber-500 text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg">
+                  <span className="bg-red-600 text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg">
                     MOST POPULAR
                   </span>
                 </div>
-                <h3 className="text-2xl font-bold mb-2 text-white">Premium</h3>
-                <div className="text-3xl font-bold text-white mb-1">£150</div>
-                <div className="text-sm text-white/90">+ £10/month</div>
+                <h3 className="text-2xl font-bold mb-2 text-black">Premium</h3>
+                <div className="text-3xl font-bold text-black mb-1">£150</div>
+                <div className="text-sm text-black/70">+ £10/month</div>
               </div>
               
               {/* Feature Values - Elevated */}
@@ -133,20 +133,20 @@ export default function Comparison() {
                   key={index}
                   className={`flex items-center justify-center p-4 rounded-lg backdrop-blur-sm transition-all duration-200 border-2 ${
                     feature.category === 'advanced'
-                      ? 'bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/50 dark:to-yellow-950/50 border-amber-300 dark:border-amber-700 shadow-md hover:shadow-xl'
-                      : 'bg-emerald-50/50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 hover:shadow-lg hover:border-emerald-300'
+                      ? 'bg-white/95 border-black shadow-xl hover:shadow-2xl'
+                      : 'bg-white/85 border-black/60 hover:shadow-lg hover:border-black'
                   }`}
                 >
                   {typeof feature.premium === "boolean" ? (
                     feature.premium ? (
                       <Check className={`w-6 h-6 ${
-                        feature.category === 'advanced' ? 'text-amber-600' : 'text-emerald-600'
+                        feature.category === 'advanced' ? 'text-accent' : 'text-black'
                       }`} data-testid={`check-premium-${index}`} />
                     ) : (
-                      <X className="w-6 h-6 text-gray-400" data-testid={`x-premium-${index}`} />
+                      <X className="w-6 h-6 text-black/30" data-testid={`x-premium-${index}`} />
                     )
                   ) : (
-                    <span className="text-sm text-gray-700 dark:text-gray-300 font-medium" data-testid={`text-premium-${index}`}>
+                    <span className="text-sm text-black font-medium" data-testid={`text-premium-${index}`}>
                       {feature.premium}
                     </span>
                   )}
@@ -159,14 +159,14 @@ export default function Comparison() {
           <div className="flex justify-center gap-6 mt-8">
             <a
               href="/payment?package=basic"
-              className="px-8 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-semibold text-center"
+              className="px-8 py-3 bg-white/90 backdrop-blur-sm text-black border-2 border-black rounded-lg hover:bg-white transition-all font-semibold text-center shadow-lg hover:shadow-xl hover:scale-105 duration-200"
               data-testid="button-select-basic"
             >
               Choose Basic
             </a>
             <a
               href="/payment?package=premium"
-              className="px-8 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-colors font-semibold text-center shadow-xl"
+              className="px-8 py-3 bg-black text-white border-2 border-black rounded-lg hover:bg-black/90 transition-all font-semibold text-center shadow-xl hover:shadow-2xl hover:scale-105 duration-200"
               data-testid="button-select-premium"
             >
               Choose Premium
@@ -177,11 +177,11 @@ export default function Comparison() {
         {/* Mobile View - Stacked Cards */}
         <div className="md:hidden max-w-md mx-auto space-y-6">
           {/* Basic Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6 text-center">
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border-2 border-black overflow-hidden">
+            <div className="bg-white/95 backdrop-blur-sm text-black p-6 text-center border-b-2 border-black">
               <h3 className="text-2xl font-bold mb-2">Basic</h3>
               <div className="text-3xl font-bold mb-1">£75</div>
-              <div className="text-sm opacity-90">+ £10/month</div>
+              <div className="text-sm opacity-70">+ £10/month</div>
             </div>
             <div className="p-4 space-y-3">
               {features.map((feature, index) => {
@@ -189,18 +189,18 @@ export default function Comparison() {
                 return (
                   <div key={index} className="flex items-center justify-between py-2">
                     <div className="flex items-center gap-2 flex-1">
-                      <Icon className="w-4 h-4 text-gray-600 dark:text-gray-400 flex-shrink-0" />
-                      <span className="text-sm text-gray-900 dark:text-white">{feature.name}</span>
+                      <Icon className="w-4 h-4 text-black flex-shrink-0" />
+                      <span className="text-sm text-black">{feature.name}</span>
                     </div>
                     <div className="ml-2">
                       {typeof feature.basic === "boolean" ? (
                         feature.basic ? (
-                          <Check className="w-5 h-5 text-emerald-600" />
+                          <Check className="w-5 h-5 text-black" />
                         ) : (
-                          <X className="w-5 h-5 text-gray-400" />
+                          <X className="w-5 h-5 text-black/30" />
                         )
                       ) : (
-                        <span className="text-xs text-gray-700 dark:text-gray-300 font-medium">
+                        <span className="text-xs text-black font-medium">
                           {feature.basic}
                         </span>
                       )}
@@ -212,7 +212,7 @@ export default function Comparison() {
             <div className="p-4 pt-0">
               <a
                 href="/payment?package=basic"
-                className="block w-full px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-semibold text-center"
+                className="block w-full px-6 py-3 bg-white text-black border-2 border-black rounded-lg hover:bg-white/90 transition-all font-semibold text-center shadow-lg"
                 data-testid="button-select-basic-mobile"
               >
                 Choose Basic
@@ -221,18 +221,18 @@ export default function Comparison() {
           </div>
 
           {/* Premium Card - Featured */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border-2 border-emerald-400 overflow-hidden relative">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border-4 border-black overflow-hidden relative">
             {/* Most Popular Badge */}
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-              <span className="bg-amber-500 text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg">
+              <span className="bg-red-600 text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg">
                 MOST POPULAR
               </span>
             </div>
             
-            <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-6 text-center mt-2">
+            <div className="bg-white/98 backdrop-blur-sm text-black p-6 text-center mt-2 border-b-2 border-black">
               <h3 className="text-2xl font-bold mb-2">Premium</h3>
               <div className="text-3xl font-bold mb-1">£150</div>
-              <div className="text-sm opacity-90">+ £10/month</div>
+              <div className="text-sm opacity-70">+ £10/month</div>
             </div>
             <div className="p-4 space-y-3">
               {features.map((feature, index) => {
@@ -240,24 +240,24 @@ export default function Comparison() {
                 return (
                   <div 
                     key={index} 
-                    className={`flex items-center justify-between py-2 rounded-lg px-2 ${
+                    className={`flex items-center justify-between py-2 rounded-lg px-2 border ${
                       feature.category === 'advanced' 
-                        ? 'bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30' 
-                        : ''
+                        ? 'bg-white/90 backdrop-blur-sm border-black/80' 
+                        : 'border-transparent'
                     }`}
                   >
                     <div className="flex items-center gap-2 flex-1">
                       <Icon className={`w-4 h-4 flex-shrink-0 ${
                         feature.category === 'advanced' 
-                          ? 'text-amber-600 dark:text-amber-400' 
-                          : 'text-gray-600 dark:text-gray-400'
+                          ? 'text-accent' 
+                          : 'text-black'
                       }`} />
                       <div>
-                        <span className="text-sm text-gray-900 dark:text-white block">
+                        <span className="text-sm text-black block">
                           {feature.name}
                         </span>
                         {feature.description && (
-                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                          <span className="text-xs text-black/70">
                             {feature.description}
                           </span>
                         )}
@@ -267,13 +267,13 @@ export default function Comparison() {
                       {typeof feature.premium === "boolean" ? (
                         feature.premium ? (
                           <Check className={`w-5 h-5 ${
-                            feature.category === 'advanced' ? 'text-amber-600' : 'text-emerald-600'
+                            feature.category === 'advanced' ? 'text-accent' : 'text-black'
                           }`} />
                         ) : (
-                          <X className="w-5 h-5 text-gray-400" />
+                          <X className="w-5 h-5 text-black/30" />
                         )
                       ) : (
-                        <span className="text-xs text-gray-700 dark:text-gray-300 font-medium">
+                        <span className="text-xs text-black font-medium">
                           {feature.premium}
                         </span>
                       )}
@@ -285,7 +285,7 @@ export default function Comparison() {
             <div className="p-4 pt-0">
               <a
                 href="/payment?package=premium"
-                className="block w-full px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-colors font-semibold text-center shadow-lg"
+                className="block w-full px-6 py-3 bg-black text-white border-2 border-black rounded-lg hover:bg-black/90 transition-all font-semibold text-center shadow-xl"
                 data-testid="button-select-premium-mobile"
               >
                 Choose Premium
