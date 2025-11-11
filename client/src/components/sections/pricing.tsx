@@ -41,7 +41,7 @@ export default function Pricing() {
           <div className="text-center mb-16">
             {discountActive ? (
               <>
-                <div className="inline-flex items-center gradient-box px-4 py-2 rounded-full text-sm font-medium mb-4 text-black hover:scale-105 transition-transform duration-200">
+                <div className="inline-flex items-center gradient-box px-4 py-2 rounded-full text-sm font-medium mb-4 hover:scale-105 transition-transform duration-200 text-[#ef4444]">
                   🔥 Limited Time Discount - Ends {getDiscountEndDateFormatted()}
                 </div>
                 <h2 className="text-4xl font-bold text-black mb-4">Special Launch Pricing - Save 50%!</h2>
