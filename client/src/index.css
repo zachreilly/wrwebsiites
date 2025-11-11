@@ -157,6 +157,11 @@
     border: 1px solid rgba(255, 255, 255, 0.3);
   }
   
+  .gradient-box {
+    background: linear-gradient(to bottom, hsl(160 84% 39%), hsl(158 64% 52%));
+    border: 2px solid rgba(0, 0, 0, 0.1);
+  }
+  
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     *,

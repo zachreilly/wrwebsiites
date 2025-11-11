@@ -29,7 +29,7 @@ export default function SocialProof() {
   ];
 
   return (
-    <section className="py-16 bg-gradient-to-r from-emerald-600 to-teal-600">
+    <section className="py-16 bg-gradient-to-b from-emerald-700 to-emerald-600">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, index) => {
@@ -37,11 +37,11 @@ export default function SocialProof() {
             return (
               <div 
                 key={index} 
-                className="text-center text-white"
+                className="text-center text-black"
                 data-testid={`stat-card-${index}`}
               >
                 <div className="flex justify-center mb-4">
-                  <div className="bg-white/20 p-4 rounded-full backdrop-blur-sm">
+                  <div className="bg-black/10 p-4 rounded-full">
                     <Icon className="w-8 h-8" data-testid={`icon-${index}`} />
                   </div>
                 </div>

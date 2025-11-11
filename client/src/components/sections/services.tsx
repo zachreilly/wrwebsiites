@@ -19,27 +19,27 @@ function ServiceCard({ icon: Icon, title, description, benefits, note, delay }: 
         style={tilt.style}
         onMouseMove={tilt.onMouseMove}
         onMouseLeave={tilt.onMouseLeave}
-        className="glass-strong p-8 rounded-xl shadow-2xl border border-white/30 hover:shadow-3xl transition-shadow h-full gpu-accelerated"
+        className="gradient-box p-8 rounded-xl shadow-2xl hover:shadow-3xl transition-shadow h-full gpu-accelerated"
       >
-        <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mb-6 backdrop-blur-sm">
-          <Icon className="w-6 h-6 text-white" />
+        <div className="w-12 h-12 bg-black/10 rounded-lg flex items-center justify-center mb-6">
+          <Icon className="w-6 h-6 text-black" />
         </div>
-        <h3 className="text-xl font-semibold text-white mb-4">{title}</h3>
-        <p className="text-white/90 mb-4">{description}</p>
+        <h3 className="text-xl font-semibold text-black mb-4">{title}</h3>
+        <p className="text-black/90 mb-4">{description}</p>
         {benefits && (
           <>
-            <h4 className="font-semibold text-white mb-2">Why it's great:</h4>
-            <ul className="text-sm text-white/80 space-y-2">
+            <h4 className="font-semibold text-black mb-2">Why it's great:</h4>
+            <ul className="text-sm text-black/80 space-y-2">
               {benefits.map((benefit, i) => (
                 <li key={i} className="flex items-center">
-                  <span className="text-accent mr-2">✓</span>
+                  <span className="text-black mr-2">✓</span>
                   {benefit.text}
                 </li>
               ))}
             </ul>
           </>
         )}
-        {note && <p className="text-sm text-white/70 mt-3 italic">{note}</p>}
+        {note && <p className="text-sm text-black/70 mt-3 italic">{note}</p>}
       </div>
     </ScrollAnimation>
   );
@@ -51,8 +51,8 @@ export default function Services() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollAnimation>
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">What We Offer</h2>
-            <p className="text-xl text-white/90 max-w-3xl mx-auto">We help businesses get online with simple, affordable websites that look great and work on all devices. Whether you just need a professional online presence or want something more customised, we've got you covered.</p>
+            <h2 className="text-4xl font-bold text-black mb-4">What We Offer</h2>
+            <p className="text-xl text-black/90 max-w-3xl mx-auto">We help businesses get online with simple, affordable websites that look great and work on all devices. Whether you just need a professional online presence or want something more customised, we've got you covered.</p>
           </div>
         </ScrollAnimation>
 
@@ -92,13 +92,13 @@ export default function Services() {
         </div>
 
         <ScrollAnimation delay={0.4}>
-          <div className="glass-strong p-8 rounded-xl shadow-2xl border border-white/30">
-            <h3 className="text-2xl font-semibold text-white mb-6 text-center">Our Development Process</h3>
+          <div className="gradient-box p-8 rounded-xl shadow-2xl">
+            <h3 className="text-2xl font-semibold text-black mb-6 text-center">Our Development Process</h3>
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
-                <div className="glass p-8 rounded-lg text-white border border-white/20 shadow-xl">
-                  <h4 className="text-xl font-semibold mb-4">Professional Web Design</h4>
-                  <ul className="space-y-2 text-sm text-white/90">
+                <div className="bg-black/10 p-8 rounded-lg border-2 border-black/20 shadow-xl">
+                  <h4 className="text-xl font-semibold mb-4 text-black">Professional Web Design</h4>
+                  <ul className="space-y-2 text-sm text-black/90">
                     <li>• Mobile-responsive design</li>
                     <li>• Fast loading speeds</li>
                     <li>• SEO optimised</li>
@@ -113,10 +113,10 @@ export default function Services() {
                   { step: 3, title: "Launch & Support", description: "Seamless deployment with ongoing maintenance and support." }
                 ].map((item, i) => (
                   <div key={i} className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-white font-semibold text-sm backdrop-blur-sm">{item.step}</div>
+                    <div className="w-8 h-8 bg-black/20 rounded-full flex items-center justify-center text-black font-semibold text-sm">{item.step}</div>
                     <div>
-                      <h4 className="font-semibold text-white mb-2">{item.title}</h4>
-                      <p className="text-white/80">{item.description}</p>
+                      <h4 className="font-semibold text-black mb-2">{item.title}</h4>
+                      <p className="text-black/80">{item.description}</p>
                     </div>
                   </div>
                 ))}
