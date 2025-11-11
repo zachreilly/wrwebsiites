@@ -9,7 +9,7 @@ export function AnimatedGradientMesh({ opacity = 0.15, speed = 0.001 }: Animated
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const timeRef = useRef(0);
   const animationFrameRef = useRef<number>();
-  const gridDimensionsRef = useRef({ cols: 0, rows: 0, meshSize: 150 });
+  const gridDimensionsRef = useRef({ cols: 0, rows: 0, meshSize: 240 });
   const [isVisible, setIsVisible] = useState(true);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 

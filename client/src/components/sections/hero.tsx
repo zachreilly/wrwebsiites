@@ -17,7 +17,7 @@ export default function Hero() {
   return (
     <section id="home" className="relative text-white min-h-screen flex items-center overflow-hidden">
       <FloatingShapes />
-      <FloatingElements count={4} size="large" />
+      <FloatingElements count={2} size="large" />
       <Parallax speed={0.3}>
         <RotatingGeometry />
       </Parallax>
