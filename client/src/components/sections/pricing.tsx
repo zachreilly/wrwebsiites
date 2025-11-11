@@ -37,7 +37,7 @@ export default function Pricing() {
 
   return (
     <section id="pricing" className="py-20 relative overflow-hidden">
-      <FloatingElements count={3} size="medium" />
+      <FloatingElements count={2} size="medium" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <ScrollAnimation>
           <div className="text-center mb-16">

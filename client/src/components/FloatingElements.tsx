@@ -28,7 +28,7 @@ export function FloatingElements({ count = 5, size = 'medium' }: FloatingElement
   };
 
   return (
-    <div ref={containerRef} className="floating-elements-container">
+    <div className="floating-elements-container">
       {Array.from({ length: count }).map((_, index) => {
         const shape = shapes[index % shapes.length];
         const delay = index * 0.5;
