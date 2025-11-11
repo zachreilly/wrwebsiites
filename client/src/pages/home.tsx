@@ -7,7 +7,7 @@ import Comparison from "@/components/sections/comparison";
 import About from "@/components/sections/about";
 import FAQ from "@/components/sections/faq";
 import Contact from "@/components/sections/contact";
-import BeamSection from "@/components/sections/beam-section";
+import BeamLight from "@/components/sections/beam-light";
 
 export default function Home() {
   return (
@@ -20,7 +20,7 @@ export default function Home() {
       </header>
       <main id="main-content">
         <Hero />
-        <BeamSection />
+        <BeamLight />
         <Services />
         <Pricing />
         <Comparison />
