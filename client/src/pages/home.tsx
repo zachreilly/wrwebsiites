@@ -7,12 +7,11 @@ import Comparison from "@/components/sections/comparison";
 import About from "@/components/sections/about";
 import FAQ from "@/components/sections/faq";
 import Contact from "@/components/sections/contact";
-import ParticleBeam from "@/components/ParticleBeam";
+import BeamSection from "@/components/sections/beam-section";
 
 export default function Home() {
   return (
     <div className="min-h-screen">
-      <ParticleBeam />
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-primary focus:text-white focus:px-4 focus:py-2 focus:rounded">
         Skip to main content
       </a>
@@ -21,6 +20,7 @@ export default function Home() {
       </header>
       <main id="main-content">
         <Hero />
+        <BeamSection />
         <Services />
         <Pricing />
         <Comparison />
