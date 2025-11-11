@@ -12,25 +12,31 @@ export default function Footer() {
   return (
     <footer className="bg-black/20 backdrop-blur-md text-white py-16 relative border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <ScrollAnimation delay={0.1}>
-            <div className="lg:col-span-2">
+            <div>
               <div className="text-2xl font-bold text-white mb-4">wrwebsites</div>
-              <p className="text-white/80 mb-6 max-w-md">We help businesses get online with simple, affordable websites that look great and work on all devices. Special launch pricing available now.</p>
+              <p className="text-white/80 mb-6">We help businesses get online with simple, affordable websites.</p>
+            </div>
+          </ScrollAnimation>
+
+          <ScrollAnimation delay={0.2}>
+            <div>
+              <h4 className="font-semibold text-white mb-4">Contact</h4>
               <div className="space-y-2">
                 <div className="flex items-center text-white/90 hover:scale-105 hover:translate-x-1 transition-all duration-200">
-                  <Phone className="w-5 h-5 mr-3" />
-                  <span>07535778637</span>
+                  <Phone className="w-5 h-5 mr-3 flex-shrink-0" />
+                  <span className="text-sm">07535778637</span>
                 </div>
                 <div className="flex items-center text-white/90 hover:scale-105 hover:translate-x-1 transition-all duration-200">
-                  <Mail className="w-5 h-5 mr-3" />
-                  <span>zachhreillyy@gmail.com</span>
+                  <Mail className="w-5 h-5 mr-3 flex-shrink-0" />
+                  <span className="text-sm break-all">zachhreillyy@gmail.com</span>
                 </div>
               </div>
             </div>
           </ScrollAnimation>
 
-          <ScrollAnimation delay={0.2}>
+          <ScrollAnimation delay={0.3}>
             <div>
               <h4 className="font-semibold text-white mb-4">Quick Links</h4>
               <ul className="space-y-2">
@@ -54,7 +60,7 @@ export default function Footer() {
             </div>
           </ScrollAnimation>
 
-          <ScrollAnimation delay={0.3}>
+          <ScrollAnimation delay={0.4}>
             <div>
               <h4 className="font-semibold text-white mb-4">Services</h4>
               <ul className="space-y-2">
