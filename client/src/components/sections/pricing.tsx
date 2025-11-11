@@ -212,10 +212,10 @@ export default function Pricing() {
                   { title: "Major Revamp", price: "£500+", items: ["Complete redesign", "Major functionality", "New architecture", "Full rebuild"] }
                 ].map((tier, i) => (
                   <div key={i} className="text-center">
-                    <div className="bg-black p-6 rounded-lg shadow-xl border-2 border-white/20 h-full">
-                      <h4 className="text-xl font-bold text-white mb-3">{tier.title}</h4>
-                      <div className="text-2xl font-bold text-white mb-2">{tier.price}</div>
-                      <ul className="text-sm text-white/80 space-y-1">
+                    <div className="gradient-box p-6 rounded-lg shadow-xl border-2 border-black h-full">
+                      <h4 className="text-xl font-bold text-black mb-3">{tier.title}</h4>
+                      <div className="text-2xl font-bold text-black mb-2">{tier.price}</div>
+                      <ul className="text-sm text-black/80 space-y-1">
                         {tier.items.map((item, j) => (
                           <li key={j}>• {item}</li>
                         ))}
