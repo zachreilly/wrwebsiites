@@ -20,7 +20,7 @@ export default function Hero() {
               Professional Web Development for Your Business
             </h1>
             <p className="text-xl text-green-100 mb-8 leading-relaxed">We help businesses get online with simple, affordable websites that look great and work on all devices. Special launch pricing available now.</p>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 ml-[120px] mr-[120px] pl-[10px] pr-[10px]">
               <Button 
                 onClick={() => window.location.href = '/onboarding'} 
                 className="bg-accent text-slate-900 px-8 py-4 rounded-lg font-semibold hover:bg-amber-400 transition-colors text-center"
