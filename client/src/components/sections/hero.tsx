@@ -4,6 +4,7 @@ import { RotatingGeometry } from "@/components/RotatingGeometry";
 import { ScrollAnimation } from "@/components/ScrollAnimation";
 import { Parallax } from "@/components/Parallax";
 import { Button3D } from "@/components/Button3D";
+import { FloatingElements } from "@/components/FloatingElements";
 
 export default function Hero() {
   const scrollToSection = (sectionId: string) => {
@@ -16,6 +17,7 @@ export default function Hero() {
   return (
     <section id="home" className="relative text-white min-h-screen flex items-center overflow-hidden">
       <FloatingShapes />
+      <FloatingElements count={4} size="large" />
       <Parallax speed={0.3}>
         <RotatingGeometry />
       </Parallax>

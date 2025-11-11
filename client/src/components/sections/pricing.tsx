@@ -4,6 +4,7 @@ import { getCurrentPricing, getDiscountEndDateFormatted, isDiscountActive } from
 import { useEffect, useState } from "react";
 import { ScrollAnimation } from "@/components/ScrollAnimation";
 import { use3DTilt } from "@/hooks/use3DTilt";
+import { FloatingElements } from "@/components/FloatingElements";
 
 export default function Pricing() {
   const [, setLocation] = useLocation();
@@ -35,8 +36,9 @@ export default function Pricing() {
   };
 
   return (
-    <section id="pricing" className="py-20 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="pricing" className="py-20 relative overflow-hidden">
+      <FloatingElements count={3} size="medium" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <ScrollAnimation>
           <div className="text-center mb-16">
             {discountActive ? (

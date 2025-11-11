@@ -1,13 +1,15 @@
 import { CheckCircle, Zap, Headphones } from "lucide-react";
 import { ScrollAnimation } from "@/components/ScrollAnimation";
 import { use3DTilt } from "@/hooks/use3DTilt";
+import { FloatingElements } from "@/components/FloatingElements";
 
 export default function About() {
   const cardTilt = use3DTilt({ max: 8, scale: 1.02 });
 
   return (
-    <section id="about" className="py-20 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="about" className="py-20 relative overflow-hidden">
+      <FloatingElements count={3} size="small" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <ScrollAnimation delay={0.1}>
             <div>

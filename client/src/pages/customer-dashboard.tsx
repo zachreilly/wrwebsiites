@@ -21,6 +21,7 @@ import {
   Bell
 } from "lucide-react";
 import type { Customer, Project, Transaction, Invoice, DesignApproval, ChangeRequest } from "@shared/schema";
+import { BillingSection } from "@/components/BillingSection";
 
 interface CustomerData {
   customer: Customer & {
@@ -511,95 +512,39 @@ export default function CustomerDashboard() {
           </TabsContent>
 
           <TabsContent value="billing" className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Subscription Status</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span>Package:</span>
-                      <Badge>{customerData.customer.package}</Badge>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Status:</span>
-                      <Badge className={getStatusColor(customerData.customer.subscriptionStatus)}>
-                        {customerData.customer.subscriptionStatus || 'inactive'}
-                      </Badge>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Monthly Fee:</span>
-                      <span className="font-semibold">
-                        {formatCurrency(customerData.customer.monthlyFee)}
-                      </span>
-                    </div>
-                    {customerData.customer.nextBillingDate && (
-                      <div className="flex justify-between">
-                        <span>Next Billing:</span>
-                        <span>{new Date(customerData.customer.nextBillingDate).toLocaleDateString()}</span>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recent Transactions</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {customerData.transactions.slice(0, 3).map((transaction) => (
-                    <div key={transaction.id} className="flex justify-between items-center py-2 border-b last:border-b-0">
-                      <div>
-                        <p className="font-medium text-sm">{transaction.description}</p>
-                        <p className="text-xs text-gray-500">
-                          {new Date(transaction.billingDate).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-semibold">{formatCurrency(transaction.amount)}</p>
-                        <Badge className={`${getStatusColor(transaction.status)} text-xs`}>
-                          {transaction.status}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
-                  
-                  {customerData.transactions.length === 0 && (
-                    <p className="text-gray-500 text-center py-4">No transactions yet</p>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
             <Card>
               <CardHeader>
-                <CardTitle>All Transactions</CardTitle>
+                <CardTitle>Subscription Status</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  {customerData.transactions.map((transaction) => (
-                    <div key={transaction.id} className="flex justify-between items-center p-3 border rounded-lg">
-                      <div>
-                        <p className="font-medium">{transaction.description}</p>
-                        <div className="flex items-center space-x-2 text-sm text-gray-500">
-                          <span>{new Date(transaction.billingDate).toLocaleDateString()}</span>
-                          <span>•</span>
-                          <span>{transaction.type}</span>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-semibold text-lg">{formatCurrency(transaction.amount)}</p>
-                        <Badge className={getStatusColor(transaction.status)}>
-                          {transaction.status}
-                        </Badge>
-                      </div>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="flex justify-between">
+                    <span>Package:</span>
+                    <Badge>{customerData.customer.package}</Badge>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Status:</span>
+                    <Badge className={getStatusColor(customerData.customer.subscriptionStatus)}>
+                      {customerData.customer.subscriptionStatus || 'inactive'}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Monthly Fee:</span>
+                    <span className="font-semibold">
+                      {formatCurrency(customerData.customer.monthlyFee)}
+                    </span>
+                  </div>
+                  {customerData.customer.nextBillingDate && (
+                    <div className="flex justify-between">
+                      <span>Next Billing:</span>
+                      <span>{new Date(customerData.customer.nextBillingDate).toLocaleDateString()}</span>
                     </div>
-                  ))}
+                  )}
                 </div>
               </CardContent>
             </Card>
+
+            <BillingSection customerId={customerData.customer.id} />
           </TabsContent>
 
           <TabsContent value="referrals" className="space-y-6">

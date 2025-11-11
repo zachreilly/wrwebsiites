@@ -983,6 +983,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Customer: Get invoices
+  app.get("/api/customers/:id/invoices", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const invoices = await storage.getInvoicesByCustomer(id);
+      res.json({ success: true, data: invoices });
+    } catch (error) {
+      console.error("Get invoices error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch invoices" });
+    }
+  });
+
+  // Customer: Get transactions/payment history
+  app.get("/api/customers/:id/transactions", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const transactions = await storage.getTransactionsByCustomer(id);
+      res.json({ success: true, data: transactions });
+    } catch (error) {
+      console.error("Get transactions error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch transactions" });
+    }
+  });
+
   // Admin: Get upload URL for project update image
   app.post("/api/admin/project-update-image-upload", async (req, res) => {
     try {
