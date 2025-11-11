@@ -12,7 +12,7 @@ export default function Hero() {
     <section id="home" className="relative bg-gradient-to-br from-primary to-secondary text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div>
+          <div className="text-center">
             <div className="inline-flex items-center bg-green-100 text-red-600 px-4 py-2 rounded-full text-sm font-medium mb-6">
               🚀 Special Launch Pricing Available
             </div>
