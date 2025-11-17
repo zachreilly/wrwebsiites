@@ -234,7 +234,7 @@ export default function CustomerDashboard() {
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div>
               <h1 className="text-2xl font-bold text-gray-900" data-testid="text-welcome">
                 Welcome, {customerData.customer.firstName}!
@@ -293,7 +293,7 @@ export default function CustomerDashboard() {
                 </div>
               )}
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-wrap items-center gap-3">
               {/* Show "Set Up Payment" button if not paid */}
               {customerData.customer.setupFeesPaid === false && (
                 <Button 
@@ -411,7 +411,7 @@ export default function CustomerDashboard() {
         )}
         
         <Tabs defaultValue="projects" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="projects" data-testid="tab-projects">
               <FileText className="w-4 h-4 mr-2" />
               Projects
