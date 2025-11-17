@@ -23,6 +23,7 @@ export default function OnboardingCompletePage() {
   const businessName = data.businessName || '';
   const packageType = data.package || '';
   const clientId = data.clientId || '';
+  const demoMode = data.demoMode === true;
 
   // Clear sensitive data from sessionStorage after component mounts
   useEffect(() => {
@@ -172,52 +173,102 @@ export default function OnboardingCompletePage() {
           {/* What's Next */}
           <div className="bg-slate-50 rounded-lg p-6 mb-6">
             <h3 className="font-semibold text-slate-900 mb-4 text-lg">What Happens Next?</h3>
-            <ul className="space-y-3 text-slate-700">
-              <li className="flex items-start">
-                <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                <span>We'll start designing your website based on your preferences</span>
-              </li>
-              <li className="flex items-start">
-                <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                <span>Track progress anytime through your customer portal</span>
-              </li>
-              <li className="flex items-start">
-                <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                <span>You can set up payment now or later - completely flexible!</span>
-              </li>
-              <li className="flex items-start">
-                <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                <span>Your website setup fee is only charged when your site goes live</span>
-              </li>
-            </ul>
+            {demoMode ? (
+              <>
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-300 rounded-lg p-4 mb-4">
+                  <p className="text-blue-900 font-semibold text-center text-lg">
+                    🎉 This is your FREE DEMO!
+                  </p>
+                </div>
+                <ul className="space-y-3 text-slate-700">
+                  <li className="flex items-start">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <span>We'll create a demo version of your website to show you our quality</span>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <span>View your demo portal to see the design as we build it</span>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <span>Once you approve the demo, we'll set up payment to make it live</span>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <span>Zero commitment - only pay if you love what we create!</span>
+                  </li>
+                </ul>
+              </>
+            ) : (
+              <ul className="space-y-3 text-slate-700">
+                <li className="flex items-start">
+                  <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                  <span>We'll start designing your website based on your preferences</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                  <span>Track progress anytime through your customer portal</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                  <span>You can set up payment now or later - completely flexible!</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                  <span>Your website setup fee is only charged when your site goes live</span>
+                </li>
+              </ul>
+            )}
           </div>
 
           {/* Action Buttons */}
           <div className="space-y-3">
-            <Button 
-              onClick={handlePaymentSetup}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-6 text-lg font-semibold"
-              data-testid="button-setup-payment"
-            >
-              <Lock className="w-5 h-5 mr-2" />
-              Set Up Payment Now
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
+            {demoMode ? (
+              <>
+                <Button 
+                  onClick={handlePortalAccess}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 text-lg font-semibold"
+                  data-testid="button-view-demo-portal"
+                >
+                  <User className="w-5 h-5 mr-2" />
+                  View Your Demo Portal
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
 
-            <Button 
-              onClick={handlePortalAccess}
-              variant="outline"
-              className="w-full border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 py-6 text-lg font-semibold"
-              data-testid="button-access-portal"
-            >
-              <User className="w-5 h-5 mr-2" />
-              Access Customer Portal (Pay Later)
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
+                <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
+                  <p className="text-blue-900 text-center text-sm">
+                    💡 <strong>This is your free demo!</strong> Once you approve it, we'll set up payment to make it live.
+                  </p>
+                </div>
+              </>
+            ) : (
+              <>
+                <Button 
+                  onClick={handlePaymentSetup}
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-6 text-lg font-semibold"
+                  data-testid="button-setup-payment"
+                >
+                  <Lock className="w-5 h-5 mr-2" />
+                  Set Up Payment Now
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
 
-            <p className="text-center text-sm text-slate-500 mt-4">
-              No rush! You can access the customer portal anytime and set up payment whenever you're ready.
-            </p>
+                <Button 
+                  onClick={handlePortalAccess}
+                  variant="outline"
+                  className="w-full border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 py-6 text-lg font-semibold"
+                  data-testid="button-access-portal"
+                >
+                  <User className="w-5 h-5 mr-2" />
+                  Access Customer Portal (Pay Later)
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+
+                <p className="text-center text-sm text-slate-500 mt-4">
+                  No rush! You can access the customer portal anytime and set up payment whenever you're ready.
+                </p>
+              </>
+            )}
           </div>
         </CardContent>
       </Card>

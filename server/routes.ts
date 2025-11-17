@@ -184,7 +184,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Client onboarding submission
   app.post("/api/client-onboarding", async (req, res) => {
     try {
-      const validatedData = insertClientOnboardingSchema.parse(req.body);
+      const { demoMode, ...formData } = req.body;
+      const validatedData = insertClientOnboardingSchema.parse(formData);
       
       // Handle referral code validation and discount
       let referralDiscount = 0;
@@ -212,7 +213,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
         referralDiscount
       });
       
-      res.json({ success: true, data: clientOnboarding });
+      // If demo mode, automatically create customer with demoMode flag
+      if (demoMode) {
+        // Split name into first and last
+        const nameParts = clientOnboarding.fullName.trim().split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || nameParts[0] || '';
+
+        // Create customer record with demo mode
+        const customer = await storage.createCustomer({
+          firstName,
+          lastName,
+          email: clientOnboarding.email,
+          phone: clientOnboarding.phone || '',
+          businessName: clientOnboarding.businessName,
+          clientOnboardingId: clientOnboarding.id,
+          package: clientOnboarding.selectedPackage,
+          setupFeesPaid: false,
+          googleBusinessSetup: clientOnboarding.googleBusinessSetup,
+          subscriptionStatus: 'inactive',
+          demoMode: true,
+          demoApproved: false,
+          wantsUserAuth: clientOnboarding.wantsUserAuth,
+          wantsDatabase: clientOnboarding.wantsDatabase,
+          wantsPaymentProcessing: clientOnboarding.wantsPaymentProcessing,
+          wantsCrudOperations: clientOnboarding.wantsCrudOperations,
+          wantsAdminPanel: clientOnboarding.wantsAdminPanel,
+          wantsProductionFeatures: clientOnboarding.wantsProductionFeatures,
+          desiredCompletionDate: clientOnboarding.desiredCompletionDate
+        });
+
+        // Create initial project with "Demo" status
+        const project = await storage.createProject({
+          customerId: customer.id,
+          projectName: `${clientOnboarding.businessName} Website (DEMO)`,
+          projectDescription: clientOnboarding.businessDescription,
+          status: 'planning',
+          priority: 'medium',
+          domainName: clientOnboarding.existingDomain || null,
+          estimatedCompletionDate: null
+        });
+
+        // Return customer data for portal access
+        res.json({ 
+          success: true, 
+          data: {
+            ...clientOnboarding,
+            customerId: customer.id,
+            isDemoMode: true
+          }
+        });
+      } else {
+        res.json({ success: true, data: clientOnboarding });
+      }
     } catch (error) {
       console.error("Client onboarding error:", error);
       if (error instanceof z.ZodError) {

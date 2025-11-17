@@ -72,9 +72,10 @@ export default function OnboardingPage() {
   const { toast } = useToast();
   const totalSteps = 6;
 
-  // Get package from URL parameter
+  // Get package and mode from URL parameters
   const urlParams = new URLSearchParams(window.location.search);
   const packageFromUrl = urlParams.get('package') as 'basic' | 'premium' | null;
+  const isDemoMode = urlParams.get('mode') === 'demo';
 
   const form = useForm<ClientInfoForm>({
     resolver: zodResolver(clientInfoSchema),
@@ -113,7 +114,10 @@ export default function OnboardingPage() {
 
   const submitMutation = useMutation({
     mutationFn: async (data: ClientInfoForm) => {
-      const response = await apiRequest("POST", "/api/client-onboarding", data);
+      const response = await apiRequest("POST", "/api/client-onboarding", {
+        ...data,
+        demoMode: isDemoMode
+      });
       return await response.json();
     },
     onSuccess: (responseData: any) => {
@@ -127,7 +131,8 @@ export default function OnboardingPage() {
         name: form.getValues('fullName'),
         businessName: form.getValues('businessName'),
         package: form.getValues('selectedPackage'),
-        clientId: responseData?.data?.id || ''
+        clientId: responseData?.data?.id || '',
+        demoMode: isDemoMode
       };
       
       console.log('Setting sessionStorage data:', onboardingData);
