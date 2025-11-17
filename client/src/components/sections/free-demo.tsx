@@ -17,7 +17,7 @@ export default function FreeDemo() {
             </div>
             <h2 className="text-5xl font-bold text-black mb-6 leading-tight">
               Try Before You Buy with a<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-rose-600">
                 FREE Demo Website
               </span>
             </h2>
@@ -51,7 +51,7 @@ export default function FreeDemo() {
                   }
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-rose-500 flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
                       {item.step}
                     </div>
                     <div>
@@ -74,7 +74,7 @@ export default function FreeDemo() {
               className="gradient-box rounded-2xl p-8 shadow-2xl gpu-accelerated"
             >
               <div className="text-center mb-6">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mx-auto mb-4">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-red-500 to-rose-500 flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-12 h-12 text-white" />
                 </div>
                 <h3 className="text-2xl font-bold text-black mb-2">Why Request a Free Demo?</h3>
@@ -96,7 +96,7 @@ export default function FreeDemo() {
 
               <Button 
                 onClick={() => window.location.href = '/onboarding?mode=demo'}
-                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white py-6 text-lg rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                className="w-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white py-6 text-lg rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
                 data-testid="button-request-demo"
               >
                 <Sparkles className="w-5 h-5 mr-2" />
