@@ -317,6 +317,10 @@ export const customers = pgTable("customers", {
   monthlyFee: integer("monthly_fee").default(1000), // in pence, so £10.00 = 1000
   googleBusinessSetup: boolean("google_business_setup").default(false),
   
+  // Demo mode fields
+  demoMode: boolean("demo_mode").default(false), // true for free demo customers
+  demoApproved: boolean("demo_approved").default(false), // true when customer approves demo and wants to pay
+  
   // Premium Advanced Features (Premium Package Only)
   wantsUserAuth: boolean("wants_user_auth").default(false), // User authentication & accounts
   wantsDatabase: boolean("wants_database").default(false), // Database storage
