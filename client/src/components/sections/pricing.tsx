@@ -132,7 +132,7 @@ export default function Pricing() {
               className="gradient-box p-8 rounded-xl shadow-2xl border-2 border-accent relative gpu-accelerated h-full flex flex-col"
             >
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <div className="bg-accent text-slate-900 px-4 py-2 rounded-full text-sm font-medium">Most Popular</div>
+                <div className="bg-accent text-white px-4 py-2 rounded-full text-sm font-medium">Most Popular</div>
               </div>
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold text-black mb-2">Premium Business Website</h3>
@@ -181,7 +181,7 @@ export default function Pricing() {
               
               <Button
                 onClick={() => setLocation('/payment?package=premium')}
-                className="w-full bg-accent text-slate-900 hover:bg-amber-400 shadow-xl hover:scale-105 transition-all duration-200"
+                className="w-full bg-accent text-white hover:bg-red-600 shadow-xl hover:scale-105 transition-all duration-200"
                 size="lg"
                 data-testid="button-premium-package"
               >
@@ -233,7 +233,7 @@ export default function Pricing() {
                 </div>
                 <Button
                   onClick={() => setLocation('/website-update-request')}
-                  className="bg-accent text-slate-900 hover:bg-amber-400 px-8 py-3 text-lg shadow-xl hover:scale-105 transition-all duration-200"
+                  className="bg-accent text-white hover:bg-red-600 px-8 py-3 text-lg shadow-xl hover:scale-105 transition-all duration-200"
                   size="lg"
                   data-testid="button-request-quote"
                 >

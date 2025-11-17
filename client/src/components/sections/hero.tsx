@@ -44,7 +44,7 @@ export default function Hero() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button3D
                   onClick={() => window.location.href = '/onboarding'} 
-                  className="bg-accent text-slate-900 px-8 py-4 rounded-lg font-semibold hover:bg-amber-400 transition-all text-center shadow-2xl"
+                  className="bg-accent text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-600 transition-all text-center shadow-2xl"
                 >
                   Get Started - Tell Us About Your Project
                 </Button3D>

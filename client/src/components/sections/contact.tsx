@@ -21,13 +21,13 @@ export default function Contact() {
                 icon: Phone,
                 title: "Call Us Direct",
                 description: "Speak with us directly about your project",
-                content: <a href="tel:07535778637" className="block text-accent font-medium hover:text-amber-400">07535778637</a>
+                content: <a href="tel:07535778637" className="block text-accent font-medium hover:text-red-600">07535778637</a>
               },
               {
                 icon: Mail,
                 title: "Email Us Direct",
                 description: "Send us your project details",
-                content: <a href="https://mail.google.com/mail/?view=cm&to=zachhreillyy@gmail.com" target="_blank" rel="noopener noreferrer" className="block text-accent font-medium hover:text-amber-400">zachhreillyy@gmail.com</a>
+                content: <a href="https://mail.google.com/mail/?view=cm&to=zachhreillyy@gmail.com" target="_blank" rel="noopener noreferrer" className="block text-accent font-medium hover:text-red-600">zachhreillyy@gmail.com</a>
               },
               {
                 icon: Clock,
