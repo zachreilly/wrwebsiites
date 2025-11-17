@@ -97,6 +97,7 @@ export const paymentRequests = pgTable("payment_requests", {
   city: varchar("city").notNull(),
   postcode: varchar("postcode").notNull(),
   googleBusinessSetup: boolean("google_business_setup").default(false), // £25 add-on
+  logoCreation: boolean("logo_creation").default(false), // £25 add-on
   
   // Template & Design Preferences
   templateStyle: varchar("template_style"), // 'modern', 'classic', 'minimalist', 'bold', 'creative', 'corporate', 'elegant', 'tech', 'magazine'
@@ -147,6 +148,7 @@ export const clientOnboarding = pgTable("client_onboarding", {
   // Extras
   wantsContactForm: boolean("wants_contact_form").default(false),
   googleBusinessSetup: boolean("google_business_setup").default(false),
+  logoCreation: boolean("logo_creation").default(false), // £25 add-on
   socialMediaLinks: text("social_media_links"),
   specialRequests: text("special_requests"),
   
@@ -316,6 +318,7 @@ export const customers = pgTable("customers", {
   setupFeesPaid: boolean("setup_fees_paid").default(false),
   monthlyFee: integer("monthly_fee").default(1000), // in pence, so £10.00 = 1000
   googleBusinessSetup: boolean("google_business_setup").default(false),
+  logoCreation: boolean("logo_creation").default(false), // £25 add-on
   
   // Demo mode fields
   demoMode: boolean("demo_mode").default(false), // true for free demo customers

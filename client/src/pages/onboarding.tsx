@@ -48,6 +48,7 @@ const clientInfoSchema = z.object({
   
   // Extras
   wantsContactForm: z.boolean().default(false),
+  logoCreation: z.boolean().default(false),
   socialMediaLinks: z.string().optional(),
   specialRequests: z.string().optional(),
   desiredCompletionDate: z.date().optional(),
@@ -99,6 +100,7 @@ export default function OnboardingPage() {
       colorScheme: "",
       exampleWebsites: "",
       wantsContactForm: false,
+      logoCreation: false,
       socialMediaLinks: "",
       specialRequests: "",
       desiredCompletionDate: undefined,
@@ -1224,6 +1226,30 @@ export default function OnboardingPage() {
                             </FormLabel>
                             <FormDescription>
                               We can help create one if you don't have a logo yet
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="logoCreation"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-accent/50 p-4 bg-accent/5">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              data-testid="checkbox-logo-creation"
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="font-semibold text-accent">
+                              Create a Professional Logo (+£25)
+                            </FormLabel>
+                            <FormDescription>
+                              Don't have a logo? We'll create a custom professional logo for your business for just £25
                             </FormDescription>
                           </div>
                         </FormItem>

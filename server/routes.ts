@@ -220,39 +220,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const firstName = nameParts[0] || '';
         const lastName = nameParts.slice(1).join(' ') || nameParts[0] || '';
 
-        // Create customer record with demo mode
-        const customer = await storage.createCustomer({
-          firstName,
-          lastName,
-          email: clientOnboarding.email,
-          phone: clientOnboarding.phone || '',
-          businessName: clientOnboarding.businessName,
-          clientOnboardingId: clientOnboarding.id,
-          package: clientOnboarding.selectedPackage,
-          setupFeesPaid: false,
-          googleBusinessSetup: clientOnboarding.googleBusinessSetup,
-          subscriptionStatus: 'inactive',
-          demoMode: true,
-          demoApproved: false,
-          wantsUserAuth: clientOnboarding.wantsUserAuth,
-          wantsDatabase: clientOnboarding.wantsDatabase,
-          wantsPaymentProcessing: clientOnboarding.wantsPaymentProcessing,
-          wantsCrudOperations: clientOnboarding.wantsCrudOperations,
-          wantsAdminPanel: clientOnboarding.wantsAdminPanel,
-          wantsProductionFeatures: clientOnboarding.wantsProductionFeatures,
-          desiredCompletionDate: clientOnboarding.desiredCompletionDate
-        });
+        // Check if customer already exists with this email
+        const existingCustomer = await storage.getCustomerByEmail(clientOnboarding.email);
+        
+        let customer;
+        if (existingCustomer) {
+          // Customer already exists - return info to redirect to login
+          return res.status(409).json({ 
+            success: false, 
+            message: "An account with this email already exists. Please log in to your customer portal instead.",
+            shouldRedirectToLogin: true
+          });
+        } else {
+          // Create new customer record with demo mode
+          customer = await storage.createCustomer({
+            firstName,
+            lastName,
+            email: clientOnboarding.email,
+            phone: clientOnboarding.phone || '',
+            businessName: clientOnboarding.businessName,
+            clientOnboardingId: clientOnboarding.id,
+            package: clientOnboarding.selectedPackage,
+            setupFeesPaid: false,
+            googleBusinessSetup: clientOnboarding.googleBusinessSetup,
+            logoCreation: clientOnboarding.logoCreation,
+            subscriptionStatus: 'inactive',
+            demoMode: true,
+            demoApproved: false,
+            wantsUserAuth: clientOnboarding.wantsUserAuth,
+            wantsDatabase: clientOnboarding.wantsDatabase,
+            wantsPaymentProcessing: clientOnboarding.wantsPaymentProcessing,
+            wantsCrudOperations: clientOnboarding.wantsCrudOperations,
+            wantsAdminPanel: clientOnboarding.wantsAdminPanel,
+            wantsProductionFeatures: clientOnboarding.wantsProductionFeatures,
+            desiredCompletionDate: clientOnboarding.desiredCompletionDate
+          });
 
-        // Create initial project with "Demo" status
-        const project = await storage.createProject({
-          customerId: customer.id,
-          projectName: `${clientOnboarding.businessName} Website (DEMO)`,
-          projectDescription: clientOnboarding.businessDescription,
-          status: 'planning',
-          priority: 'medium',
-          domainName: clientOnboarding.existingDomain || null,
-          estimatedCompletionDate: null
-        });
+          // Create initial project with "Demo" status
+          const project = await storage.createProject({
+            customerId: customer.id,
+            projectName: `${clientOnboarding.businessName} Website (DEMO)`,
+            projectDescription: clientOnboarding.businessDescription,
+            status: 'planning',
+            priority: 'medium',
+            domainName: clientOnboarding.existingDomain || null,
+            estimatedCompletionDate: null
+          });
+        }
 
         // Return customer data for portal access
         res.json({ 

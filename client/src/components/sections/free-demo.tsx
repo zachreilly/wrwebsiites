@@ -85,6 +85,7 @@ export default function FreeDemo() {
                   "See your actual website before paying a penny",
                   "Make sure we understand your vision",
                   "Test our quality and service risk-free",
+                  "Add professional logo creation for just £25",
                   "No pressure, no hidden fees, no commitments"
                 ].map((benefit, i) => (
                   <div key={i} className="flex items-start gap-3">
