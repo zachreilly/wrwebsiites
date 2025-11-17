@@ -307,6 +307,7 @@ export const customers = pgTable("customers", {
   // GoCardless customer information
   gocardlessCustomerId: varchar("gocardless_customer_id").unique(),
   gocardlessMandateId: varchar("gocardless_mandate_id"),
+  gocardlessBillingRequestId: varchar("gocardless_billing_request_id"),
   
   // Subscription status
   subscriptionStatus: varchar("subscription_status").default("inactive"), // 'inactive', 'active', 'cancelled', 'paused'

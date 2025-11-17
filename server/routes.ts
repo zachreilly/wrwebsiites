@@ -520,7 +520,69 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Direct debit payment endpoint
+  // Generate GoCardless payment link
+  app.post("/api/payment/generate-link", async (req, res) => {
+    try {
+      const {
+        customerId,
+        email,
+        firstName,
+        lastName,
+        address,
+        city,
+        postcode,
+        packageType,
+        logoCreation
+      } = req.body;
+
+      if (!customerId || !email || !firstName || !lastName) {
+        return res.status(400).json({
+          success: false,
+          message: "Missing required customer information"
+        });
+      }
+
+      // Calculate setup fee
+      const baseSetupFee = packageType === 'premium' ? 15000 : 7500; // £150 or £75 in pence
+      const logoFee = logoCreation ? 2500 : 0; // £25 in pence
+      const totalSetupFee = baseSetupFee + logoFee;
+
+      const { gocardlessService } = await import("./gocardless");
+      
+      // Generate payment link
+      const { billingRequestId, authorizationUrl } = await gocardlessService.createPaymentLink({
+        email,
+        firstName,
+        lastName,
+        addressLine1: address || '1 Main Street',
+        city: city || 'London',
+        postalCode: postcode || 'SW1A 1AA',
+        setupFeeAmount: totalSetupFee,
+        description: `Setup fee for ${packageType} website package${logoCreation ? ' + Logo creation' : ''}`,
+        customerId,
+      });
+
+      // Store billing request ID with customer for webhook processing
+      await storage.updateCustomer(customerId, {
+        gocardlessBillingRequestId: billingRequestId,
+      });
+
+      res.json({
+        success: true,
+        paymentUrl: authorizationUrl,
+        billingRequestId,
+      });
+
+    } catch (error: any) {
+      console.error("Payment link generation error:", error);
+      res.status(500).json({
+        success: false,
+        message: error.message || "Failed to generate payment link"
+      });
+    }
+  });
+
+  // Direct debit payment endpoint (legacy - kept for compatibility)
   app.post("/api/payment/direct-debit", async (req, res) => {
     try {
       const { setupDirectDebit } = await import("./gocardless");

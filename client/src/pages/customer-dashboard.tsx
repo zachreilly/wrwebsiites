@@ -297,16 +297,40 @@ export default function CustomerDashboard() {
               {/* Show "Set Up Payment" button if not paid */}
               {customerData.customer.setupFeesPaid === false && (
                 <Button 
-                  onClick={() => {
-                    const fullName = `${customerData.customer.firstName} ${customerData.customer.lastName}`.trim();
-                    const params = new URLSearchParams({
-                      clientId: customerData.customer.id || '',
-                      email: customerData.customer.email || '',
-                      name: fullName,
-                      businessName: customerData.customer.businessName || '',
-                      package: customerData.customer.package || ''
-                    });
-                    window.location.href = `/payment-setup?${params.toString()}`;
+                  onClick={async () => {
+                    try {
+                      toast({
+                        title: "Generating payment link...",
+                        description: "Please wait while we set up your payment.",
+                      });
+
+                      const response = await apiRequest("POST", "/api/payment/generate-link", {
+                        customerId: customerData.customer.id,
+                        email: customerData.customer.email,
+                        firstName: customerData.customer.firstName,
+                        lastName: customerData.customer.lastName,
+                        address: "1 Main Street", // Using default for now
+                        city: "London", // Using default for now
+                        postcode: "SW1A 1AA", // Using default for now
+                        packageType: customerData.customer.package,
+                        logoCreation: customerData.customer.logoCreation || false,
+                      });
+
+                      const data = await response.json();
+
+                      if (data.success && data.paymentUrl) {
+                        // Redirect to GoCardless payment page
+                        window.location.href = data.paymentUrl;
+                      } else {
+                        throw new Error(data.message || "Failed to generate payment link");
+                      }
+                    } catch (error: any) {
+                      toast({
+                        title: "Payment Setup Failed",
+                        description: error.message || "Unable to generate payment link. Please try again.",
+                        variant: "destructive",
+                      });
+                    }
                   }}
                   className="bg-green-600 hover:bg-green-700 text-white"
                   data-testid="button-setup-payment"

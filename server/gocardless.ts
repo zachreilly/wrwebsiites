@@ -48,7 +48,75 @@ export interface PaymentIntentData {
 }
 
 export class GoCardlessService {
-  // Create a customer in GoCardless
+  // Create a billing request and return payment link (Billing Request Flow)
+  async createPaymentLink(paymentData: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    addressLine1: string;
+    city: string;
+    postalCode: string;
+    setupFeeAmount: number; // in pence
+    description: string;
+    customerId: string;
+    redirectUri?: string;
+    exitUri?: string;
+  }) {
+    try {
+      const client = await initializeGoCardless();
+      
+      if (!client) {
+        throw new Error('GoCardless client not initialized. Please check API credentials.');
+      }
+      
+      // Step 1: Create Billing Request with both payment and mandate
+      const billingRequest = await client.billingRequests.create({
+        payment_request: {
+          description: paymentData.description,
+          amount: paymentData.setupFeeAmount,
+          currency: 'GBP',
+          app_fee: null,
+        },
+        mandate_request: {
+          currency: 'GBP',
+          scheme: 'bacs', // UK Direct Debit
+        },
+        metadata: {
+          customer_id: paymentData.customerId,
+        }
+      });
+
+      // Step 2: Create Billing Request Flow to generate payment link
+      const flow = await client.billingRequestFlows.create({
+        redirect_uri: paymentData.redirectUri || `${process.env.REPLIT_DEV_DOMAIN || 'http://localhost:5000'}/customer-dashboard?payment=success`,
+        exit_uri: paymentData.exitUri || `${process.env.REPLIT_DEV_DOMAIN || 'http://localhost:5000'}/customer-dashboard?payment=cancelled`,
+        lock_customer_details: false,
+        lock_bank_account: false,
+        prefilled_customer: {
+          given_name: paymentData.firstName,
+          family_name: paymentData.lastName,
+          email: paymentData.email,
+          address_line1: paymentData.addressLine1,
+          city: paymentData.city,
+          postal_code: paymentData.postalCode,
+          country_code: 'GB',
+        },
+        links: {
+          billing_request: billingRequest.billingRequests.id,
+        },
+      });
+
+      return {
+        billingRequestId: billingRequest.billingRequests.id,
+        authorizationUrl: flow.billingRequestFlows.authorisation_url,
+      };
+    } catch (error) {
+      console.error('GoCardless billing request creation error:', error);
+      throw error;
+    }
+  }
+
+  // Create a customer in GoCardless (legacy - kept for backward compatibility)
   async createCustomer(customerData: {
     email: string;
     firstName: string;
@@ -357,7 +425,15 @@ export async function processWebhook(req: Request, res: Response) {
   try {
     const event = req.body;
 
+    console.log('Received GoCardless webhook:', event.action, event.resource_type);
+
     switch (event.action) {
+      case 'fulfilled':
+      case 'completed':
+        if (event.resource_type === 'billing_requests') {
+          await handleBillingRequestEvent(event);
+        }
+        break;
       case 'payments':
         if (event.resource_type === 'payments') {
           await handlePaymentEvent(event);
@@ -374,6 +450,134 @@ export async function processWebhook(req: Request, res: Response) {
   } catch (error) {
     console.error('Webhook processing error:', error);
     res.status(500).json({ error: 'Webhook processing failed' });
+  }
+}
+
+async function handleBillingRequestEvent(event: any) {
+  try {
+    console.log('Processing billing request event:', event);
+    
+    // Validate event structure
+    if (event.resource_type !== 'billing_requests') {
+      console.error('Invalid resource type for billing request event:', event.resource_type);
+      return;
+    }
+    
+    if (!event.links?.billing_request) {
+      console.error('Missing billing_request link in event');
+      return;
+    }
+    
+    const billingRequestId = event.links.billing_request;
+    
+    // Find customer by billing request ID
+    const customer = await storage.getCustomerByBillingRequestId(billingRequestId);
+    
+    if (!customer) {
+      console.error('Customer not found for billing request:', billingRequestId);
+      return;
+    }
+
+    const client = await initializeGoCardless();
+    
+    if (!client) {
+      console.error('GoCardless client not initialized - cannot process webhook');
+      return;
+    }
+    
+    // Fetch the billing request details
+    const billingRequest = await client.billingRequests.find(billingRequestId);
+    const brData = billingRequest.billingRequests;
+    
+    console.log('Billing request fulfilled:', brData);
+
+    // Extract mandate and payment info from billing request
+    const mandateId = brData.mandate_request?.links?.mandate;
+    const paymentId = brData.payment_request?.links?.payment;
+    const gcCustomerId = brData.links?.customer;
+
+    if (!mandateId || !gcCustomerId) {
+      console.error('Missing mandate or customer ID in billing request');
+      return;
+    }
+
+    // Update customer with GoCardless details
+    await storage.updateCustomer(customer.id, {
+      gocardlessCustomerId: gcCustomerId,
+      gocardlessMandateId: mandateId,
+      subscriptionStatus: 'active',
+    });
+
+    console.log(`Updated customer ${customer.id} with mandate ${mandateId}`);
+
+    // Create monthly subscription (starts next month)
+    const subscriptionStartDate = new Date();
+    subscriptionStartDate.setMonth(subscriptionStartDate.getMonth() + 1);
+    subscriptionStartDate.setDate(1); // First of next month
+
+    try {
+      const subscription = await gocardlessService.createSubscription({
+        amount: 1000, // £10 in pence
+        name: `Monthly hosting and support for ${customer.businessName || customer.email}`,
+        mandateId: mandateId,
+        customerId: customer.id,
+        startDate: subscriptionStartDate.toISOString().split('T')[0],
+      });
+
+      console.log(`Created subscription for customer ${customer.id}`);
+
+      // Update customer with subscription dates
+      await storage.updateCustomer(customer.id, {
+        subscriptionStartDate,
+        nextBillingDate: subscriptionStartDate,
+      });
+    } catch (subError) {
+      console.error('Failed to create subscription:', subError);
+      // Continue anyway - payment was successful
+    }
+
+    // Mark setup fees as paid when payment is confirmed
+    if (paymentId) {
+      await storage.updateCustomer(customer.id, {
+        setupFeesPaid: true,
+      });
+
+      // Also update client_onboarding if linked
+      if (customer.clientOnboardingId) {
+        await storage.updateClientOnboardingPaymentStatus(customer.clientOnboardingId, true);
+        console.log(`Updated client_onboarding ${customer.clientOnboardingId} setupFeesPaid to true`);
+      }
+
+      // AUTO-CREATE PROJECT when payment is confirmed
+      try {
+        const existingProjects = await storage.getProjectsByCustomer(customer.id);
+        if (existingProjects.length === 0) {
+          let onboarding = null;
+          if (customer.clientOnboardingId) {
+            onboarding = await storage.getClientOnboarding(customer.clientOnboardingId);
+          }
+
+          const project = await storage.createProject({
+            customerId: customer.id,
+            projectName: `${customer.businessName || customer.firstName + ' ' + customer.lastName} Website`,
+            projectDescription: onboarding?.businessDescription || `${customer.package} website development project`,
+            status: 'planning',
+            priority: 'medium',
+            domainName: onboarding?.existingDomain || null,
+            estimatedCompletionDate: onboarding?.desiredCompletionDate || null
+          });
+          
+          console.log(`✅ AUTO-CREATED PROJECT: ${project.id} for customer ${customer.id} (${customer.email})`);
+        }
+      } catch (error) {
+        console.error('Failed to auto-create project:', error);
+        // Don't throw - we don't want to break the webhook
+      }
+    }
+
+  } catch (error) {
+    console.error('Error handling billing request event:', error);
+    throw error;
   }
 }
 
