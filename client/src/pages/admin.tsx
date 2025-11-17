@@ -693,9 +693,9 @@ export default function AdminPage() {
             <h1 className="text-3xl font-bold text-slate-900">Admin Dashboard</h1>
             <p className="text-slate-600 mt-2">Website analytics, traffic data, and customer management</p>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-3">
             <Select value={days} onValueChange={setDays}>
-              <SelectTrigger className="w-32">
+              <SelectTrigger className="w-32 border-slate-300 bg-white">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -706,8 +706,7 @@ export default function AdminPage() {
             </Select>
             <Button 
               onClick={() => window.open('/admin/payments', '_blank')} 
-              variant="outline"
-              className="bg-emerald-600 text-white hover:bg-emerald-700 relative"
+              className="bg-emerald-600 text-white hover:bg-emerald-700 border-0 relative"
             >
               <Bell className="w-4 h-4 mr-2" />
               View Payments
@@ -719,13 +718,16 @@ export default function AdminPage() {
             </Button>
             <Button 
               onClick={() => window.location.href = '/'} 
-              variant="outline"
+              className="bg-blue-600 text-white hover:bg-blue-700 border-0"
               data-testid="button-home"
             >
               <Home className="w-4 h-4 mr-2" />
               Home
             </Button>
-            <Button onClick={handleLogout} variant="outline">
+            <Button 
+              onClick={handleLogout}
+              className="bg-slate-600 text-white hover:bg-slate-700 border-0"
+            >
               Logout
             </Button>
           </div>
