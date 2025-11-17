@@ -86,10 +86,24 @@ export class GoCardlessService {
         }
       });
 
+      console.log('Billing request created:', JSON.stringify(billingRequest, null, 2));
+
+      // Extract billing request ID from response
+      const billingRequestId = billingRequest?.billingRequests?.id || billingRequest?.id;
+      
+      if (!billingRequestId) {
+        console.error('No billing request ID in response:', billingRequest);
+        throw new Error('Failed to create billing request - no ID returned');
+      }
+
       // Step 2: Create Billing Request Flow to generate payment link
+      const baseUrl = process.env.REPLIT_DEV_DOMAIN 
+        ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
+        : 'http://localhost:5000';
+      
       const flow = await client.billingRequestFlows.create({
-        redirect_uri: paymentData.redirectUri || `${process.env.REPLIT_DEV_DOMAIN || 'http://localhost:5000'}/customer-dashboard?payment=success`,
-        exit_uri: paymentData.exitUri || `${process.env.REPLIT_DEV_DOMAIN || 'http://localhost:5000'}/customer-dashboard?payment=cancelled`,
+        redirect_uri: paymentData.redirectUri || `${baseUrl}/customer-dashboard?payment=success`,
+        exit_uri: paymentData.exitUri || `${baseUrl}/customer-dashboard?payment=cancelled`,
         lock_customer_details: false,
         lock_bank_account: false,
         prefilled_customer: {
@@ -102,13 +116,23 @@ export class GoCardlessService {
           country_code: 'GB',
         },
         links: {
-          billing_request: billingRequest.billingRequests.id,
+          billing_request: billingRequestId,
         },
       });
 
+      console.log('Billing request flow created:', JSON.stringify(flow, null, 2));
+
+      // Extract authorization URL from response
+      const authUrl = flow?.billingRequestFlows?.authorisation_url || flow?.authorisation_url;
+      
+      if (!authUrl) {
+        console.error('No authorization URL in response:', flow);
+        throw new Error('Failed to create payment link - no URL returned');
+      }
+
       return {
-        billingRequestId: billingRequest.billingRequests.id,
-        authorizationUrl: flow.billingRequestFlows.authorisation_url,
+        billingRequestId: billingRequestId,
+        authorizationUrl: authUrl,
       };
     } catch (error) {
       console.error('GoCardless billing request creation error:', error);
