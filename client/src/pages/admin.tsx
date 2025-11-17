@@ -1147,6 +1147,11 @@ export default function AdminPage() {
                                       {client.clientCode}
                                     </span>
                                   )}
+                                  {client.demoMode && (
+                                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded border border-blue-300">
+                                      🎁 FREE DEMO
+                                    </span>
+                                  )}
                                 </div>
                                 <p className="text-sm text-slate-600">{client.email}</p>
                                 {client.businessName && (
