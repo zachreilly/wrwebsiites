@@ -453,6 +453,21 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteClientOnboarding(id: string): Promise<boolean> {
+    // First, check if there are any customers linked to this client_onboarding
+    const linkedCustomers = await db
+      .select()
+      .from(customers)
+      .where(eq(customers.clientOnboardingId, id));
+    
+    // If there are linked customers, set their client_onboarding_id to NULL
+    if (linkedCustomers.length > 0) {
+      await db
+        .update(customers)
+        .set({ clientOnboardingId: null })
+        .where(eq(customers.clientOnboardingId, id));
+    }
+    
+    // Now delete the client_onboarding record
     const result = await db
       .delete(clientOnboarding)
       .where(eq(clientOnboarding.id, id));
