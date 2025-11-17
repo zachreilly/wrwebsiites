@@ -328,6 +328,88 @@ export default function CustomerDashboard() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Demo Mode Banner */}
+        {customerData.customer.demoMode && !customerData.customer.demoApproved && (
+          <Card className="mb-6 border-2 border-blue-500 bg-gradient-to-r from-blue-50 to-cyan-50">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                      <Eye className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-blue-900">This is Your FREE Demo Website!</h3>
+                      <p className="text-sm text-blue-700">No payment required yet</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-700 mb-4">
+                    We'll build your demo website based on the preferences you provided. Once we complete it and you approve it, you can start payment to make it live!
+                  </p>
+                  <div className="bg-white rounded-lg p-4 border border-blue-200">
+                    <h4 className="font-semibold text-gray-900 mb-2">What happens next:</h4>
+                    <ol className="space-y-2 text-sm text-gray-700">
+                      <li className="flex items-start">
+                        <span className="text-blue-600 font-bold mr-2">1.</span>
+                        <span>We'll build your demo website (usually within 3-5 days)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-blue-600 font-bold mr-2">2.</span>
+                        <span>You'll review it in this portal and provide feedback</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-blue-600 font-bold mr-2">3.</span>
+                        <span>Once you approve it, click the button below to set up payment and make it live!</span>
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        
+        {/* Demo Approval Banner - Shows when demo is ready */}
+        {customerData.customer.demoMode && !customerData.customer.setupFeesPaid && activeProject?.status === 'review' && (
+          <Card className="mb-6 border-2 border-green-500 bg-gradient-to-r from-green-50 to-emerald-50">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-3">
+                    <CheckCircle className="w-10 h-10 text-green-600" />
+                    <div>
+                      <h3 className="text-xl font-bold text-green-900">Your Demo is Ready for Review!</h3>
+                      <p className="text-sm text-green-700">Love it? Let's make it live!</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-700 mb-4">
+                    Your free demo website is complete! Review it below and if you're happy with it, click the button to approve and set up payment.
+                  </p>
+                </div>
+                <Button 
+                  onClick={() => {
+                    const fullName = `${customerData.customer.firstName} ${customerData.customer.lastName}`.trim();
+                    const params = new URLSearchParams({
+                      clientId: customerData.customer.id || '',
+                      email: customerData.customer.email || '',
+                      name: fullName,
+                      businessName: customerData.customer.businessName || '',
+                      package: customerData.customer.package || '',
+                      fromDemo: 'true'
+                    });
+                    window.location.href = `/payment-setup?${params.toString()}`;
+                  }}
+                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-6 text-lg h-auto whitespace-nowrap"
+                  data-testid="button-approve-demo"
+                >
+                  <CheckCircle className="w-5 h-5 mr-2" />
+                  Approve & Start Payment
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        
         <Tabs defaultValue="projects" className="space-y-6">
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="projects" data-testid="tab-projects">

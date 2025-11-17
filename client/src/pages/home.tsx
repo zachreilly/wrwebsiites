@@ -2,6 +2,7 @@ import Navigation from "@/components/ui/navigation";
 import Footer from "@/components/ui/footer";
 import Hero from "@/components/sections/hero";
 import Services from "@/components/sections/services";
+import FreeDemo from "@/components/sections/free-demo";
 import Pricing from "@/components/sections/pricing";
 import Comparison from "@/components/sections/comparison";
 import About from "@/components/sections/about";
@@ -23,8 +24,9 @@ export default function Home() {
       </header>
       <main id="main-content" className="relative z-10">
         <Hero />
-        <Services />
+        <FreeDemo />
         <Pricing />
+        <Services />
         <Comparison />
         <About />
         <FAQ />
