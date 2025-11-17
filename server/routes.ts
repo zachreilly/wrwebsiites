@@ -981,11 +981,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      // Check if a linked customer record exists (for project access)
+      const linkedCustomer = await storage.getCustomerByOnboardingId(client.id);
+      
+      // Return the actual customer ID if one exists, otherwise use onboarding ID
+      const customerId = linkedCustomer ? linkedCustomer.id : client.id;
+      
+      console.log('Login successful:', { 
+        onboardingId: client.id, 
+        customerId, 
+        hasLinkedCustomer: !!linkedCustomer 
+      });
+
       // Return client information
       res.json({ 
         success: true, 
         customer: {
-          id: client.id,
+          id: customerId,
           clientCode: client.clientCode,
           firstName: client.fullName.split(' ')[0] || client.fullName,
           lastName: client.fullName.split(' ').slice(1).join(' ') || '',
@@ -1007,42 +1019,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { customerId } = req.params;
       
-      // First try to get from client_onboarding (new system)
-      const clientOnboarding = await storage.getClientOnboarding(customerId);
+      // Try to get customer record first (happy path after login returns customer ID)
+      let customer = await storage.getCustomer(customerId);
       
-      if (clientOnboarding) {
-        // Check if a customer record exists for this client onboarding
-        const actualCustomer = await storage.getCustomerByOnboardingId(customerId);
-        
-        // If a customer record exists, fetch their projects
-        let projects: Project[] = [];
-        let transactions: Transaction[] = [];
-        let invoices: Invoice[] = [];
-        
-        if (actualCustomer) {
-          [projects, transactions, invoices] = await Promise.all([
-            storage.getProjectsByCustomer(actualCustomer.id),
-            storage.getTransactionsByCustomer(actualCustomer.id),
-            storage.getInvoicesByCustomer(actualCustomer.id)
-          ]);
-        }
-        
-        // Return client onboarding data formatted as customer data
-        const customer = {
-          id: clientOnboarding.id,
-          clientCode: clientOnboarding.clientCode,
-          firstName: clientOnboarding.fullName.split(' ')[0] || clientOnboarding.fullName,
-          lastName: clientOnboarding.fullName.split(' ').slice(1).join(' ') || '',
-          fullName: clientOnboarding.fullName,
-          email: clientOnboarding.email,
-          phone: clientOnboarding.phone,
-          businessName: clientOnboarding.businessName,
-          package: clientOnboarding.selectedPackage,
-          setupFeesPaid: clientOnboarding.setupFeesPaid,
-          subscriptionStatus: clientOnboarding.setupFeesPaid ? 'active' : 'inactive',
-          monthlyFee: clientOnboarding.selectedPackage === 'premium' ? 1000 : 1000, // £10/month
-        };
-        
+      if (customer) {
+        // Found customer directly, fetch their data
+        const [projects, transactions, invoices] = await Promise.all([
+          storage.getProjectsByCustomer(customer.id),
+          storage.getTransactionsByCustomer(customer.id),
+          storage.getInvoicesByCustomer(customer.id)
+        ]);
+
         return res.json({
           success: true,
           data: {
@@ -1054,27 +1041,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      // Fallback to old customers table for legacy users
-      const [customer, projects, transactions, invoices] = await Promise.all([
-        storage.getCustomer(customerId),
-        storage.getProjectsByCustomer(customerId),
-        storage.getTransactionsByCustomer(customerId),
-        storage.getInvoicesByCustomer(customerId)
-      ]);
-
-      if (!customer) {
-        return res.status(404).json({ success: false, message: "Customer not found" });
+      // Fallback: Try client_onboarding if customerId is an onboarding ID
+      const clientOnboarding = await storage.getClientOnboarding(customerId);
+      
+      if (clientOnboarding) {
+        // Check if a linked customer record exists
+        const linkedCustomer = await storage.getCustomerByOnboardingId(customerId);
+        
+        if (linkedCustomer) {
+          // Customer exists - fetch and return their full data
+          const [projects, transactions, invoices] = await Promise.all([
+            storage.getProjectsByCustomer(linkedCustomer.id),
+            storage.getTransactionsByCustomer(linkedCustomer.id),
+            storage.getInvoicesByCustomer(linkedCustomer.id)
+          ]);
+          
+          return res.json({
+            success: true,
+            data: {
+              customer: linkedCustomer,
+              projects,
+              transactions,
+              invoices
+            }
+          });
+        }
+        
+        // No linked customer yet (onboarding only) - return onboarding data with empty arrays
+        const formattedCustomer = {
+          id: clientOnboarding.id,
+          clientCode: clientOnboarding.clientCode,
+          firstName: clientOnboarding.fullName.split(' ')[0] || clientOnboarding.fullName,
+          lastName: clientOnboarding.fullName.split(' ').slice(1).join(' ') || '',
+          fullName: clientOnboarding.fullName,
+          email: clientOnboarding.email,
+          phone: clientOnboarding.phone,
+          businessName: clientOnboarding.businessName,
+          package: clientOnboarding.selectedPackage,
+          setupFeesPaid: clientOnboarding.setupFeesPaid,
+          subscriptionStatus: 'inactive',
+          monthlyFee: clientOnboarding.selectedPackage === 'premium' ? 1000 : 1000, // £10/month
+        };
+        
+        return res.json({
+          success: true,
+          data: {
+            customer: formattedCustomer,
+            projects: [],
+            transactions: [],
+            invoices: []
+          }
+        });
       }
 
-      res.json({
-        success: true,
-        data: {
-          customer,
-          projects,
-          transactions,
-          invoices
-        }
-      });
+      // No customer or onboarding record found
+      return res.status(404).json({ success: false, message: "Customer not found" });
     } catch (error) {
       console.error("Customer dashboard error:", error);
       res.status(500).json({ success: false, message: "Failed to fetch dashboard data" });
