@@ -110,6 +110,7 @@ export interface IStorage {
   getCustomer(id: string): Promise<Customer | undefined>;
   getCustomerByEmail(email: string): Promise<Customer | undefined>;
   getCustomerByBillingRequestId(billingRequestId: string): Promise<Customer | undefined>;
+  getCustomerByOnboardingId(onboardingId: string): Promise<Customer | undefined>;
   updateCustomer(id: string, updates: Partial<Customer>): Promise<Customer | undefined>;
   
   // Project operations
@@ -594,6 +595,11 @@ export class DatabaseStorage implements IStorage {
 
   async getCustomerByBillingRequestId(billingRequestId: string): Promise<Customer | undefined> {
     const [customer] = await db.select().from(customers).where(eq(customers.gocardlessBillingRequestId, billingRequestId));
+    return customer;
+  }
+
+  async getCustomerByOnboardingId(onboardingId: string): Promise<Customer | undefined> {
+    const [customer] = await db.select().from(customers).where(eq(customers.clientOnboardingId, onboardingId));
     return customer;
   }
 

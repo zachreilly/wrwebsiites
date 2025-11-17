@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertContactRequestSchema, insertPageViewSchema, insertClickEventSchema, insertAdminSessionSchema, insertClientOnboardingSchema, insertConsultationRequestSchema, insertWebsiteUpdateRequestSchema, insertPortfolioItemSchema, customers, projects } from "@shared/schema";
+import { insertContactRequestSchema, insertPageViewSchema, insertClickEventSchema, insertAdminSessionSchema, insertClientOnboardingSchema, insertConsultationRequestSchema, insertWebsiteUpdateRequestSchema, insertPortfolioItemSchema, customers, projects, type Project, type Transaction, type Invoice } from "@shared/schema";
 import { z } from "zod";
 import { db } from "./db";
 import { eq, desc, count } from "drizzle-orm";
@@ -1011,6 +1011,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const clientOnboarding = await storage.getClientOnboarding(customerId);
       
       if (clientOnboarding) {
+        // Check if a customer record exists for this client onboarding
+        const actualCustomer = await storage.getCustomerByOnboardingId(customerId);
+        
+        // If a customer record exists, fetch their projects
+        let projects: Project[] = [];
+        let transactions: Transaction[] = [];
+        let invoices: Invoice[] = [];
+        
+        if (actualCustomer) {
+          [projects, transactions, invoices] = await Promise.all([
+            storage.getProjectsByCustomer(actualCustomer.id),
+            storage.getTransactionsByCustomer(actualCustomer.id),
+            storage.getInvoicesByCustomer(actualCustomer.id)
+          ]);
+        }
+        
         // Return client onboarding data formatted as customer data
         const customer = {
           id: clientOnboarding.id,
@@ -1031,9 +1047,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           success: true,
           data: {
             customer,
-            projects: [], // Projects will be created after payment
-            transactions: [],
-            invoices: []
+            projects,
+            transactions,
+            invoices
           }
         });
       }
