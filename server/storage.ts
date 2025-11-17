@@ -90,6 +90,7 @@ export interface IStorage {
   getClientOnboardingByEmail(email: string): Promise<ClientOnboarding | undefined>;
   updateClientOnboardingStatus(id: string, status: string): Promise<ClientOnboarding | undefined>;
   updateClientOnboardingPaymentStatus(id: string, setupFeesPaid: boolean): Promise<ClientOnboarding | undefined>;
+  deleteClientOnboarding(id: string): Promise<boolean>;
   
   // Referral operations
   validateReferralCode(referralCode: string): Promise<Customer | ClientOnboarding | null>;
@@ -448,6 +449,14 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     return updated;
+  }
+
+  async deleteClientOnboarding(id: string): Promise<boolean> {
+    const result = await db
+      .delete(clientOnboarding)
+      .where(eq(clientOnboarding.id, id));
+    
+    return result.rowCount !== null && result.rowCount > 0;
   }
 
   // Referral operations

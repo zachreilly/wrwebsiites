@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent, MessageSquare, Calculator, Check, Clock, ExternalLink, Bell, AlertCircle, Download, Plus, Home, Send } from "lucide-react";
+import { Eye, MousePointer, Calendar, BarChart3, Activity, Lock, Users, Globe, FileText, Palette, Settings, User, TrendingUp, Target, DollarSign, Percent, MessageSquare, Calculator, Check, Clock, ExternalLink, Bell, AlertCircle, Download, Plus, Home, Send, Trash2 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
 interface AnalyticsData {
@@ -528,6 +528,35 @@ export default function AdminPage() {
     },
   });
 
+  // Mutation for deleting client inquiry
+  const deleteClientInquiryMutation = useMutation({
+    mutationFn: async (clientId: string) => {
+      const response = await fetch(`/api/admin/client-onboarding/${clientId}?password=${encodeURIComponent(sessionPassword)}`, {
+        method: 'DELETE',
+      });
+
+      const result = await response.json();
+      if (!result.success) {
+        throw new Error(result.message || 'Failed to delete inquiry');
+      }
+      return result.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/client-onboarding'] });
+      toast({
+        title: "Inquiry deleted",
+        description: "Client inquiry has been removed",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Delete failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   // Mutation for updating consultation status
   const updateConsultationStatusMutation = useMutation({
     mutationFn: async ({ consultationId, status }: { consultationId: string; status: string }) => {
@@ -980,29 +1009,48 @@ export default function AdminPage() {
                                       minute: '2-digit'
                                     })}
                                   </span>
-                                  {client.status !== 'accepted' && client.status !== 'delayed' && (
-                                    <div className="flex space-x-2">
-                                      <Button
-                                        size="sm"
-                                        onClick={() => updateClientStatusMutation.mutate({ clientId: client.id, status: 'accepted' })}
-                                        disabled={updateClientStatusMutation.isPending}
-                                        className="bg-green-600 hover:bg-green-700 text-white"
-                                      >
-                                        <Check className="w-4 h-4 mr-1" />
-                                        Accept
-                                      </Button>
-                                      <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={() => updateClientStatusMutation.mutate({ clientId: client.id, status: 'delayed' })}
-                                        disabled={updateClientStatusMutation.isPending}
-                                        className="border-orange-300 text-orange-700 hover:bg-orange-50"
-                                      >
-                                        <Clock className="w-4 h-4 mr-1" />
-                                        Delay
-                                      </Button>
-                                    </div>
-                                  )}
+                                  <div className="flex space-x-2">
+                                    {client.status !== 'accepted' && client.status !== 'delayed' && (
+                                      <>
+                                        <Button
+                                          size="sm"
+                                          onClick={() => updateClientStatusMutation.mutate({ clientId: client.id, status: 'accepted' })}
+                                          disabled={updateClientStatusMutation.isPending}
+                                          className="bg-green-600 hover:bg-green-700 text-white"
+                                          data-testid={`button-accept-${client.id}`}
+                                        >
+                                          <Check className="w-4 h-4 mr-1" />
+                                          Accept
+                                        </Button>
+                                        <Button
+                                          size="sm"
+                                          variant="outline"
+                                          onClick={() => updateClientStatusMutation.mutate({ clientId: client.id, status: 'delayed' })}
+                                          disabled={updateClientStatusMutation.isPending}
+                                          className="border-orange-300 text-orange-700 hover:bg-orange-50"
+                                          data-testid={`button-delay-${client.id}`}
+                                        >
+                                          <Clock className="w-4 h-4 mr-1" />
+                                          Delay
+                                        </Button>
+                                      </>
+                                    )}
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => {
+                                        if (confirm('Are you sure you want to delete this client inquiry? This action cannot be undone.')) {
+                                          deleteClientInquiryMutation.mutate(client.id);
+                                        }
+                                      }}
+                                      disabled={deleteClientInquiryMutation.isPending}
+                                      className="border-red-300 text-red-700 hover:bg-red-50"
+                                      data-testid={`button-delete-${client.id}`}
+                                    >
+                                      <Trash2 className="w-4 h-4 mr-1" />
+                                      Delete
+                                    </Button>
+                                  </div>
                                 </div>
                               </div>
                           

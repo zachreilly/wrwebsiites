@@ -375,6 +375,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Delete client onboarding (admin endpoint)
+  app.delete("/api/admin/client-onboarding/:id", async (req, res) => {
+    try {
+      const { password } = req.query;
+      const { id } = req.params;
+      
+      if (!password || typeof password !== 'string') {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Authentication required" 
+        });
+      }
+
+      // Direct password check for BADMAN123
+      if (password === 'BADMAN123') {
+        // Valid admin password, proceed
+      } else {
+        // Try session verification as backup
+        const session = await storage.verifyAdminSession(password);
+        if (!session) {
+          return res.status(401).json({ 
+            success: false, 
+            message: "Invalid password or expired session" 
+          });
+        }
+      }
+
+      const deleted = await storage.deleteClientOnboarding(id);
+      
+      if (!deleted) {
+        return res.status(404).json({ success: false, message: "Client inquiry not found" });
+      }
+      
+      res.json({ 
+        success: true, 
+        message: "Client inquiry deleted successfully" 
+      });
+    } catch (error) {
+      console.error("Error deleting client inquiry:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to delete client inquiry" 
+      });
+    }
+  });
+
   // Create customer and project from onboarding data (admin endpoint)
   app.post("/api/admin/create-customer-project", async (req, res) => {
     try {
