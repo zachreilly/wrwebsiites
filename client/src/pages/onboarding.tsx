@@ -120,7 +120,14 @@ export default function OnboardingPage() {
         ...data,
         demoMode: isDemoMode
       });
-      return await response.json();
+      const result = await response.json();
+      
+      // Check for specific error conditions
+      if (!response.ok) {
+        throw { status: response.status, data: result };
+      }
+      
+      return result;
     },
     onSuccess: (responseData: any) => {
       console.log('Submission successful, response:', responseData);
@@ -154,12 +161,29 @@ export default function OnboardingPage() {
         window.location.href = `/onboarding-complete`;
       }, 100);
     },
-    onError: (error) => {
-      toast({
-        title: "Submission Failed",
-        description: "Please try again or contact us directly.",
-        variant: "destructive",
-      });
+    onError: (error: any) => {
+      console.error('Submission error:', error);
+      
+      // Handle duplicate email error
+      if (error?.status === 409 && error?.data?.shouldRedirectToLogin) {
+        toast({
+          title: "Account Already Exists",
+          description: error?.data?.message || "An account with this email already exists. Redirecting to login...",
+          variant: "destructive",
+        });
+        
+        // Redirect to login after a short delay
+        setTimeout(() => {
+          window.location.href = '/customer/login';
+        }, 2000);
+      } else {
+        // Generic error
+        toast({
+          title: "Submission Failed",
+          description: error?.data?.message || "Please try again or contact us directly.",
+          variant: "destructive",
+        });
+      }
     },
   });
 
