@@ -5,6 +5,7 @@ import { ScrollAnimation } from "@/components/ScrollAnimation";
 import { Parallax } from "@/components/Parallax";
 import { Button3D } from "@/components/Button3D";
 import { FloatingElements } from "@/components/FloatingElements";
+import { ArrowRight, CheckCircle } from "lucide-react";
 
 export default function Hero() {
   const scrollToSection = (sectionId: string) => {
@@ -21,40 +22,75 @@ export default function Hero() {
       <Parallax speed={0.3}>
         <RotatingGeometry />
       </Parallax>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 w-full relative z-10">
         <div className="flex justify-center items-center">
-          <div className="text-center max-w-4xl">
+          <div className="text-center max-w-5xl">
             <ScrollAnimation delay={0.1}>
-              <div className="inline-flex items-center glass px-4 py-2 rounded-full text-sm font-medium mb-6 text-white hover:scale-105 transition-transform duration-200">
-                🚀 Special Launch Pricing Available
+              <div className="inline-flex items-center bg-gradient-to-r from-red-600 to-rose-500 px-6 py-3 rounded-full text-base md:text-lg font-bold mb-8 text-white shadow-xl hover:scale-105 transition-transform duration-200 animate-pulse">
+                50% OFF Launch Special - Limited Time Only
               </div>
             </ScrollAnimation>
             
             <ScrollAnimation delay={0.2}>
-              <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight text-balance">
-                Professional Web Development for Your Business
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-8 leading-[1.1] tracking-tight">
+                Get a Professional Website
+                <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-white to-yellow-300">
+                  That Brings You More Customers
+                </span>
               </h1>
             </ScrollAnimation>
             
             <ScrollAnimation delay={0.3}>
-              <p className="text-xl mb-8 leading-relaxed text-[#323232]">We help businesses get online with simple, affordable websites that look great and work on all devices. Special launch pricing available now.</p>
+              <p className="text-lg sm:text-xl md:text-2xl mb-6 leading-relaxed text-white/90 max-w-3xl mx-auto">
+                A great website helps potential customers find you online, trust your business, and get in touch. We make it simple and affordable.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4 md:gap-6 mb-10 text-sm md:text-base">
+                {[
+                  "More enquiries from local searches",
+                  "Professional first impression",
+                  "Works on all devices"
+                ].map((benefit, i) => (
+                  <div key={i} className="flex items-center gap-2 text-white/90">
+                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                    <span>{benefit}</span>
+                  </div>
+                ))}
+              </div>
             </ScrollAnimation>
             
             <ScrollAnimation delay={0.4}>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center">
                 <Button3D
                   onClick={() => window.location.href = '/onboarding'} 
-                  className="bg-accent text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-600 transition-all text-center shadow-2xl"
+                  className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-rose-500 text-white px-8 md:px-12 py-5 md:py-6 rounded-xl font-bold text-lg md:text-xl hover:from-red-700 hover:to-rose-600 transition-all shadow-2xl hover:shadow-red-500/30 flex items-center justify-center gap-3"
                 >
-                  Get Started - Tell Us About Your Project
+                  Get My Website Today
+                  <ArrowRight className="w-6 h-6" />
                 </Button3D>
                 
                 <Button3D
-                  onClick={() => scrollToSection('contact')} 
-                  className="border-2 border-white glass-strong px-8 py-4 rounded-lg font-semibold hover:bg-white/20 transition-all text-center shadow-2xl"
+                  onClick={() => scrollToSection('pricing')} 
+                  className="w-full sm:w-auto border-3 border-white bg-white/10 backdrop-blur-sm px-8 md:px-10 py-5 md:py-6 rounded-xl font-semibold text-lg hover:bg-white/20 transition-all text-center shadow-xl"
                 >
-                  Contact Us Directly
+                  View Pricing
                 </Button3D>
+              </div>
+              
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-white/70 text-sm">
+                <span className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-400" />
+                  Free demo available
+                </span>
+                <span className="hidden sm:inline">|</span>
+                <span className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-400" />
+                  No upfront payment
+                </span>
+                <span className="hidden sm:inline">|</span>
+                <span className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-400" />
+                  Live in days, not weeks
+                </span>
               </div>
             </ScrollAnimation>
           </div>

@@ -124,6 +124,31 @@ export default function Services() {
             </div>
           </div>
         </ScrollAnimation>
+
+        <ScrollAnimation delay={0.5}>
+          <div className="mt-16 text-center">
+            <div className="bg-gradient-to-r from-red-600 to-rose-500 p-8 md:p-12 rounded-2xl shadow-2xl max-w-4xl mx-auto">
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready to Get Your Business Online?</h3>
+              <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
+                Join local businesses already growing with a professional website. Start with a free demo - no payment required.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button 
+                  onClick={() => window.location.href = '/onboarding'}
+                  className="bg-white text-red-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all shadow-xl hover:scale-105"
+                >
+                  Get My Website Today
+                </button>
+                <button 
+                  onClick={() => window.location.href = '/onboarding?mode=demo'}
+                  className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/10 transition-all"
+                >
+                  Try Free Demo First
+                </button>
+              </div>
+            </div>
+          </div>
+        </ScrollAnimation>
       </div>
     </section>
   );
