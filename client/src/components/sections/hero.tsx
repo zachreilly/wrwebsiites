@@ -26,7 +26,7 @@ export default function Hero() {
         <div className="flex justify-center items-center">
           <div className="text-center max-w-5xl">
             <ScrollAnimation delay={0.1}>
-              <div className="inline-flex items-center bg-gradient-to-r from-red-600 to-rose-500 px-6 py-3 rounded-full text-base md:text-lg font-bold mb-8 text-white shadow-xl hover:scale-105 transition-transform duration-200 animate-pulse">
+              <div className="inline-flex items-center bg-gradient-to-r from-red-600 to-rose-500 px-6 py-3 rounded-full text-base md:text-lg font-bold mb-8 text-white shadow-xl hover:scale-105 transition-transform duration-200">
                 50% OFF Launch Special - Limited Time Only
               </div>
             </ScrollAnimation>
@@ -64,7 +64,7 @@ export default function Hero() {
                   onClick={() => window.location.href = '/onboarding'} 
                   className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-rose-500 text-white px-8 md:px-12 py-5 md:py-6 rounded-xl font-bold text-lg md:text-xl hover:from-red-700 hover:to-rose-600 transition-all shadow-2xl hover:shadow-red-500/30 flex items-center justify-center gap-3"
                 >
-                  Get My Website Today
+                  Get Your Website Today
                   <ArrowRight className="w-6 h-6" />
                 </Button3D>
                 

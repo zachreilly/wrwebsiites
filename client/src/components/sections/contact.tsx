@@ -60,7 +60,7 @@ export default function Contact() {
                   onClick={() => window.location.href = '/onboarding'}
                   className="bg-white text-red-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all shadow-xl hover:scale-105 flex items-center justify-center gap-2"
                 >
-                  Get My Website Today
+                  Get Your Website Today
                   <ArrowRight className="w-5 h-5" />
                 </button>
                 <button 

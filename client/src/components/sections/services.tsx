@@ -137,7 +137,7 @@ export default function Services() {
                   onClick={() => window.location.href = '/onboarding'}
                   className="bg-white text-red-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all shadow-xl hover:scale-105"
                 >
-                  Get My Website Today
+                  Get Your Website Today
                 </button>
                 <button 
                   onClick={() => window.location.href = '/onboarding?mode=demo'}

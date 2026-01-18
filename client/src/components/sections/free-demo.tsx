@@ -1,11 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Sparkles, ArrowRight } from "lucide-react";
 import { ScrollAnimation } from "@/components/ScrollAnimation";
-import { use3DTilt } from "@/hooks/use3DTilt";
 
 export default function FreeDemo() {
-  const cardTilt = use3DTilt({ max: 5, scale: 1.02, speed: 150 });
-
   return (
     <section id="free-demo" className="py-20 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -66,13 +63,7 @@ export default function FreeDemo() {
 
           {/* Right: Benefits Card */}
           <ScrollAnimation delay={0.2}>
-            <div
-              ref={cardTilt.ref}
-              style={cardTilt.style}
-              onMouseMove={cardTilt.onMouseMove}
-              onMouseLeave={cardTilt.onMouseLeave}
-              className="gradient-box rounded-2xl p-8 shadow-2xl gpu-accelerated"
-            >
+            <div className="gradient-box rounded-2xl p-8 shadow-2xl">
               <div className="text-center mb-6">
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-red-500 to-rose-500 flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-12 h-12 text-white" />

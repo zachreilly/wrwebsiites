@@ -3,7 +3,6 @@ import { useLocation } from "wouter";
 import { getCurrentPricing, getDiscountEndDateFormatted, isDiscountActive } from "@shared/pricing";
 import { useEffect, useState } from "react";
 import { ScrollAnimation } from "@/components/ScrollAnimation";
-import { use3DTilt } from "@/hooks/use3DTilt";
 import { FloatingElements } from "@/components/FloatingElements";
 
 export default function Pricing() {
@@ -11,9 +10,6 @@ export default function Pricing() {
   const [basicPricing, setBasicPricing] = useState(getCurrentPricing('basic'));
   const [premiumPricing, setPremiumPricing] = useState(getCurrentPricing('premium'));
   const [discountActive, setDiscountActive] = useState(isDiscountActive());
-  
-  const basicTilt = use3DTilt({ max: 4, scale: 1.01, speed: 160 });
-  const premiumTilt = use3DTilt({ max: 4, scale: 1.01, speed: 160 });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -69,13 +65,7 @@ export default function Pricing() {
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
           <ScrollAnimation delay={0.1}>
-            <div 
-              ref={basicTilt.ref}
-              style={basicTilt.style}
-              onMouseMove={basicTilt.onMouseMove}
-              onMouseLeave={basicTilt.onMouseLeave}
-              className="gradient-box p-8 rounded-xl shadow-2xl gpu-accelerated h-full flex flex-col"
-            >
+            <div className="gradient-box p-8 rounded-xl shadow-2xl h-full flex flex-col">
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold text-black mb-2">Basic Static Website</h3>
                 <p className="text-black/80 mb-6">Perfect for small businesses - a professional website with everything you need to establish your online presence. Monthly fee covers ongoing moderation and support for as long as you're subscribed.</p>
@@ -124,13 +114,7 @@ export default function Pricing() {
           </ScrollAnimation>
 
           <ScrollAnimation delay={0.2}>
-            <div 
-              ref={premiumTilt.ref}
-              style={premiumTilt.style}
-              onMouseMove={premiumTilt.onMouseMove}
-              onMouseLeave={premiumTilt.onMouseLeave}
-              className="gradient-box p-8 rounded-xl shadow-2xl border-2 border-accent relative gpu-accelerated h-full flex flex-col"
-            >
+            <div className="gradient-box p-8 rounded-xl shadow-2xl border-2 border-accent relative h-full flex flex-col">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                 <div className="bg-accent text-white px-4 py-2 rounded-full text-sm font-medium">Most Popular</div>
               </div>

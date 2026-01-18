@@ -118,7 +118,7 @@ export default function About() {
                 onClick={() => window.location.href = '/onboarding'}
                 className="mt-8 w-full bg-gradient-to-r from-red-600 to-rose-500 text-white py-4 rounded-xl font-bold text-lg hover:from-red-700 hover:to-rose-600 transition-all shadow-xl hover:scale-105 flex items-center justify-center gap-2"
               >
-                Get My Website Today
+                Get Your Website Today
                 <ArrowRight className="w-5 h-5" />
               </button>
             </div>

@@ -50,7 +50,7 @@ export default function Navigation() {
               className="hidden sm:flex bg-gradient-to-r from-red-600 to-rose-500 text-white px-4 md:px-6 py-2 md:py-3 rounded-full font-bold text-sm md:text-base hover:from-red-700 hover:to-rose-600 transition-all shadow-lg hover:shadow-red-500/30 items-center gap-2"
               data-testid="button-get-started-header"
             >
-              <span className="hidden md:inline">Get My Website</span>
+              <span className="hidden md:inline">Get Your Website</span>
               <span className="md:hidden">Get Started</span>
               <ArrowRight className="w-4 h-4" />
             </Button>
@@ -117,7 +117,7 @@ export default function Navigation() {
                 }} 
                 className="w-full bg-gradient-to-r from-red-600 to-rose-500 text-white hover:from-red-700 hover:to-rose-600 py-4 text-lg font-bold rounded-xl shadow-lg flex items-center justify-center gap-2"
               >
-                Get My Website Today
+                Get Your Website Today
                 <ArrowRight className="w-5 h-5" />
               </Button>
               <Button 
