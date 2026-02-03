@@ -102,14 +102,25 @@ export default function Pricing() {
                   </li>
                 ))}
               </ul>
-              <Button
-                onClick={() => setLocation('/payment?package=basic')}
-                className="w-full bg-black/20 text-black hover:bg-black/30 border-2 border-black/30 hover:scale-105 transition-all duration-200"
-                size="lg"
-                data-testid="button-basic-package"
-              >
-                Get Started - Basic
-              </Button>
+              <div className="space-y-3">
+                <Button
+                  onClick={() => setLocation('/onboarding?package=basic')}
+                  className="w-full bg-black/20 text-black hover:bg-black/30 border-2 border-black/30 hover:scale-105 transition-all duration-200"
+                  size="lg"
+                  data-testid="button-basic-package"
+                >
+                  Get Started - Basic
+                </Button>
+                <Button
+                  onClick={() => setLocation('/direct-payment?package=basic')}
+                  variant="outline"
+                  className="w-full border-2 border-red-500 text-red-600 hover:bg-red-50 hover:scale-105 transition-all duration-200"
+                  size="lg"
+                  data-testid="button-basic-quick-pay"
+                >
+                  Quick Pay - Skip Form
+                </Button>
+              </div>
             </div>
           </ScrollAnimation>
 
@@ -163,14 +174,25 @@ export default function Pricing() {
                 </div>
               </div>
               
-              <Button
-                onClick={() => setLocation('/payment?package=premium')}
-                className="w-full bg-accent text-white hover:bg-red-600 shadow-xl hover:scale-105 transition-all duration-200"
-                size="lg"
-                data-testid="button-premium-package"
-              >
-                Get Started - Premium
-              </Button>
+              <div className="space-y-3">
+                <Button
+                  onClick={() => setLocation('/onboarding?package=premium')}
+                  className="w-full bg-accent text-white hover:bg-red-600 shadow-xl hover:scale-105 transition-all duration-200"
+                  size="lg"
+                  data-testid="button-premium-package"
+                >
+                  Get Started - Premium
+                </Button>
+                <Button
+                  onClick={() => setLocation('/direct-payment?package=premium')}
+                  variant="outline"
+                  className="w-full border-2 border-red-500 text-red-600 hover:bg-red-50 hover:scale-105 transition-all duration-200"
+                  size="lg"
+                  data-testid="button-premium-quick-pay"
+                >
+                  Quick Pay - Skip Form
+                </Button>
+              </div>
             </div>
           </ScrollAnimation>
         </div>

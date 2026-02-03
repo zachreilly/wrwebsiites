@@ -36,7 +36,12 @@ type DirectPaymentForm = z.infer<typeof directPaymentSchema>;
 export default function DirectPaymentPage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const [selectedPackage, setSelectedPackage] = useState<"basic" | "premium">("basic");
+  
+  // Get package from URL parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlPackage = urlParams.get('package') as "basic" | "premium" | null;
+  
+  const [selectedPackage, setSelectedPackage] = useState<"basic" | "premium">(urlPackage || "basic");
   
   const basicPricing = getCurrentPricing('basic');
   const premiumPricing = getCurrentPricing('premium');
@@ -53,7 +58,7 @@ export default function DirectPaymentPage() {
       address: "",
       city: "",
       postcode: "",
-      packageType: "basic",
+      packageType: urlPackage || "basic",
       agreedToTerms: false,
       agreedToDirectDebit: false,
     },
