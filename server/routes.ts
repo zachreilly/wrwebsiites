@@ -582,6 +582,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Direct payment endpoint - for clients onboarded via Google Forms
+  app.post("/api/payment/create-billing-request", async (req, res) => {
+    try {
+      const directPaymentSchema = z.object({
+        firstName: z.string().min(1, "First name is required"),
+        lastName: z.string().min(1, "Last name is required"),
+        email: z.string().email("Valid email is required"),
+        businessName: z.string().min(1, "Business name is required"),
+        phone: z.string().optional(),
+        address: z.string().min(1, "Address is required"),
+        city: z.string().min(1, "City is required"),
+        postcode: z.string().min(1, "Postcode is required"),
+        packageType: z.enum(["basic", "premium"]).default("basic"),
+        setupFeeAmount: z.number().optional(),
+      });
+
+      const validatedData = directPaymentSchema.parse(req.body);
+      const {
+        firstName,
+        lastName,
+        email,
+        businessName,
+        phone,
+        address,
+        city,
+        postcode,
+        packageType,
+        setupFeeAmount
+      } = validatedData;
+
+      // Create or find customer
+      let customer = await storage.getCustomerByEmail(email);
+      
+      if (!customer) {
+        customer = await storage.createCustomer({
+          email,
+          firstName,
+          lastName,
+          businessName: businessName || `${firstName} ${lastName}`,
+          phone: phone || '',
+          package: packageType || 'basic',
+        });
+      }
+
+      const { gocardlessService } = await import("./gocardless");
+      
+      // Generate payment link
+      const { billingRequestId, authorizationUrl } = await gocardlessService.createPaymentLink({
+        email,
+        firstName,
+        lastName,
+        addressLine1: address,
+        city,
+        postalCode: postcode,
+        setupFeeAmount: setupFeeAmount || (packageType === 'premium' ? 15000 : 7500),
+        description: `Setup fee for ${packageType || 'basic'} website package`,
+        customerId: customer.id,
+      });
+
+      // Store billing request ID with customer for webhook processing
+      await storage.updateCustomer(customer.id, {
+        gocardlessBillingRequestId: billingRequestId,
+      });
+
+      res.json({
+        success: true,
+        authorizationUrl,
+        billingRequestId,
+        customerId: customer.id,
+      });
+
+    } catch (error: any) {
+      console.error("Direct payment billing request error:", error);
+      res.status(500).json({
+        success: false,
+        message: error.message || "Failed to create payment link"
+      });
+    }
+  });
+
   // Direct debit payment endpoint (legacy - kept for compatibility)
   app.post("/api/payment/direct-debit", async (req, res) => {
     try {

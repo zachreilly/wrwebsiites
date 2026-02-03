@@ -20,6 +20,7 @@ import WebsiteUpdateRequest from "@/pages/website-update-request";
 import CustomerLogin from "@/pages/customer-login";
 import CustomerDashboard from "@/pages/customer-dashboard";
 import PortfolioPage from "@/pages/portfolio";
+import DirectPaymentPage from "@/pages/direct-payment";
 
 function Router() {
   usePageMeta();
@@ -37,6 +38,7 @@ function Router() {
         <Route path="/consultation" component={ConsultationPage} />
         <Route path="/website-update-request" component={WebsiteUpdateRequest} />
         <Route path="/portfolio" component={PortfolioPage} />
+        <Route path="/direct-payment" component={DirectPaymentPage} />
         <Route path="/customer/login" component={CustomerLogin} />
         <Route path="/customer/dashboard/:customerId?" component={CustomerDashboard} />
         <Route component={NotFound} />
