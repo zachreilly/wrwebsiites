@@ -6,7 +6,6 @@ import { Toaster } from "@/components/ui/toaster";
 // import { TooltipProvider } from "@/components/ui/tooltip";
 import { analytics } from "@/lib/analytics";
 import { usePageMeta } from "@/hooks/usePageMeta";
-import { PageTransition } from "@/components/PageTransition";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import AdminPage from "@/pages/admin";
@@ -26,7 +25,6 @@ function Router() {
   usePageMeta();
   
   return (
-    <PageTransition>
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/admin" component={AdminPage} />
@@ -43,7 +41,6 @@ function Router() {
         <Route path="/customer/dashboard/:customerId?" component={CustomerDashboard} />
         <Route component={NotFound} />
       </Switch>
-    </PageTransition>
   );
 }
 

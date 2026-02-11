@@ -8,7 +8,7 @@ Preferred communication style: Simple, everyday language.
 
 ## System Architecture
 ### UI/UX Decisions
-The frontend uses React with TypeScript, leveraging `shadcn/ui` (built on Radix UI) for consistent and accessible components. Styling is managed with Tailwind CSS, utilizing a custom design system with CSS variables for theming, focusing on a neutral palette with primary blue and accent yellow. Google Fonts are used for typography.
+The frontend uses React with TypeScript, leveraging `shadcn/ui` (built on Radix UI) for consistent and accessible components. Styling is managed with Tailwind CSS, utilizing a custom design system with CSS variables for theming. The design uses a simplified emerald green and white colour palette with gray accents for a professional, trustworthy appearance. Google Fonts (Inter) are used for typography. No animations, scroll effects, or 3D components are used — content loads instantly for fast mobile performance. Cards use clean white backgrounds with subtle shadows (shadow-md).
 
 ### Technical Implementations
 *   **Frontend**: React, TypeScript, Wouter for routing, TanStack Query for server state management, React Hook Form with Zod for form handling.

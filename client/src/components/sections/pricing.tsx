@@ -2,8 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { getCurrentPricing, getDiscountEndDateFormatted, isDiscountActive } from "@shared/pricing";
 import { useEffect, useState } from "react";
-import { ScrollAnimation } from "@/components/ScrollAnimation";
-import { FloatingElements } from "@/components/FloatingElements";
+import { CheckCircle } from "lucide-react";
 
 export default function Pricing() {
   const [, setLocation] = useLocation();
@@ -23,247 +22,178 @@ export default function Pricing() {
 
     return () => clearInterval(interval);
   }, [discountActive]);
-  
-  const scrollToContact = () => {
-    const element = document.getElementById('contact');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
 
   return (
-    <section id="pricing" className="py-20 relative overflow-hidden w-full px-0">
-      <FloatingElements count={2} size="medium" />
+    <section id="pricing" className="py-24 relative overflow-hidden w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 box-border">
-        <ScrollAnimation>
-          <div className="text-center mb-16">
-            {discountActive ? (
-              <>
-                <div className="inline-flex items-center px-4 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-lg font-bold mb-4 sm:mb-6 bg-gradient-to-r from-red-600 via-red-500 to-orange-500 text-white shadow-2xl border-2 sm:border-4 border-white hover:scale-110 transition-transform duration-300">
-                  <span className="text-lg sm:text-2xl mr-1 sm:mr-2">🔥</span>
-                  <span className="drop-shadow-lg">Limited Time Discount - Ends {getDiscountEndDateFormatted()}</span>
-                  <span className="text-lg sm:text-2xl ml-1 sm:ml-2">🔥</span>
-                </div>
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-4 drop-shadow-md">Special Launch Pricing - Save 50%!</h2>
-                <p className="text-base sm:text-xl text-black/90 max-w-3xl mx-auto">
-                  Get your professional website at half price! This limited-time offer ends in one week - don't miss out on these incredible savings.
-                </p>
-              </>
-            ) : (
-              <>
-                <div className="inline-flex items-center gradient-box px-4 py-2 rounded-full text-sm font-medium mb-4 text-black hover:scale-105 transition-transform duration-200">
-                  Professional Web Development
-                </div>
-                <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4">Our Standard Pricing</h2>
-                <p className="text-base sm:text-xl text-black/90 max-w-3xl mx-auto">
-                  Professional website development and hosting services for your business.
-                </p>
-              </>
-            )}
-          </div>
-        </ScrollAnimation>
-
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
-          <ScrollAnimation delay={0.1}>
-            <div className="gradient-box p-5 sm:p-8 rounded-xl shadow-2xl h-full flex flex-col">
-              <div className="text-center mb-6 sm:mb-8">
-                <h3 className="text-xl sm:text-2xl font-bold text-black mb-2">Basic Static Website</h3>
-                <p className="text-sm sm:text-base text-black/80 mb-4 sm:mb-6 px-2">Perfect for small businesses - a professional website with everything you need to establish your online presence. Monthly fee covers ongoing moderation and support for as long as you're subscribed.</p>
-                <div className="text-3xl sm:text-4xl font-bold text-black mb-2 flex flex-wrap justify-center items-center gap-2">
-                  {basicPricing.isDiscounted && basicPricing.originalSetupPrice && (
-                    <span className="text-2xl text-red-400 line-through">£{basicPricing.originalSetupPrice}</span>
-                  )}
-                  <span>£{basicPricing.setupPrice}</span>
-                  <span className="text-sm font-normal text-black/70">setup</span>
-                  {basicPricing.isDiscounted && (
-                    <div className="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full">SAVE 50%</div>
-                  )}
-                </div>
-                <div className="text-lg font-semibold text-black">
-                  {basicPricing.isDiscounted && basicPricing.originalMonthlyPrice && basicPricing.originalMonthlyPrice !== basicPricing.monthlyPrice && (
-                    <span className="text-red-400 line-through mr-2">£{basicPricing.originalMonthlyPrice}</span>
-                  )}
-                  + £{basicPricing.monthlyPrice} per month
-                </div>
-                <p className="text-xs text-black/60 mt-2">Monthly fee includes hosting, security, and ongoing support</p>
+        <div className="text-center mb-16">
+          {discountActive ? (
+            <>
+              <div className="inline-flex items-center bg-emerald-700 text-white px-4 sm:px-6 py-2 rounded-full text-sm font-medium mb-6">
+                Launch pricing ends {getDiscountEndDateFormatted()}
               </div>
-              <ul className="space-y-3 mb-8 flex-grow">
-                {[
-                  "Up to 3 professional pages (Home, About, Contact)",
-                  "Mobile-friendly responsive design",
-                  "Contact form & business information",
-                  "Fast secure hosting included",
-                  "Basic SEO optimization",
-                  "1 month dedicated support"
-                ].map((feature, i) => (
-                  <li key={i} className="flex items-center text-black/90">
-                    <span className="text-black mr-3">✓</span>
-                    <strong>{feature}</strong>
-                  </li>
-                ))}
-              </ul>
-              <div className="space-y-3">
-                <Button
-                  onClick={() => setLocation('/onboarding?package=basic')}
-                  className="w-full bg-black/20 text-black hover:bg-black/30 border-2 border-black/30 hover:scale-105 transition-all duration-200"
-                  size="lg"
-                  data-testid="button-basic-package"
-                >
-                  Get Started - Basic
-                </Button>
-                <Button
-                  onClick={() => setLocation('/direct-payment?package=basic')}
-                  variant="outline"
-                  className="w-full border-2 border-red-500 text-red-600 hover:bg-red-50 hover:scale-105 transition-all duration-200"
-                  size="lg"
-                  data-testid="button-basic-quick-pay"
-                >
-                  Quick Pay - Skip Form
-                </Button>
-              </div>
-            </div>
-          </ScrollAnimation>
-
-          <ScrollAnimation delay={0.2}>
-            <div className="gradient-box p-5 sm:p-8 rounded-xl shadow-2xl border-2 border-accent relative h-full flex flex-col">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <div className="bg-accent text-white px-4 py-2 rounded-full text-sm font-medium">Most Popular</div>
-              </div>
-              <div className="text-center mb-6 sm:mb-8">
-                <h3 className="text-xl sm:text-2xl font-bold text-black mb-2">Premium Business Website</h3>
-                <p className="text-sm sm:text-base text-black/80 mb-4 sm:mb-6 px-2">Everything you need for a professional online presence - custom design, your own domain, and advanced features that help you stand out from competitors</p>
-                <div className="text-3xl sm:text-4xl font-bold text-black mb-2 flex flex-wrap justify-center items-center gap-2">
-                  {premiumPricing.isDiscounted && premiumPricing.originalSetupPrice && (
-                    <span className="text-2xl text-red-400 line-through">£{premiumPricing.originalSetupPrice}</span>
-                  )}
-                  <span>£{premiumPricing.setupPrice}</span>
-                  <span className="text-sm font-normal text-black/70">setup</span>
-                  {premiumPricing.isDiscounted && (
-                    <div className="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full">SAVE 50%</div>
-                  )}
-                </div>
-                <div className="text-lg font-semibold text-black">
-                  {premiumPricing.isDiscounted && premiumPricing.originalMonthlyPrice && premiumPricing.originalMonthlyPrice !== premiumPricing.monthlyPrice && (
-                    <span className="text-red-400 line-through mr-2">£{premiumPricing.originalMonthlyPrice}</span>
-                  )}
-                  + £{premiumPricing.monthlyPrice} per month
-                </div>
-              </div>
-              <ul className="space-y-3 mb-8 flex-grow">
-                {[
-                  "Unlimited pages & custom design",
-                  "Professional domain & email included",
-                  "Advanced SEO & Google optimization",
-                  "Analytics & performance tracking",
-                  "Content management system",
-                  "3 months priority support"
-                ].map((feature, i) => (
-                  <li key={i} className="flex items-center text-black/90">
-                    <span className="text-black mr-3">✓</span>
-                    <strong>{feature}</strong>
-                  </li>
-                ))}
-              </ul>
-              
-              <div className="bg-black/10 p-4 rounded-lg mb-6 border-2 border-accent/50">
-                <div className="text-center">
-                  <p className="text-accent font-semibold text-sm mb-1">💰 INCREDIBLE VALUE</p>
-                  <p className="text-black font-bold text-sm">
-                    Over £570 worth of services included FREE!
-                  </p>
-                </div>
-              </div>
-              
-              <div className="space-y-3">
-                <Button
-                  onClick={() => setLocation('/onboarding?package=premium')}
-                  className="w-full bg-accent text-white hover:bg-red-600 shadow-xl hover:scale-105 transition-all duration-200"
-                  size="lg"
-                  data-testid="button-premium-package"
-                >
-                  Get Started - Premium
-                </Button>
-                <Button
-                  onClick={() => setLocation('/direct-payment?package=premium')}
-                  variant="outline"
-                  className="w-full border-2 border-red-500 text-red-600 hover:bg-red-50 hover:scale-105 transition-all duration-200"
-                  size="lg"
-                  data-testid="button-premium-quick-pay"
-                >
-                  Quick Pay - Skip Form
-                </Button>
-              </div>
-            </div>
-          </ScrollAnimation>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-4">Simple, Transparent Pricing</h2>
+              <p className="text-base sm:text-lg text-black/70 max-w-2xl mx-auto">
+                Get your professional website at half price during our launch period. No hidden fees.
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4">Simple, Transparent Pricing</h2>
+              <p className="text-base sm:text-lg text-black/70 max-w-2xl mx-auto">
+                Professional website development and hosting for your business. No hidden fees.
+              </p>
+            </>
+          )}
         </div>
 
-        <ScrollAnimation delay={0.3}>
-          <div className="max-w-4xl mx-auto">
-            <div className="gradient-box p-5 sm:p-8 rounded-xl shadow-2xl">
-              <div className="text-center mb-6 sm:mb-8">
-                <h3 className="text-2xl sm:text-3xl font-bold text-black mb-2">Update Your Website</h3>
-                <p className="text-base sm:text-lg text-black/90 mb-4 sm:mb-6 max-w-3xl mx-auto">Already have a website? Let us enhance it with new features, content updates, or a complete redesign to keep your business competitive.</p>
-                <div className="text-3xl sm:text-4xl font-bold text-accent mb-2 flex flex-wrap justify-center items-center gap-2">
-                  <span>Quote</span>
-                  <span className="text-lg font-normal text-black/70">on request</span>
-                </div>
-                <div className="text-xl font-semibold text-black">
-                  Payment after completion
-                </div>
-                <p className="text-sm text-black/60 mt-2">No upfront costs - pay only when satisfied</p>
+        <div className="grid md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto mb-16">
+          <div className="bg-white rounded-xl shadow-md border border-black/10 p-6 sm:p-8 h-full flex flex-col">
+            <div className="text-center mb-6">
+              <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">Basic</h3>
+              <p className="text-sm text-gray-500 mb-4">Perfect for small businesses getting started online</p>
+              <div className="flex flex-wrap justify-center items-baseline gap-2">
+                {basicPricing.isDiscounted && basicPricing.originalSetupPrice && (
+                  <span className="text-xl text-gray-400 line-through">£{basicPricing.originalSetupPrice}</span>
+                )}
+                <span className="text-4xl font-bold text-gray-900">£{basicPricing.setupPrice}</span>
+                <span className="text-sm text-gray-500">setup</span>
               </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-                {[
-                  { title: "Basic Updates", price: "£40–£75", items: ["Content changes", "Small fixes", "Text updates", "Image replacements"] },
-                  { title: "Medium Updates", price: "£100–£250", items: ["New pages", "Design tweaks", "Plugin additions", "Feature enhancements"] },
-                  { title: "Major Revamp", price: "£500+", items: ["Complete redesign", "Major functionality", "New architecture", "Full rebuild"] }
-                ].map((tier, i) => (
-                  <div key={i} className="text-center">
-                    <div className="gradient-box p-6 rounded-lg shadow-xl border-2 border-black h-full">
-                      <h4 className="text-xl font-bold text-black mb-3">{tier.title}</h4>
-                      <div className="text-2xl font-bold text-black mb-2">{tier.price}</div>
-                      <ul className="text-sm text-black/80 space-y-1">
-                        {tier.items.map((item, j) => (
-                          <li key={j}>• {item}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="text-center">
-                <div className="bg-black/10 p-3 sm:p-4 rounded-lg border-2 border-black/30 mb-6 inline-block max-w-full overflow-hidden">
-                  <p className="text-black font-semibold text-[10px] sm:text-base whitespace-normal break-words">✓ Professional assessment • ✓ Quote within 24 hours • ✓ Payment after completion</p>
-                </div>
-                <Button
-                  onClick={() => setLocation('/website-update-request')}
-                  className="bg-accent text-white hover:bg-red-600 px-8 py-3 text-lg shadow-xl hover:scale-105 transition-all duration-200"
-                  size="lg"
-                  data-testid="button-request-quote"
-                >
-                  Request Quote
-                </Button>
-              </div>
+              <p className="text-sm text-gray-500 mt-1">+ £{basicPricing.monthlyPrice}/month for hosting & support</p>
+            </div>
+            <ul className="space-y-3 mb-8 flex-grow">
+              {[
+                "Up to 3 pages (Home, About, Contact)",
+                "Mobile-friendly responsive design",
+                "Contact form & business info",
+                "Fast, secure hosting included",
+                "Basic SEO optimisation",
+                "1 month dedicated support"
+              ].map((feature, i) => (
+                <li key={i} className="flex items-start text-gray-600 text-sm">
+                  <CheckCircle className="w-4 h-4 text-emerald-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="space-y-3">
+              <Button
+                onClick={() => setLocation('/onboarding?package=basic')}
+                className="w-full bg-emerald-600 text-white hover:bg-emerald-700 transition-colors"
+                size="lg"
+                data-testid="button-basic-package"
+              >
+                Get Started
+              </Button>
+              <Button
+                onClick={() => setLocation('/direct-payment?package=basic')}
+                variant="outline"
+                className="w-full border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+                size="lg"
+                data-testid="button-basic-quick-pay"
+              >
+                Quick Pay
+              </Button>
             </div>
           </div>
-        </ScrollAnimation>
 
-        <ScrollAnimation delay={0.4}>
-          <div className="mt-12 text-center">
-            <p className="text-black/90 mb-4">Premium package includes domain registration. Both packages include secure hosting and ongoing support</p>
-            <div className="gradient-box p-6 rounded-xl max-w-2xl mx-auto shadow-2xl">
-              <h4 className="font-semibold mb-2 text-black">Why Choose Us?</h4>
-              <ul className="text-sm space-y-1 text-black/90">
-                <li>• Affordable launch pricing — pay less now for the same professional quality</li>
-                <li>• Perfect for businesses who want a simple, stress-free way to get online</li>
-                <li>• Fast turnaround — your site can be live in days, not weeks</li>
-                <li>• Friendly, local support whenever you need it</li>
-              </ul>
+          <div className="bg-white rounded-xl shadow-md border-2 border-emerald-500 relative p-6 sm:p-8 h-full flex flex-col">
+            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+              <div className="bg-emerald-600 text-white px-4 py-1 rounded-full text-xs font-medium">Most Popular</div>
+            </div>
+            <div className="text-center mb-6">
+              <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">Premium</h3>
+              <p className="text-sm text-gray-500 mb-4">Everything you need for a strong online presence</p>
+              <div className="flex flex-wrap justify-center items-baseline gap-2">
+                {premiumPricing.isDiscounted && premiumPricing.originalSetupPrice && (
+                  <span className="text-xl text-gray-400 line-through">£{premiumPricing.originalSetupPrice}</span>
+                )}
+                <span className="text-4xl font-bold text-gray-900">£{premiumPricing.setupPrice}</span>
+                <span className="text-sm text-gray-500">setup</span>
+              </div>
+              <p className="text-sm text-gray-500 mt-1">+ £{premiumPricing.monthlyPrice}/month for hosting & support</p>
+            </div>
+            <ul className="space-y-3 mb-8 flex-grow">
+              {[
+                "Unlimited pages & custom design",
+                "Professional domain & email included",
+                "Advanced SEO & Google optimisation",
+                "Analytics & performance tracking",
+                "Content management system",
+                "3 months priority support"
+              ].map((feature, i) => (
+                <li key={i} className="flex items-start text-gray-600 text-sm">
+                  <CheckCircle className="w-4 h-4 text-emerald-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="space-y-3">
+              <Button
+                onClick={() => setLocation('/onboarding?package=premium')}
+                className="w-full bg-emerald-600 text-white hover:bg-emerald-700 transition-colors"
+                size="lg"
+                data-testid="button-premium-package"
+              >
+                Get Started
+              </Button>
+              <Button
+                onClick={() => setLocation('/direct-payment?package=premium')}
+                variant="outline"
+                className="w-full border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+                size="lg"
+                data-testid="button-premium-quick-pay"
+              >
+                Quick Pay
+              </Button>
             </div>
           </div>
-        </ScrollAnimation>
+        </div>
+
+        <div className="max-w-4xl mx-auto mb-16">
+          <div className="bg-white rounded-xl shadow-md border border-black/10 p-6 sm:p-8">
+            <div className="text-center mb-6">
+              <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">Website Updates</h3>
+              <p className="text-sm text-gray-500 mb-4">Already have a website? We can enhance it for you.</p>
+              <p className="text-sm text-gray-500">No upfront costs — pay only when you're satisfied</p>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
+              {[
+                { title: "Small Updates", price: "£40–£75", items: ["Content changes", "Small fixes", "Text updates", "Image replacements"] },
+                { title: "Medium Updates", price: "£100–£250", items: ["New pages", "Design tweaks", "Plugin additions", "Feature enhancements"] },
+                { title: "Major Revamp", price: "£500+", items: ["Complete redesign", "Major functionality", "New architecture", "Full rebuild"] }
+              ].map((tier, i) => (
+                <div key={i} className="text-center">
+                  <div className="bg-gray-50 p-5 rounded-lg border border-gray-200 h-full">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">{tier.title}</h4>
+                    <div className="text-xl font-bold text-emerald-600 mb-3">{tier.price}</div>
+                    <ul className="text-sm text-gray-500 space-y-1">
+                      {tier.items.map((item, j) => (
+                        <li key={j}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="text-center">
+              <Button
+                onClick={() => setLocation('/website-update-request')}
+                className="bg-emerald-600 text-white hover:bg-emerald-700 px-8 py-3 transition-colors"
+                size="lg"
+                data-testid="button-request-quote"
+              >
+                Request a Quote
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-center max-w-2xl mx-auto">
+          <p className="text-sm text-black/60">Both packages include secure hosting and ongoing support. Premium includes domain registration.</p>
+        </div>
       </div>
     </section>
   );

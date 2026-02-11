@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
 import { useLocation } from "wouter";
-import InteractiveCursor from "@/components/InteractiveCursor";
 
 export default function PaymentPageSimple() {
   const [, setLocation] = useLocation();
@@ -11,8 +10,6 @@ export default function PaymentPageSimple() {
 
   return (
     <div className="min-h-screen relative">
-      <InteractiveCursor />
-      
       <div className="relative z-10 min-h-screen py-8 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center mb-8">
