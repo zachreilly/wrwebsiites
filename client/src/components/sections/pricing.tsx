@@ -88,7 +88,7 @@ export default function Pricing() {
               <Button
                 onClick={() => setLocation('/direct-payment?package=basic')}
                 variant="outline"
-                className="w-full border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+                className="w-full border border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
                 size="lg"
                 data-testid="button-basic-quick-pay"
               >
@@ -140,7 +140,7 @@ export default function Pricing() {
               <Button
                 onClick={() => setLocation('/direct-payment?package=premium')}
                 variant="outline"
-                className="w-full border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+                className="w-full border border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
                 size="lg"
                 data-testid="button-premium-quick-pay"
               >
