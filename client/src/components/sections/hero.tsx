@@ -26,7 +26,7 @@ export default function Hero() {
         <div className="flex justify-center items-center">
           <div className="text-center max-w-5xl">
             <ScrollAnimation delay={0.1}>
-              <div className="inline-flex items-center bg-gradient-to-r from-red-600 to-rose-500 px-6 py-3 rounded-full text-base md:text-lg font-bold mb-8 text-white shadow-xl hover:scale-105 transition-transform duration-200">
+              <div className="inline-flex items-center bg-gradient-to-r from-red-600 to-rose-500 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base md:text-lg font-bold mb-6 sm:mb-8 text-white shadow-xl hover:scale-105 transition-transform duration-200">
                 50% OFF Launch Special - Limited Time Only
               </div>
             </ScrollAnimation>
@@ -44,14 +44,14 @@ export default function Hero() {
               <p className="text-lg sm:text-xl md:text-2xl mb-6 leading-relaxed text-white/90 max-w-3xl mx-auto">
                 A great website helps potential customers find you online, trust your business, and get in touch. We make it simple and affordable.
               </p>
-              <div className="flex flex-wrap justify-center gap-4 md:gap-6 mb-10 text-sm md:text-base">
+              <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-4 md:gap-6 mb-8 sm:mb-10 text-sm md:text-base">
                 {[
                   "More enquiries from local searches",
                   "Professional first impression",
                   "Works on all devices"
                 ].map((benefit, i) => (
                   <div key={i} className="flex items-center gap-2 text-white/90">
-                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400 flex-shrink-0" />
                     <span>{benefit}</span>
                   </div>
                 ))}
@@ -76,7 +76,7 @@ export default function Hero() {
                 </Button3D>
               </div>
               
-              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-white/70 text-sm">
+              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-white/70 text-xs sm:text-sm">
                 <span className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-green-400" />
                   Free demo available

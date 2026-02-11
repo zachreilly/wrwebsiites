@@ -39,13 +39,13 @@ export default function Pricing() {
           <div className="text-center mb-16">
             {discountActive ? (
               <>
-                <div className="inline-flex items-center px-8 py-4 rounded-full text-lg font-bold mb-6 bg-gradient-to-r from-red-600 via-red-500 to-orange-500 text-white shadow-2xl border-4 border-white hover:scale-110 transition-transform duration-300">
-                  <span className="text-2xl mr-2">🔥</span>
+                <div className="inline-flex items-center px-4 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-lg font-bold mb-4 sm:mb-6 bg-gradient-to-r from-red-600 via-red-500 to-orange-500 text-white shadow-2xl border-2 sm:border-4 border-white hover:scale-110 transition-transform duration-300">
+                  <span className="text-lg sm:text-2xl mr-1 sm:mr-2">🔥</span>
                   <span className="drop-shadow-lg">Limited Time Discount - Ends {getDiscountEndDateFormatted()}</span>
-                  <span className="text-2xl ml-2">🔥</span>
+                  <span className="text-lg sm:text-2xl ml-1 sm:ml-2">🔥</span>
                 </div>
-                <h2 className="text-5xl font-bold text-black mb-4 drop-shadow-md">Special Launch Pricing - Save 50%!</h2>
-                <p className="text-xl text-black/90 max-w-3xl mx-auto">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-4 drop-shadow-md">Special Launch Pricing - Save 50%!</h2>
+                <p className="text-base sm:text-xl text-black/90 max-w-3xl mx-auto">
                   Get your professional website at half price! This limited-time offer ends in one week - don't miss out on these incredible savings.
                 </p>
               </>
@@ -54,8 +54,8 @@ export default function Pricing() {
                 <div className="inline-flex items-center gradient-box px-4 py-2 rounded-full text-sm font-medium mb-4 text-black hover:scale-105 transition-transform duration-200">
                   Professional Web Development
                 </div>
-                <h2 className="text-4xl font-bold text-black mb-4">Our Standard Pricing</h2>
-                <p className="text-xl text-black/90 max-w-3xl mx-auto">
+                <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4">Our Standard Pricing</h2>
+                <p className="text-base sm:text-xl text-black/90 max-w-3xl mx-auto">
                   Professional website development and hosting services for your business.
                 </p>
               </>
@@ -65,11 +65,11 @@ export default function Pricing() {
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
           <ScrollAnimation delay={0.1}>
-            <div className="gradient-box p-8 rounded-xl shadow-2xl h-full flex flex-col">
-              <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-black mb-2">Basic Static Website</h3>
-                <p className="text-black/80 mb-6">Perfect for small businesses - a professional website with everything you need to establish your online presence. Monthly fee covers ongoing moderation and support for as long as you're subscribed.</p>
-                <div className="text-4xl font-bold text-black mb-2">
+            <div className="gradient-box p-5 sm:p-8 rounded-xl shadow-2xl h-full flex flex-col">
+              <div className="text-center mb-6 sm:mb-8">
+                <h3 className="text-xl sm:text-2xl font-bold text-black mb-2">Basic Static Website</h3>
+                <p className="text-sm sm:text-base text-black/80 mb-4 sm:mb-6">Perfect for small businesses - a professional website with everything you need to establish your online presence. Monthly fee covers ongoing moderation and support for as long as you're subscribed.</p>
+                <div className="text-3xl sm:text-4xl font-bold text-black mb-2">
                   {basicPricing.isDiscounted && basicPricing.originalSetupPrice && (
                     <span className="text-2xl text-red-400 line-through mr-3">£{basicPricing.originalSetupPrice}</span>
                   )}
@@ -125,14 +125,14 @@ export default function Pricing() {
           </ScrollAnimation>
 
           <ScrollAnimation delay={0.2}>
-            <div className="gradient-box p-8 rounded-xl shadow-2xl border-2 border-accent relative h-full flex flex-col">
+            <div className="gradient-box p-5 sm:p-8 rounded-xl shadow-2xl border-2 border-accent relative h-full flex flex-col">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                 <div className="bg-accent text-white px-4 py-2 rounded-full text-sm font-medium">Most Popular</div>
               </div>
-              <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-black mb-2">Premium Business Website</h3>
-                <p className="text-black/80 mb-6">Everything you need for a professional online presence - custom design, your own domain, and advanced features that help you stand out from competitors</p>
-                <div className="text-4xl font-bold text-black mb-2">
+              <div className="text-center mb-6 sm:mb-8">
+                <h3 className="text-xl sm:text-2xl font-bold text-black mb-2">Premium Business Website</h3>
+                <p className="text-sm sm:text-base text-black/80 mb-4 sm:mb-6">Everything you need for a professional online presence - custom design, your own domain, and advanced features that help you stand out from competitors</p>
+                <div className="text-3xl sm:text-4xl font-bold text-black mb-2">
                   {premiumPricing.isDiscounted && premiumPricing.originalSetupPrice && (
                     <span className="text-2xl text-red-400 line-through mr-3">£{premiumPricing.originalSetupPrice}</span>
                   )}
@@ -199,11 +199,11 @@ export default function Pricing() {
 
         <ScrollAnimation delay={0.3}>
           <div className="max-w-4xl mx-auto">
-            <div className="gradient-box p-8 rounded-xl shadow-2xl">
-              <div className="text-center mb-8">
-                <h3 className="text-3xl font-bold text-black mb-2">Update Your Website</h3>
-                <p className="text-lg text-black/90 mb-6 max-w-3xl mx-auto">Already have a website? Let us enhance it with new features, content updates, or a complete redesign to keep your business competitive.</p>
-                <div className="text-4xl font-bold text-accent mb-2">
+            <div className="gradient-box p-5 sm:p-8 rounded-xl shadow-2xl">
+              <div className="text-center mb-6 sm:mb-8">
+                <h3 className="text-2xl sm:text-3xl font-bold text-black mb-2">Update Your Website</h3>
+                <p className="text-base sm:text-lg text-black/90 mb-4 sm:mb-6 max-w-3xl mx-auto">Already have a website? Let us enhance it with new features, content updates, or a complete redesign to keep your business competitive.</p>
+                <div className="text-3xl sm:text-4xl font-bold text-accent mb-2">
                   Quote
                   <span className="text-lg font-normal text-black/70 ml-2">on request</span>
                 </div>
@@ -213,7 +213,7 @@ export default function Pricing() {
                 <p className="text-sm text-black/60 mt-2">No upfront costs - pay only when satisfied</p>
               </div>
               
-              <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 {[
                   { title: "Basic Updates", price: "£40–£75", items: ["Content changes", "Small fixes", "Text updates", "Image replacements"] },
                   { title: "Medium Updates", price: "£100–£250", items: ["New pages", "Design tweaks", "Plugin additions", "Feature enhancements"] },
@@ -234,8 +234,8 @@ export default function Pricing() {
               </div>
               
               <div className="text-center">
-                <div className="bg-black/10 p-4 rounded-lg border-2 border-black/30 mb-6 inline-block">
-                  <p className="text-black font-semibold">✓ Professional assessment • ✓ Quote within 24 hours • ✓ Payment after completion</p>
+                <div className="bg-black/10 p-3 sm:p-4 rounded-lg border-2 border-black/30 mb-6 inline-block">
+                  <p className="text-black font-semibold text-xs sm:text-base">✓ Professional assessment • ✓ Quote within 24 hours • ✓ Payment after completion</p>
                 </div>
                 <Button
                   onClick={() => setLocation('/website-update-request')}

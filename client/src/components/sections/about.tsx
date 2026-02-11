@@ -12,14 +12,14 @@ export default function About() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <ScrollAnimation>
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-black mb-6">Why Your Business Needs a Great Website</h2>
-            <p className="text-xl text-black/90 max-w-3xl mx-auto leading-relaxed">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-4 sm:mb-6">Why Your Business Needs a Great Website</h2>
+            <p className="text-base sm:text-lg md:text-xl text-black/90 max-w-3xl mx-auto leading-relaxed">
               In today's digital world, your website is often the first impression customers have of your business. A professional website doesn't just look good - it actively helps grow your business.
             </p>
           </div>
         </ScrollAnimation>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
           {[
             {
               icon: Search,
@@ -44,7 +44,7 @@ export default function About() {
             }
           ].map((item, i) => (
             <ScrollAnimation key={i} delay={i * 0.1}>
-              <div className="gradient-box p-6 md:p-8 rounded-xl shadow-2xl h-full">
+              <div className="gradient-box p-5 sm:p-6 md:p-8 rounded-xl shadow-2xl h-full">
                 <div className="w-14 h-14 bg-black/10 rounded-xl flex items-center justify-center mb-6">
                   <item.icon className="w-7 h-7 text-black" />
                 </div>
@@ -59,11 +59,11 @@ export default function About() {
           ))}
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-10 sm:gap-16 items-center">
           <ScrollAnimation delay={0.1}>
             <div>
-              <h3 className="text-3xl md:text-4xl font-bold text-black mb-6">Why Choose wrwebsites?</h3>
-              <p className="text-xl text-black/90 mb-8 leading-relaxed">We help businesses get online with professional, affordable websites. Our special launch pricing means you get professional quality for a fraction of the usual cost.</p>
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-4 sm:mb-6">Why Choose wrwebsites?</h3>
+              <p className="text-base sm:text-lg md:text-xl text-black/90 mb-6 sm:mb-8 leading-relaxed">We help businesses get online with professional, affordable websites. Our special launch pricing means you get professional quality for a fraction of the usual cost.</p>
               
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
@@ -95,7 +95,7 @@ export default function About() {
               style={cardTilt.style}
               onMouseMove={cardTilt.onMouseMove}
               onMouseLeave={cardTilt.onMouseLeave}
-              className="gradient-box rounded-xl p-8 shadow-2xl gpu-accelerated"
+              className="gradient-box rounded-xl p-5 sm:p-8 shadow-2xl gpu-accelerated"
             >
               <h4 className="text-2xl font-bold text-black mb-6">Why Local Businesses Choose Us</h4>
               <div className="space-y-5">

@@ -13,9 +13,9 @@ export default function Footer() {
     <footer className="bg-black/20 backdrop-blur-md text-white py-12 md:py-16 relative border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollAnimation>
-          <div className="bg-gradient-to-r from-emerald-800/50 to-green-700/50 p-6 md:p-8 rounded-2xl mb-12 text-center border border-white/20">
-            <h3 className="text-xl md:text-2xl font-bold text-white mb-3">Start Growing Your Business Today</h3>
-            <p className="text-white/80 mb-6 max-w-2xl mx-auto">Get a professional website that brings you more customers. Limited time 50% off launch special.</p>
+          <div className="bg-gradient-to-r from-emerald-800/50 to-green-700/50 p-5 sm:p-6 md:p-8 rounded-2xl mb-8 sm:mb-12 text-center border border-white/20">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-3">Start Growing Your Business Today</h3>
+            <p className="text-sm sm:text-base text-white/80 mb-4 sm:mb-6 max-w-2xl mx-auto">Get a professional website that brings you more customers. Limited time 50% off launch special.</p>
             <button 
               onClick={() => window.location.href = '/onboarding'}
               className="bg-gradient-to-r from-red-600 to-rose-500 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold text-base md:text-lg hover:from-red-700 hover:to-rose-600 transition-all shadow-xl hover:scale-105 inline-flex items-center gap-2"
@@ -26,7 +26,7 @@ export default function Footer() {
           </div>
         </ScrollAnimation>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
           <ScrollAnimation delay={0.1}>
             <div>
               <div className="text-xl md:text-2xl font-bold text-white mb-4">wrwebsites</div>

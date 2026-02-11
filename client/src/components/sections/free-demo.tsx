@@ -8,27 +8,27 @@ export default function FreeDemo() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <ScrollAnimation>
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gradient-box px-6 py-3 rounded-full text-lg font-bold mb-6 text-black hover:scale-105 transition-transform duration-200">
-              <Sparkles className="w-5 h-5 mr-2 text-red-600" />
+            <div className="inline-flex items-center gradient-box px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-lg font-bold mb-4 sm:mb-6 text-black hover:scale-105 transition-transform duration-200">
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-red-600" />
               Zero Risk • Zero Commitment
             </div>
-            <h2 className="text-5xl font-bold text-black mb-6 leading-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-4 sm:mb-6 leading-tight">
               Try Before You Buy with a<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-rose-600">
                 FREE Demo Website
               </span>
             </h2>
-            <p className="text-xl text-black/90 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-black/90 max-w-3xl mx-auto leading-relaxed">
               Not sure yet? We'll build your entire website for free first. Only pay if you love it!
             </p>
           </div>
         </ScrollAnimation>
 
-        <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center max-w-6xl mx-auto">
           {/* Left: How it Works */}
           <ScrollAnimation delay={0.1}>
             <div>
-              <h3 className="text-3xl font-bold text-black mb-8">How It Works</h3>
+              <h3 className="text-2xl sm:text-3xl font-bold text-black mb-6 sm:mb-8">How It Works</h3>
               <div className="space-y-6">
                 {[
                   {
@@ -63,7 +63,7 @@ export default function FreeDemo() {
 
           {/* Right: Benefits Card */}
           <ScrollAnimation delay={0.2}>
-            <div className="gradient-box rounded-2xl p-8 shadow-2xl">
+            <div className="gradient-box rounded-2xl p-5 sm:p-8 shadow-2xl">
               <div className="text-center mb-6">
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-red-500 to-rose-500 flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-12 h-12 text-white" />

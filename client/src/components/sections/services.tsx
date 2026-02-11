@@ -19,7 +19,7 @@ function ServiceCard({ icon: Icon, title, description, benefits, note, delay }: 
         style={tilt.style}
         onMouseMove={tilt.onMouseMove}
         onMouseLeave={tilt.onMouseLeave}
-        className="gradient-box p-8 rounded-xl shadow-2xl hover:shadow-3xl transition-shadow h-full gpu-accelerated"
+        className="gradient-box p-5 sm:p-8 rounded-xl shadow-2xl hover:shadow-3xl transition-shadow h-full gpu-accelerated"
       >
         <div className="w-12 h-12 bg-black/10 rounded-lg flex items-center justify-center mb-6">
           <Icon className="w-6 h-6 text-black" />
@@ -51,12 +51,12 @@ export default function Services() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollAnimation>
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-black mb-4">What We Offer</h2>
-            <p className="text-xl text-black/90 max-w-3xl mx-auto">We help businesses get online with simple, affordable websites that look great and work on all devices. Whether you just need a professional online presence or want something more customised, we've got you covered.</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4">What We Offer</h2>
+            <p className="text-base sm:text-lg md:text-xl text-black/90 max-w-3xl mx-auto">We help businesses get online with simple, affordable websites that look great and work on all devices. Whether you just need a professional online presence or want something more customised, we've got you covered.</p>
           </div>
         </ScrollAnimation>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
           <ServiceCard
             icon={Code}
             title="Static Websites – Simple & Reliable"
@@ -92,9 +92,9 @@ export default function Services() {
         </div>
 
         <ScrollAnimation delay={0.4}>
-          <div className="gradient-box p-8 rounded-xl shadow-2xl">
-            <h3 className="text-2xl font-semibold text-black mb-6 text-center">Our Development Process</h3>
-            <div className="grid md:grid-cols-2 gap-8 items-center">
+          <div className="gradient-box p-5 sm:p-8 rounded-xl shadow-2xl">
+            <h3 className="text-xl sm:text-2xl font-semibold text-black mb-4 sm:mb-6 text-center">Our Development Process</h3>
+            <div className="grid md:grid-cols-2 gap-6 sm:gap-8 items-center">
               <div>
                 <div className="bg-black/10 p-8 rounded-lg border-2 border-black/20 shadow-xl">
                   <h4 className="text-xl font-semibold mb-4 text-black">Professional Web Design</h4>
@@ -127,7 +127,7 @@ export default function Services() {
 
         <ScrollAnimation delay={0.5}>
           <div className="mt-16 text-center">
-            <div className="bg-gradient-to-r from-red-600 to-rose-500 p-8 md:p-12 rounded-2xl shadow-2xl max-w-4xl mx-auto">
+            <div className="bg-gradient-to-r from-red-600 to-rose-500 p-6 sm:p-8 md:p-12 rounded-2xl shadow-2xl max-w-4xl mx-auto">
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready to Get Your Business Online?</h3>
               <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
                 Join local businesses already growing with a professional website. Start with a free demo - no payment required.

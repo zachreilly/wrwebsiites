@@ -7,8 +7,8 @@ export default function Contact() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollAnimation>
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-black mb-6">Get In Touch</h2>
-            <p className="text-lg md:text-xl text-black/90 max-w-3xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-4 sm:mb-6">Get In Touch</h2>
+            <p className="text-base sm:text-lg md:text-xl text-black/90 max-w-3xl mx-auto">
               Ready to get your business online? Contact us directly via phone or email to discuss your website needs.
             </p>
           </div>
@@ -50,9 +50,9 @@ export default function Contact() {
           </div>
 
           <ScrollAnimation delay={0.4}>
-            <div className="bg-gradient-to-r from-red-600 to-rose-500 p-8 md:p-10 rounded-2xl shadow-2xl text-center">
-              <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready to Get Started?</h3>
-              <p className="text-lg text-white/90 mb-6 max-w-2xl mx-auto">
+            <div className="bg-gradient-to-r from-red-600 to-rose-500 p-5 sm:p-8 md:p-10 rounded-2xl shadow-2xl text-center">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-4">Ready to Get Started?</h3>
+              <p className="text-base sm:text-lg text-white/90 mb-4 sm:mb-6 max-w-2xl mx-auto">
                 Don't let another day pass without a professional online presence. Get your website today and start attracting more customers.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

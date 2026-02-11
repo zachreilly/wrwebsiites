@@ -23,13 +23,13 @@ export default function Testimonials() {
     <section className="py-20 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-slate-900 mb-4">What Our Clients Say</h2>
-          <p className="text-xl text-slate-600">Join the growing number of businesses trusting us with their web presence</p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">What Our Clients Say</h2>
+          <p className="text-base sm:text-lg md:text-xl text-slate-600">Join the growing number of businesses trusting us with their web presence</p>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-white p-8 rounded-xl shadow-lg">
+            <div key={index} className="bg-white p-5 sm:p-8 rounded-xl shadow-lg">
               <div className="flex items-center mb-4">
                 <div className="flex text-accent space-x-1">
                   {[...Array(5)].map((_, i) => (
