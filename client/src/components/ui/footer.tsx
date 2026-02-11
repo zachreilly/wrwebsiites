@@ -10,8 +10,8 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-black/20 backdrop-blur-md text-white py-12 md:py-16 relative border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="bg-black/20 backdrop-blur-md text-white py-12 md:py-16 relative border-t border-white/10 w-full overflow-hidden px-0">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 box-border">
         <ScrollAnimation>
           <div className="bg-gradient-to-r from-emerald-800/50 to-green-700/50 p-5 sm:p-6 md:p-8 rounded-2xl mb-8 sm:mb-12 text-center border border-white/20">
             <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-3">Start Growing Your Business Today</h3>

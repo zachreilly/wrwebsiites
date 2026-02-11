@@ -16,13 +16,13 @@ export default function Hero() {
   };
 
   return (
-    <section id="home" className="relative text-white min-h-screen flex items-center overflow-hidden">
+    <section id="home" className="relative text-white min-h-screen flex items-center overflow-hidden w-full px-0">
       <FloatingShapes />
       <FloatingElements count={2} size="large" />
       <Parallax speed={0.3}>
         <RotatingGeometry />
       </Parallax>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 w-full relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 w-full relative z-10 box-border">
         <div className="flex justify-center items-center">
           <div className="text-center max-w-5xl">
             <ScrollAnimation delay={0.1}>
@@ -32,7 +32,7 @@ export default function Hero() {
             </ScrollAnimation>
             
             <ScrollAnimation delay={0.2}>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-8 leading-[1.1] tracking-tight">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-8 leading-[1.1] tracking-tight break-words px-2">
                 Get a Professional Website
                 <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-white to-yellow-300">
                   That Brings You More Customers

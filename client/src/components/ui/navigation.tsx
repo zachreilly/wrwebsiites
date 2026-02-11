@@ -15,20 +15,20 @@ export default function Navigation() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-gradient-to-b from-emerald-700/95 via-emerald-600/80 to-transparent backdrop-blur-sm">
-      <div className="w-full px-4 sm:px-6 lg:px-8">
+    <nav className="sticky top-0 z-50 bg-gradient-to-b from-emerald-700/95 via-emerald-600/80 to-transparent backdrop-blur-sm w-full overflow-x-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20 md:h-24">
-          <div className="flex items-center">
+          <div className="flex items-center min-w-0">
             <img 
               src={logoImage} 
               alt="wrwebsites logo" 
-              className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-full shadow-lg hover:scale-110 hover:rotate-6 transition-all duration-300"
+              className="h-10 w-10 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-full shadow-lg hover:scale-110 hover:rotate-6 transition-all duration-300 flex-shrink-0"
               data-testid="logo-image"
             />
-            <span className="ml-2 sm:ml-3 md:ml-4 text-xl sm:text-2xl md:text-4xl font-bold text-white">wrwebsites</span>
+            <span className="ml-2 sm:ml-3 md:ml-4 text-lg sm:text-2xl md:text-4xl font-bold text-white truncate">wrwebsites</span>
           </div>
           
-          <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-1 sm:gap-2 md:gap-4 flex-shrink-0">
             <Button
               variant="ghost"
               onClick={() => window.location.href = '/portfolio'}

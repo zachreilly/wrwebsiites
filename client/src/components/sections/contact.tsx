@@ -3,8 +3,8 @@ import { ScrollAnimation } from "@/components/ScrollAnimation";
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-16 md:py-24 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="contact" className="py-16 md:py-24 relative w-full overflow-hidden px-0">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 box-border">
         <ScrollAnimation>
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-4 sm:mb-6">Get In Touch</h2>

@@ -7,9 +7,9 @@ export default function About() {
   const cardTilt = use3DTilt({ max: 8, scale: 1.02 });
 
   return (
-    <section id="about" className="py-20 relative overflow-hidden">
+    <section id="about" className="py-20 relative overflow-hidden w-full px-0">
       <FloatingElements count={2} size="small" />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 box-border">
         <ScrollAnimation>
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-4 sm:mb-6">Why Your Business Needs a Great Website</h2>
@@ -50,9 +50,9 @@ export default function About() {
                 </div>
                 <h3 className="text-xl font-bold text-black mb-3">{item.title}</h3>
                 <p className="text-black/80 mb-4 leading-relaxed">{item.description}</p>
-                <div className="border-t border-black/10 pt-4">
-                  <div className="text-3xl font-bold text-red-600">{item.stat}</div>
-                  <div className="text-sm text-black/70">{item.statDesc}</div>
+                <div className="border-t border-black/10 pt-4 mt-auto">
+                  <div className="text-2xl sm:text-3xl font-bold text-red-600">{item.stat}</div>
+                  <div className="text-xs sm:text-sm text-black/70">{item.statDesc}</div>
                 </div>
               </div>
             </ScrollAnimation>

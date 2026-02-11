@@ -32,9 +32,9 @@ export default function Pricing() {
   };
 
   return (
-    <section id="pricing" className="py-20 relative overflow-hidden">
+    <section id="pricing" className="py-20 relative overflow-hidden w-full px-0">
       <FloatingElements count={2} size="medium" />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 box-border">
         <ScrollAnimation>
           <div className="text-center mb-16">
             {discountActive ? (
@@ -68,15 +68,15 @@ export default function Pricing() {
             <div className="gradient-box p-5 sm:p-8 rounded-xl shadow-2xl h-full flex flex-col">
               <div className="text-center mb-6 sm:mb-8">
                 <h3 className="text-xl sm:text-2xl font-bold text-black mb-2">Basic Static Website</h3>
-                <p className="text-sm sm:text-base text-black/80 mb-4 sm:mb-6">Perfect for small businesses - a professional website with everything you need to establish your online presence. Monthly fee covers ongoing moderation and support for as long as you're subscribed.</p>
-                <div className="text-3xl sm:text-4xl font-bold text-black mb-2">
+                <p className="text-sm sm:text-base text-black/80 mb-4 sm:mb-6 px-2">Perfect for small businesses - a professional website with everything you need to establish your online presence. Monthly fee covers ongoing moderation and support for as long as you're subscribed.</p>
+                <div className="text-3xl sm:text-4xl font-bold text-black mb-2 flex flex-wrap justify-center items-center gap-2">
                   {basicPricing.isDiscounted && basicPricing.originalSetupPrice && (
-                    <span className="text-2xl text-red-400 line-through mr-3">£{basicPricing.originalSetupPrice}</span>
+                    <span className="text-2xl text-red-400 line-through">£{basicPricing.originalSetupPrice}</span>
                   )}
-                  £{basicPricing.setupPrice}
-                  <span className="text-sm font-normal text-black/70 ml-2">setup</span>
+                  <span>£{basicPricing.setupPrice}</span>
+                  <span className="text-sm font-normal text-black/70">setup</span>
                   {basicPricing.isDiscounted && (
-                    <div className="inline-block ml-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full">SAVE 50%</div>
+                    <div className="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full">SAVE 50%</div>
                   )}
                 </div>
                 <div className="text-lg font-semibold text-black">
@@ -131,15 +131,15 @@ export default function Pricing() {
               </div>
               <div className="text-center mb-6 sm:mb-8">
                 <h3 className="text-xl sm:text-2xl font-bold text-black mb-2">Premium Business Website</h3>
-                <p className="text-sm sm:text-base text-black/80 mb-4 sm:mb-6">Everything you need for a professional online presence - custom design, your own domain, and advanced features that help you stand out from competitors</p>
-                <div className="text-3xl sm:text-4xl font-bold text-black mb-2">
+                <p className="text-sm sm:text-base text-black/80 mb-4 sm:mb-6 px-2">Everything you need for a professional online presence - custom design, your own domain, and advanced features that help you stand out from competitors</p>
+                <div className="text-3xl sm:text-4xl font-bold text-black mb-2 flex flex-wrap justify-center items-center gap-2">
                   {premiumPricing.isDiscounted && premiumPricing.originalSetupPrice && (
-                    <span className="text-2xl text-red-400 line-through mr-3">£{premiumPricing.originalSetupPrice}</span>
+                    <span className="text-2xl text-red-400 line-through">£{premiumPricing.originalSetupPrice}</span>
                   )}
-                  £{premiumPricing.setupPrice}
-                  <span className="text-sm font-normal text-black/70 ml-2">setup</span>
+                  <span>£{premiumPricing.setupPrice}</span>
+                  <span className="text-sm font-normal text-black/70">setup</span>
                   {premiumPricing.isDiscounted && (
-                    <div className="inline-block ml-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full">SAVE 50%</div>
+                    <div className="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full">SAVE 50%</div>
                   )}
                 </div>
                 <div className="text-lg font-semibold text-black">
@@ -203,9 +203,9 @@ export default function Pricing() {
               <div className="text-center mb-6 sm:mb-8">
                 <h3 className="text-2xl sm:text-3xl font-bold text-black mb-2">Update Your Website</h3>
                 <p className="text-base sm:text-lg text-black/90 mb-4 sm:mb-6 max-w-3xl mx-auto">Already have a website? Let us enhance it with new features, content updates, or a complete redesign to keep your business competitive.</p>
-                <div className="text-3xl sm:text-4xl font-bold text-accent mb-2">
-                  Quote
-                  <span className="text-lg font-normal text-black/70 ml-2">on request</span>
+                <div className="text-3xl sm:text-4xl font-bold text-accent mb-2 flex flex-wrap justify-center items-center gap-2">
+                  <span>Quote</span>
+                  <span className="text-lg font-normal text-black/70">on request</span>
                 </div>
                 <div className="text-xl font-semibold text-black">
                   Payment after completion
@@ -234,8 +234,8 @@ export default function Pricing() {
               </div>
               
               <div className="text-center">
-                <div className="bg-black/10 p-3 sm:p-4 rounded-lg border-2 border-black/30 mb-6 inline-block">
-                  <p className="text-black font-semibold text-xs sm:text-base">✓ Professional assessment • ✓ Quote within 24 hours • ✓ Payment after completion</p>
+                <div className="bg-black/10 p-3 sm:p-4 rounded-lg border-2 border-black/30 mb-6 inline-block max-w-full overflow-hidden">
+                  <p className="text-black font-semibold text-[10px] sm:text-base whitespace-normal break-words">✓ Professional assessment • ✓ Quote within 24 hours • ✓ Payment after completion</p>
                 </div>
                 <Button
                   onClick={() => setLocation('/website-update-request')}
