@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
+import { sendForm } from "@/lib/sendForm";
 import { CheckCircle, ArrowLeft, ArrowRight, User, Globe, FileText, Palette, Settings, Layout, Sun, Moon, Sparkles, CalendarIcon, Lock, Database, CreditCard, Cog, LayoutDashboard, Rocket } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -116,74 +116,27 @@ export default function OnboardingPage() {
 
   const submitMutation = useMutation({
     mutationFn: async (data: ClientInfoForm) => {
-      const response = await apiRequest("POST", "/api/client-onboarding", {
+      return sendForm("New client onboarding", {
         ...data,
-        demoMode: isDemoMode
+        demoMode: isDemoMode,
       });
-      const result = await response.json();
-      
-      // Check for specific error conditions
-      if (!response.ok) {
-        throw { status: response.status, data: result };
-      }
-      
-      return result;
     },
-    onSuccess: (responseData: any) => {
-      console.log('Submission successful, response:', responseData);
-      
-      // Store sensitive data in sessionStorage (not in URL for security)
-      const onboardingData = {
-        clientCode: responseData?.data?.clientCode || '',
-        password: responseData?.data?.plaintextPassword || '', // Plaintext password (one-time delivery)
-        email: form.getValues('email'),
-        name: form.getValues('fullName'),
-        businessName: form.getValues('businessName'),
-        package: form.getValues('selectedPackage'),
-        clientId: responseData?.data?.id || '',
-        demoMode: isDemoMode
-      };
-      
-      console.log('Setting sessionStorage data:', onboardingData);
-      sessionStorage.setItem('onboardingComplete', JSON.stringify(onboardingData));
-      
-      // Verify data was stored
-      const stored = sessionStorage.getItem('onboardingComplete');
-      console.log('Verified sessionStorage:', stored);
-      
-      toast({
-        title: "Information Submitted Successfully!",
-        description: "Redirecting...",
-      });
-      
-      // Small delay to ensure sessionStorage is written before redirect
-      setTimeout(() => {
-        window.location.href = `/onboarding-complete`;
-      }, 100);
+    onSuccess: () => {
+      sessionStorage.setItem(
+        "onboardingComplete",
+        JSON.stringify({
+          name: form.getValues("fullName"),
+          package: form.getValues("selectedPackage"),
+        }),
+      );
+      window.location.href = "/onboarding-complete";
     },
     onError: (error: any) => {
-      console.error('Submission error:', error);
-      
-      // Handle duplicate email error
-      if (error?.status === 409 && error?.data?.shouldRedirectToLogin) {
-        toast({
-          title: "Account Already Exists",
-          description: error?.data?.message || "An account with this email already exists. Redirecting to login...",
-          variant: "destructive",
-        });
-        
-        // Redirect to login after a short delay
-        setTimeout(() => {
-          window.location.href = '/customer/login';
-        }, 2000);
-      } else {
-        // Generic error
-        toast({
-          title: "Submission Failed",
-          description: error?.data?.message || "Please try again or contact us directly.",
-          variant: "destructive",
-        });
-      }
+      toast({
+        title: "Submission Failed",
+        description: error?.message || "Please try again or contact us directly.",
+        variant: "destructive",
+      });
     },
   });
 

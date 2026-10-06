@@ -10,11 +10,6 @@ export const pageMetaData: Record<string, PageMeta> = {
     description: 'Professional static website development from £75. Fast, secure, and affordable web solutions with hosting, domain setup, and ongoing support. Basic and Premium packages starting at just £10/month.',
     canonical: 'https://wrwebsites.com'
   },
-  '/payment': {
-    title: 'Get Started - Choose Your Package | wrwebsites',
-    description: 'Select your perfect web development package. Basic Static Website from £75 or Premium Static Website from £150. Both include hosting, domain setup, and ongoing support.',
-    canonical: 'https://wrwebsites.com/payment'
-  },
   '/onboarding': {
     title: 'Project Onboarding - Tell Us About Your Website | wrwebsites',
     description: 'Complete our quick onboarding form to get started with your professional website. We\'ll gather all the details we need to build your perfect online presence.',
@@ -30,32 +25,9 @@ export const pageMetaData: Record<string, PageMeta> = {
     description: 'View our portfolio of professional websites we\'ve created for businesses. See the quality and variety of our web development work.',
     canonical: 'https://wrwebsites.com/portfolio'
   },
-  '/customer/login': {
-    title: 'Customer Portal Login | wrwebsites',
-    description: 'Access your customer dashboard to view project updates, communicate with our team, and manage your website details.',
-    canonical: 'https://wrwebsites.com/customer/login'
-  },
-  '/customer/dashboard': {
-    title: 'Customer Dashboard - Your Project Updates | wrwebsites',
-    description: 'View your project status, get updates from our development team, and manage your website settings.',
-    canonical: 'https://wrwebsites.com/customer/dashboard'
-  },
-  '/admin': {
-    title: 'Admin Dashboard | wrwebsites',
-    description: 'Administrative access for wrwebsites team members.',
-  },
-  '/admin/payments': {
-    title: 'Payment Management - Admin | wrwebsites',
-    description: 'Manage customer payments and subscriptions.',
-  },
-  '/payment-setup': {
-    title: 'Payment Setup - GoCardless Direct Debit | wrwebsites',
-    description: 'Complete your payment setup using GoCardless direct debit for secure monthly billing.',
-    canonical: 'https://wrwebsites.com/payment-setup'
-  },
   '/onboarding-complete': {
     title: 'Onboarding Complete - Next Steps | wrwebsites',
-    description: 'Your onboarding is complete! Here are your next steps to get your website launched.',
+    description: 'Thanks for sending your project details. We will be in touch within 24 hours.',
     canonical: 'https://wrwebsites.com/onboarding-complete'
   },
   '/website-update-request': {

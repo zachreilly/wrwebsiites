@@ -11,8 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
-import { analytics } from "@/lib/analytics";
+import { sendForm } from "@/lib/sendForm";
 import { Calculator, Mail, ArrowLeft, CheckCircle } from "lucide-react";
 
 const consultationSchema = z.object({
@@ -130,15 +129,13 @@ export default function ConsultationPage() {
 
   const submitMutation = useMutation({
     mutationFn: async (data: ConsultationForm) => {
-      const response = await apiRequest("POST", "/api/consultation", { 
-        ...data, 
-        estimatedPrice: calculatedPrice 
+      return sendForm("Consultation request", {
+        ...data,
+        estimatedPrice: `£${calculatedPrice}`,
       });
-      return await response.json();
     },
     onSuccess: () => {
       setIsSubmitted(true);
-      analytics.trackClick("consultation-submitted");
       toast({
         title: "Consultation Request Sent",
         description: "We'll email you within 24 hours with a detailed quote and next steps.",
@@ -154,14 +151,8 @@ export default function ConsultationPage() {
   });
 
   const onSubmit = (data: ConsultationForm) => {
-    analytics.trackClick("consultation-form-submit");
     submitMutation.mutate(data);
   };
-
-  // Track page view
-  useEffect(() => {
-    analytics.trackPageView("/consultation");
-  }, []);
 
   if (isSubmitted) {
     return (

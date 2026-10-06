@@ -86,7 +86,7 @@ export default function Pricing() {
                 Get Started
               </Button>
               <Button
-                onClick={() => setLocation('/direct-payment?package=basic')}
+                onClick={() => setLocation('/onboarding?package=basic')}
                 variant="outline"
                 className="w-full border border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
                 size="lg"
@@ -138,7 +138,7 @@ export default function Pricing() {
                 Get Started
               </Button>
               <Button
-                onClick={() => setLocation('/direct-payment?package=premium')}
+                onClick={() => setLocation('/onboarding?package=premium')}
                 variant="outline"
                 className="w-full border border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
                 size="lg"

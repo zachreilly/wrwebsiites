@@ -38,14 +38,6 @@ export default function Navigation() {
               Portfolio
             </Button>
             <Button
-              variant="ghost"
-              onClick={() => window.location.href = '/customer/login'}
-              className="hidden lg:flex text-white/80 hover:text-white hover:bg-white/10 text-sm"
-              data-testid="button-customer-portal-header"
-            >
-              Customer Portal
-            </Button>
-            <Button
               onClick={() => window.location.href = '/onboarding'}
               className="hidden sm:flex bg-white text-emerald-700 px-4 md:px-5 py-2 rounded-lg font-semibold text-sm hover:bg-white/95 transition-colors items-center gap-2"
               data-testid="button-get-started-header"
@@ -96,18 +88,6 @@ export default function Navigation() {
                 Portfolio
               </button>
             </div>
-            
-            <div className="h-px bg-white/10 my-4"></div>
-            
-            <button 
-              onClick={() => {
-                window.location.href = '/customer/login';
-                setIsMenuOpen(false);
-              }} 
-              className="block px-4 py-3 text-white/70 hover:text-white w-full text-left text-sm transition-colors"
-            >
-              Customer Portal
-            </button>
             
             <div className="space-y-3 pt-4">
               <Button 

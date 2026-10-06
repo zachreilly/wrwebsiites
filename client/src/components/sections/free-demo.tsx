@@ -35,7 +35,7 @@ export default function FreeDemo() {
                 {
                   step: "3",
                   title: "Review & Decide",
-                  description: "See the finished website in your customer portal. Happy? Set up payment to go live."
+                  description: "We send you a link to the finished website. Happy? Set up payment to go live."
                 }
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-4">

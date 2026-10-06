@@ -1,8 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /admin/
-Disallow: /customer/
 Disallow: /website-update-request
+Disallow: /onboarding-complete
+Disallow: /send.php
 
 Sitemap: https://wrwebsites.com/sitemap.xml

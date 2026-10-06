@@ -88,8 +88,6 @@ export default function Footer() {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-white/40 text-xs">made by wrwebsites.com</span>
-              <span className="text-white/20">|</span>
-              <a href="/admin" className="text-white/40 hover:text-white/60 text-xs transition-colors">Admin</a>
             </div>
           </div>
         </div>

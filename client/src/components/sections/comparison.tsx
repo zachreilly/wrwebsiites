@@ -165,14 +165,14 @@ export default function Comparison() {
 
           <div className="flex justify-center gap-4 mt-12">
             <a
-              href="/payment?package=basic"
+              href="/onboarding?package=basic"
               className="px-8 py-3 bg-white text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-semibold text-center"
               data-testid="button-select-basic"
             >
               Choose Basic
             </a>
             <a
-              href="/payment?package=premium"
+              href="/onboarding?package=premium"
               className="px-8 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-semibold text-center"
               data-testid="button-select-premium"
             >
@@ -230,7 +230,7 @@ export default function Comparison() {
             </div>
             <div className="p-4 pt-2">
               <a
-                href="/payment?package=basic"
+                href="/onboarding?package=basic"
                 className="block w-full px-6 py-3 bg-white text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-semibold text-center"
                 data-testid="button-select-basic-mobile"
               >
@@ -316,7 +316,7 @@ export default function Comparison() {
             </div>
             <div className="p-4 pt-2">
               <a
-                href="/payment?package=premium"
+                href="/onboarding?package=premium"
                 className="block w-full px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-semibold text-center"
                 data-testid="button-select-premium-mobile"
               >

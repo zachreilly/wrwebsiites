@@ -4,23 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ExternalLink, Calendar, Tag, User } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
-import type { PortfolioItem } from "@shared/schema";
+import { portfolioItems } from "@/data/portfolio";
 import ClientWebsiteSlideshow from "@/components/ClientWebsiteSlideshow";
 
 export default function PortfolioPage() {
   const [, setLocation] = useLocation();
   
-  const { data: portfolioData, isLoading, error } = useQuery({
-    queryKey: ['/api/portfolio'],
-    queryFn: async () => {
-      const response = await apiRequest("GET", "/api/portfolio");
-      return response.json();
-    },
-  });
-
-  const portfolioItems: PortfolioItem[] = portfolioData?.data || [];
 
   const getProjectTypeColor = (type: string) => {
     switch (type) {
@@ -35,33 +24,6 @@ export default function PortfolioPage() {
     }
   };
 
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-teal-50 to-blue-50 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-teal-50 to-blue-50 flex items-center justify-center">
-        <Card className="w-full max-w-md shadow-xl border-0">
-          <CardContent className="p-6 text-center">
-            <h2 className="text-lg font-semibold mb-2 text-gray-900">Error Loading Portfolio</h2>
-            <p className="text-gray-600 mb-4">Please try again later</p>
-            <Button 
-              onClick={() => setLocation('/')}
-              className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-md"
-            >
-              Return to Homepage
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50">
@@ -244,7 +206,7 @@ export default function PortfolioPage() {
               </p>
               <div className="flex justify-center gap-4">
                 <Button 
-                  onClick={() => setLocation('/payment')}
+                  onClick={() => setLocation('/onboarding')}
                   className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
                   data-testid="button-get-started"
                 >

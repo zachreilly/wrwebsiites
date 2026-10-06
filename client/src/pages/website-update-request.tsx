@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, Check, Loader2 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
+import { sendForm } from "@/lib/sendForm";
 import { useToast } from "@/hooks/use-toast";
 
 interface WebsiteUpdateRequestData {
@@ -40,32 +40,17 @@ export default function WebsiteUpdateRequest() {
 
   const submitMutation = useMutation({
     mutationFn: async (data: WebsiteUpdateRequestData) => {
-      // Map frontend field names to backend schema field names
-      const backendData = {
-        fullName: data.name,
+      return sendForm("Website update request", {
+        name: data.name,
         email: data.email,
-        phone: data.phone || '', // Default to empty string if not provided
-        businessName: data.businessName || '', // Default to empty string if not provided
-        websiteDomain: data.currentWebsite,
-        updateType: data.updateCategory,
-        updateDescription: data.description,
-        // Optional fields - can be undefined
-        currentHostingProvider: undefined,
-        hasWPAccess: undefined,
-        wpLoginDetails: undefined,
-        specificChanges: `Timeline: ${data.timeline || 'Not specified'}, Budget: ${data.budget || 'Not specified'}`,
-        estimatedCost: data.budget,
-        accountHolderName: undefined,
-        sortCode: undefined,
-        accountNumber: undefined,
-        address: undefined,
-        city: undefined,
-        postcode: undefined,
-        agreedToTerms: false,
-        agreedToDirectDebit: false,
-      };
-      const response = await apiRequest("POST", "/api/website-update", backendData);
-      return await response.json();
+        phone: data.phone,
+        businessName: data.businessName,
+        currentWebsite: data.currentWebsite,
+        updateCategory: data.updateCategory,
+        description: data.description,
+        timeline: data.timeline || "Not specified",
+        budget: data.budget || "Not specified",
+      });
     },
     onSuccess: () => {
       toast({
